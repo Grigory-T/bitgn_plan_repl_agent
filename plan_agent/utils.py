@@ -15,7 +15,7 @@ LLM_MODEL_DECISION = "openai/gpt-4.1"
 LLM_MODEL_REPLAN = "openai/gpt-4.1"
 LLM_MODEL_RESPONSE = "openai/gpt-4.1"
 
-LLM_MODEL_AGENT = "openai/gpt-oss-120b:nitro"
+LLM_MODEL_AGENT = "z-ai/glm-5-turbo"
 
 # minimax/minimax-m2.7
 # openai/gpt-oss-120b:nitro
@@ -62,7 +62,7 @@ def llm_structured(prompt: str, response_model: type[BaseModel], model: str | No
 
 def llm(messages: list, model: str | None = None) -> tuple[str, str]:
     provider = (os.getenv("LLM_AGENT_PROVIDER") or "openrouter").strip().lower()
-    chosen_model = model or LLM_MODEL_AGENT
+    chosen_model = LLM_MODEL_AGENT
 
     if provider == "cerebras":
         from cerebras.cloud.sdk import Cerebras

@@ -67,6 +67,12 @@ _client: MiniRuntimeClientSync | None = None
 _harness_url: str | None = None
 
 
+def reset() -> None:
+    global _client, _harness_url
+    _client = None
+    _harness_url = None
+
+
 def _normalize_request_path(path: str | None) -> str:
     if not path or path == "/":
         return "/"
