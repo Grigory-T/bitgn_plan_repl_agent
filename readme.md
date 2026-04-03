@@ -2,6 +2,9 @@
 
 BitGN sandbox agent.
 
+This repository is meant to be edited locally and executed on a BitGN machine.
+The launcher starts one BitGN trial, runs the agent against the trial workspace, submits the final answer, and stores logs for later analysis.
+
 ## Workflow
 
 - laptop: source of truth and Git repo
@@ -20,6 +23,17 @@ Sync to `bitgn`:
 ```
 
 That syncs the project to `bitgn` and runs a remote syntax check.
+
+## Minimal Setup
+
+Create `.env` from `.env.sample` and fill in the provider keys you want to use.
+
+Minimum practical requirements:
+
+- Python 3
+- BitGN trial access through `run_bitgn_task.py`
+- OpenRouter key for the default model path
+- remote `.venv` on `bitgn`
 
 ## Run
 
@@ -48,6 +62,20 @@ Examples:
 - `bitgn_sdk/`: generated mini-runtime client
 - `logs/`: run logs
 - `work/`: temporary run directories
+
+## Public Env Example
+
+See:
+
+```bash
+.env.sample
+```
+
+Typical local setup:
+
+```bash
+cp .env.sample .env
+```
 
 ## Notes
 
