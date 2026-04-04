@@ -29,7 +29,7 @@ def _score_text(score: float | None) -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Run one or more BitGN sandbox tasks end-to-end.")
+    parser = argparse.ArgumentParser(description="Run one or more BitGN PAC1 tasks end-to-end.")
     parser.add_argument(
         "--task-id",
         required=True,
@@ -37,7 +37,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--benchmark-id",
-        default="bitgn/sandbox",
+        default="bitgn/pac1-dev",
         help="BitGN benchmark id",
     )
     parser.add_argument(
@@ -121,6 +121,7 @@ def write_task_result(
     harness_url: str | None,
     agent_result: str,
     final_response: str,
+    outcome: str,
     refs: list[str],
 ) -> None:
     lines = [
@@ -135,6 +136,9 @@ def write_task_result(
         "",
         "Final Response",
         final_response.strip(),
+        "",
+        "Final Outcome",
+        outcome.strip(),
         "",
         "Final Refs",
     ]
@@ -193,6 +197,9 @@ def record_bitgn_evaluation(log_dir: Path, *, trial_id: str, score: str, details
             "Final Response",
             "(missing)",
             "",
+            "Final Outcome",
+            "(missing)",
+            "",
             "Final Refs",
             "(none)",
             "",
@@ -208,12 +215,8 @@ def main() -> int:
     args = parser.parse_args()
 
     project = Path(__file__).resolve().parent
-    sample_agents = Path.home() / "bitgn" / "sample-agents" / "sandbox-py"
-    if str(sample_agents) not in sys.path:
-        sys.path.insert(0, str(sample_agents))
-
-    from bitgn.harness_connect import HarnessServiceClientSync
-    from bitgn.harness_pb2 import EndTrialRequest, StartPlaygroundRequest
+    from bitgn_sdk.harness_connect import HarnessServiceClientSync
+    from bitgn_sdk.harness_pb2 import EndTrialRequest, StartPlaygroundRequest
     from plan_agent.executor import initialize_runtime_globals, reset_persistent_globals
     from plan_agent.response import decide_response
     from plan_agent.run_agent import run_agent
@@ -291,15 +294,17 @@ def main() -> int:
                 harness_url=trial.harness_url,
                 agent_result=agent_result,
                 final_response=response.message,
+                outcome=response.outcome,
                 refs=response.refs,
             )
 
         if response.should_submit_to_bitgn:
-            bitgn_runtime.answer(response.message, response.refs)
+            bitgn_runtime.answer(response.message, response.outcome, response.refs)
 
         _print_section("Result")
         print(f"AGENT { _short_text(agent_result) }", flush=True)
         print(f"ANSWER { _short_text(response.message) }", flush=True)
+        print(f"OUTCOME {response.outcome}", flush=True)
         if response.refs:
             print("REFS", flush=True)
             for ref in response.refs:

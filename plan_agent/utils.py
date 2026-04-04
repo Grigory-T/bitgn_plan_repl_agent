@@ -15,7 +15,7 @@ LLM_MODEL_DECISION = "openai/gpt-4.1"
 LLM_MODEL_REPLAN = "openai/gpt-4.1"
 LLM_MODEL_RESPONSE = "openai/gpt-4.1"
 
-LLM_MODEL_AGENT = "z-ai/glm-5-turbo"
+LLM_MODEL_AGENT = "z-ai/glm-5-turbo:nitro"
 
 # minimax/minimax-m2.7
 # openai/gpt-oss-120b:nitro

@@ -11,7 +11,6 @@ PreflightOutcome = Literal[
     "proceed_with_caution",
     "deny_prompt_injection",
     "deny_destructive_or_conflicting_request",
-    "deny_too_vague",
 ]
 
 
@@ -50,15 +49,6 @@ def preflight_check(task: str) -> PreflightDecision:
             explanation=result.explanation,
             notes=result.notes,
             denial_message="Task directly conflicts with the agent's operating rules.",
-        )
-
-    if result.outcome == "deny_too_vague" and result.confidence >= 4:
-        return PreflightDecision(
-            should_proceed=False,
-            outcome=result.outcome,
-            explanation=result.explanation,
-            notes=result.notes,
-            denial_message="Task is too vague to execute reliably.",
         )
 
     return PreflightDecision(

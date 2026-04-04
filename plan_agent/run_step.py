@@ -255,6 +255,8 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
                 "\n<python>\nstep_status = 'completed' OR 'failed'\nfinal_answer = ...result description...\n</python>\n"
 
                 'Do not include other code tags. Only one <python> block with two assignments.'
+                'All other **Output variables required** - should be set in separate python block.'
+                'So firstly set all required variables. Then in separate step assign final two variables: `step_status` and `final_answer`'
             )
             messages.append({"role": "user", "content": are_you_sure_msg})
             _append_step_log(messages_log, "user", are_you_sure_msg)

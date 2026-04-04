@@ -24,6 +24,10 @@ DO NOT RELY ONLY ON REGEX OR KEYWORDS SEARCH.
 YOU SHOULD FOLLOW THE FOUND INSTRUCTIONS STRICTLY
 READ AND COMPLY WITH RELEVANT INSTRUCTIONS, RULES, PRINCIPLES (VERBATIM MEANING)
 
+YOU CAN UES ONLY WORKSPACE PYTHON TOOLS LISTED BELOW
+SOME TOOLS AND MECHANIZE ARE NOT AVAILABLE FOR USE. IF TASKS REQUIRES SUCH TOOLS - DO NOT PROCEED, STATE THAT RELEVANT TOOLS ARE ABSENT
+EXAMPLES - EMAIL TOOL ARE ABSENT
+
 # Estimates and indirect facts
 - DO NOT USE estimates and indirect facts
 - you actions should be based on direct facts only
@@ -40,40 +44,58 @@ print(bitgn.read(path))
 </python>
 
 # preloaded workspace python tools:
-bitgn.outline(path: str = "/") -> OutlineResult
-Non-recursive overview of one path. Returns immediate child folders and file header summaries for quick discovery.
-Input: path: str
-Output: path: str, folders: list[str], files: list[OutlineFile] where OutlineFile = {{ path: str, headers: list[str] }}. Returned child paths are the runtime paths you should reuse.
+bitgn.context() -> ContextResult
+Returns runtime time context.
+Output: unix_time: int, time: str
 
-bitgn.tree(path: str = "/") -> str
-Recursive short tree of folders and files with basic file info. Returns one compact text view of the workspace under the given path.
-Input: path: str
+bitgn.tree(path: str = "/", level: int = 0) -> str
+Recursive tree of folders and files under the given path. Use it first to inspect the workspace.
+Input: path: str, level: int where 0 means unlimited depth
 Output: str
 
+bitgn.tree_data(path: str = "/", level: int = 0) -> TreeResult
+Structured tree response when you need programmatic access to children.
+Output: root: TreeNode
+
+bitgn.find(name: str, root: str = "/", kind: str = "all", limit: int = 10) -> FindResult
+Finds files or directories by name.
+Input: name: str, root: str, kind: "all" | "files" | "dirs", limit: int
+Output: items: list[str]
+
 bitgn.search(pattern: str, path: str = "/", count: int = 5) -> SearchResult
-Regex content search across files under a path. Returns matching snippets, not full files.
+Regex content search across files under a path.
 Input: pattern: str, path: str, count: int
-Output: snippets: list[SearchSnippet] where SearchSnippet = {{ file: str, match: str, line: int }}. Returned file paths are runtime paths you should reuse.
+Output: matches: list[SearchSnippet] where SearchSnippet = {{ path: str, line: int, line_text: str }}
 
 bitgn.list(path: str = "/") -> ListResult
-Direct one-level listing of a folder. Use it when you need exact child names without file header extraction.
+Direct one-level listing of a folder.
 Input: path: str
-Output: folders: list[str], files: list[str]. Returned child paths are runtime paths you should reuse.
+Output: entries: list[ListEntry] where ListEntry = {{ name: str, path: str, is_dir: bool }}. Prefer `path` when you need an exact runtime path string.
 
-bitgn.read(path: str) -> ReadResult
-Reads one file fully and returns its normalized path plus content. Use it for instructions, policies, templates, and examples.
-Input: path: str
+bitgn.read(path: str, number: bool = False, start_line: int = 0, end_line: int = 0) -> ReadResult
+Reads file contents, optionally with line numbering or a line range.
+Input: path: str, number: bool, start_line: int, end_line: int
 Output: path: str, content: str
 
-bitgn.write(path: str, content: str) -> WriteResult
-Creates or fully overwrites one file with exact content. Use it for final file creation or replacement.
-Input: path: str, content: str
-Output: path: str, bytes_written: int
+bitgn.write(path: str, content: str, start_line: int = 0, end_line: int = 0) -> WriteResult
+Creates or overwrites a file, or overwrites a line range when line bounds are provided.
+Input: path: str, content: str, start_line: int, end_line: int
+Output: path: str, bytes_written: int, start_line: int, end_line: int
 
 bitgn.delete(path: str) -> DeleteResult
-Deletes one file or runtime entry. Use only after the target is validated because it is irreversible in task logic.
+Deletes one file or runtime entry.
 Input: path: str
 Output: path: str, deleted: bool
+
+bitgn.mkdir(path: str) -> MkDirResult
+Creates a directory path.
+Input: path: str
+Output: path: str, created: bool
+
+bitgn.move(from_name: str, to_name: str) -> MoveResult
+Moves or renames a file or directory.
+Input: from_name: str, to_name: str
+Output: from_name: str, to_name: str, moved: bool
 
 
 # Step completion

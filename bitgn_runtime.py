@@ -1,30 +1,52 @@
 import builtins
 import os
-from typing import List
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from bitgn_sdk.vm.mini_connect import MiniRuntimeClientSync
-from bitgn_sdk.vm.mini_pb2 import (
+from bitgn_sdk.vm.pcm_connect import PcmRuntimeClientSync
+from bitgn_sdk.vm.pcm_pb2 import (
     AnswerRequest,
+    ContextRequest,
     DeleteRequest,
+    FindRequest,
     ListRequest,
-    OutlineRequest,
+    MkDirRequest,
+    MoveRequest,
+    Outcome,
     ReadRequest,
     SearchRequest,
+    TreeRequest,
     WriteRequest,
 )
 
 
-class OutlineFile(BaseModel):
-    path: str
-    headers: list[str] = Field(default_factory=list)
+OutcomeName = Literal[
+    "OUTCOME_OK",
+    "OUTCOME_DENIED_SECURITY",
+    "OUTCOME_NONE_CLARIFICATION",
+    "OUTCOME_NONE_UNSUPPORTED",
+    "OUTCOME_ERR_INTERNAL",
+]
 
 
-class OutlineResult(BaseModel):
-    path: str
-    folders: list[str] = Field(default_factory=list)
-    files: list[OutlineFile] = Field(default_factory=list)
+class ContextResult(BaseModel):
+    unix_time: int
+    time: str
+
+
+class TreeNode(BaseModel):
+    name: str
+    is_dir: bool
+    children: list["TreeNode"] = Field(default_factory=list)
+
+
+class TreeResult(BaseModel):
+    root: TreeNode
+
+
+class FindResult(BaseModel):
+    items: list[str] = Field(default_factory=list)
 
 
 class ReadResult(BaseModel):
@@ -32,24 +54,31 @@ class ReadResult(BaseModel):
     content: str
 
 
+class ListEntry(BaseModel):
+    name: str
+    path: str
+    is_dir: bool
+
+
 class ListResult(BaseModel):
-    folders: list[str] = Field(default_factory=list)
-    files: list[str] = Field(default_factory=list)
+    entries: list[ListEntry] = Field(default_factory=list)
 
 
 class SearchSnippet(BaseModel):
-    file: str
-    match: str
+    path: str
     line: int
+    line_text: str
 
 
 class SearchResult(BaseModel):
-    snippets: list[SearchSnippet] = Field(default_factory=list)
+    matches: list[SearchSnippet] = Field(default_factory=list)
 
 
 class WriteResult(BaseModel):
     path: str
     bytes_written: int
+    start_line: int = 0
+    end_line: int = 0
 
 
 class DeleteResult(BaseModel):
@@ -57,13 +86,37 @@ class DeleteResult(BaseModel):
     deleted: bool = True
 
 
+class MkDirResult(BaseModel):
+    path: str
+    created: bool = True
+
+
+class MoveResult(BaseModel):
+    from_name: str
+    to_name: str
+    moved: bool = True
+
+
 class AnswerResult(BaseModel):
-    answer: str
+    message: str
+    outcome: OutcomeName
     refs: list[str] = Field(default_factory=list)
     submitted: bool = True
 
 
-_client: MiniRuntimeClientSync | None = None
+TreeNode.model_rebuild()
+
+
+_OUTCOME_BY_NAME = {
+    "OUTCOME_OK": Outcome.OUTCOME_OK,
+    "OUTCOME_DENIED_SECURITY": Outcome.OUTCOME_DENIED_SECURITY,
+    "OUTCOME_NONE_CLARIFICATION": Outcome.OUTCOME_NONE_CLARIFICATION,
+    "OUTCOME_NONE_UNSUPPORTED": Outcome.OUTCOME_NONE_UNSUPPORTED,
+    "OUTCOME_ERR_INTERNAL": Outcome.OUTCOME_ERR_INTERNAL,
+}
+
+
+_client: PcmRuntimeClientSync | None = None
 _harness_url: str | None = None
 
 
@@ -73,12 +126,12 @@ def reset() -> None:
     _harness_url = None
 
 
-def _normalize_request_path(path: str | None) -> str:
+def _normalize_request_path(path: str | None, *, root_empty: bool = False) -> str:
     if not path or path == "/":
-        return "/"
+        return "" if root_empty else "/"
     normalized = path.strip()
     if not normalized:
-        return "/"
+        return "" if root_empty else "/"
     while normalized.startswith("./"):
         normalized = normalized[2:]
     normalized = normalized.lstrip("/")
@@ -86,14 +139,16 @@ def _normalize_request_path(path: str | None) -> str:
         normalized = normalized.replace("//", "/")
     if normalized.endswith("/"):
         normalized = normalized.rstrip("/")
-    return normalized or "/"
+    if not normalized:
+        return "" if root_empty else "/"
+    return normalized
 
 
 def _normalize_runtime_path(path: str | None) -> str:
-    if not path or path == "/":
+    if not path:
         return "/"
     normalized = path.strip()
-    if not normalized:
+    if not normalized or normalized == "/":
         return "/"
     while normalized.startswith("./"):
         normalized = normalized[2:]
@@ -103,16 +158,6 @@ def _normalize_runtime_path(path: str | None) -> str:
     if normalized.endswith("/"):
         normalized = normalized.rstrip("/")
     return normalized or "/"
-
-
-def _join_child_path(parent: str, child: str) -> str:
-    child_path = child.strip()
-    if child_path.startswith("/"):
-        return _normalize_runtime_path(child_path)
-    base = _normalize_runtime_path(parent)
-    if base == "/":
-        return _normalize_runtime_path(child_path)
-    return _normalize_runtime_path(f"{base}/{child_path}")
 
 
 def configure(harness_url: str | None = None) -> str:
@@ -125,7 +170,7 @@ def configure(harness_url: str | None = None) -> str:
             "--task-id to run_bitgn_task.py."
         )
 
-    _client = MiniRuntimeClientSync(chosen_url)
+    _client = PcmRuntimeClientSync(chosen_url)
     _harness_url = chosen_url
     return chosen_url
 
@@ -138,88 +183,146 @@ def current_harness_url() -> str | None:
     return _harness_url or os.getenv("BITGN_HARNESS_URL")
 
 
-def _runtime() -> MiniRuntimeClientSync:
+def _runtime() -> PcmRuntimeClientSync:
     if _client is None:
         configure()
     assert _client is not None
     return _client
 
 
-def outline(path: str = "/") -> OutlineResult:
-    normalized_path = _normalize_request_path(path)
-    response = _runtime().outline(OutlineRequest(path=normalized_path))
-    return OutlineResult(
-        path=_normalize_runtime_path(response.path),
-        folders=[_join_child_path(response.path, item) for item in builtins.list(response.folders)],
-        files=[
-            OutlineFile(
-                path=_join_child_path(response.path, item.path),
-                headers=builtins.list(item.headers),
-            )
-            for item in response.files
-        ],
+def context() -> ContextResult:
+    response = _runtime().context(ContextRequest())
+    return ContextResult(unix_time=response.unix_time, time=response.time)
+
+
+def _tree_node_from_proto(entry) -> TreeNode:
+    return TreeNode(
+        name=entry.name,
+        is_dir=entry.is_dir,
+        children=[_tree_node_from_proto(child) for child in entry.children],
     )
 
 
-def tree(path: str = "/") -> str:
-    def _walk(current_path: str, depth: int) -> builtins.list[str]:
-        result = outline(current_path)
+def tree_data(path: str = "/", level: int = 0) -> TreeResult:
+    response = _runtime().tree(
+        TreeRequest(
+            root=_normalize_request_path(path, root_empty=True),
+            level=level,
+        )
+    )
+    return TreeResult(root=_tree_node_from_proto(response.root))
+
+
+def tree(path: str = "/", level: int = 0) -> str:
+    result = tree_data(path=path, level=level)
+    root_label = _normalize_runtime_path(path)
+
+    if result.root.name and not result.root.is_dir and not result.root.children:
+        return root_label
+
+    def _walk(node: TreeNode, depth: int) -> builtins.list[str]:
         lines: builtins.list[str] = []
         indent = "  " * depth
-
-        for folder in sorted(result.folders):
-            lines.append(f"{indent}{folder}/")
-            lines.extend(_walk(folder, depth + 1))
-
-        for item in sorted(result.files, key=lambda file: file.path):
-            headers = ", ".join(item.headers[:3])
-            if len(item.headers) > 3:
-                headers += ", ..."
-            if headers:
-                lines.append(f"{indent}{item.path} [{headers}]")
-            else:
-                lines.append(f"{indent}{item.path}")
-
+        for child in sorted(node.children, key=lambda item: (not item.is_dir, item.name)):
+            label = child.name + "/" if child.is_dir else child.name
+            lines.append(f"{indent}{label}")
+            if child.children:
+                lines.extend(_walk(child, depth + 1))
         return lines
 
-    normalized_path = _normalize_request_path(path)
-    root_label = normalized_path if normalized_path != "/" else "/"
-    body = _walk(normalized_path, 1)
+    body = _walk(result.root, 1)
     if not body:
         return root_label
     return "\n".join([root_label, *body])
 
 
+def find(name: str, root: str = "/", kind: Literal["all", "files", "dirs"] = "all", limit: int = 10) -> FindResult:
+    type_value = {
+        "all": FindRequest.TYPE_ALL,
+        "files": FindRequest.TYPE_FILES,
+        "dirs": FindRequest.TYPE_DIRS,
+    }[kind]
+    response = _runtime().find(
+        FindRequest(
+            root=_normalize_request_path(root, root_empty=True),
+            name=name,
+            type=type_value,
+            limit=limit,
+        )
+    )
+    return FindResult(items=[_normalize_runtime_path(item) for item in response.items])
+
+
 def search(pattern: str, path: str = "/", count: int = 5) -> SearchResult:
-    normalized_path = _normalize_request_path(path)
-    response = _runtime().search(SearchRequest(path=normalized_path, pattern=pattern, count=count))
+    response = _runtime().search(
+        SearchRequest(
+            root=_normalize_request_path(path, root_empty=True),
+            pattern=pattern,
+            limit=count,
+        )
+    )
     return SearchResult(
-        snippets=[
-            SearchSnippet(file=_join_child_path(normalized_path, item.file), match=item.match, line=item.line)
-            for item in response.snippets
+        matches=[
+            SearchSnippet(
+                path=_normalize_runtime_path(item.path),
+                line=item.line,
+                line_text=item.line_text,
+            )
+            for item in response.matches
         ]
     )
 
 
 def list(path: str = "/") -> ListResult:
     normalized_path = _normalize_request_path(path)
-    response = _runtime().list(ListRequest(path=normalized_path))
+    response = _runtime().list(ListRequest(name=_normalize_request_path(path, root_empty=True)))
+
+    def _join_child(name: str) -> str:
+        if normalized_path == "/":
+            return _normalize_runtime_path(name)
+        return _normalize_runtime_path(f"{normalized_path}/{name}")
+
     return ListResult(
-        folders=[_join_child_path(normalized_path, item) for item in builtins.list(response.folders)],
-        files=[_join_child_path(normalized_path, item) for item in builtins.list(response.files)],
+        entries=[
+            ListEntry(
+                name=item.name,
+                path=_join_child(item.name),
+                is_dir=item.is_dir,
+            )
+            for item in response.entries
+        ]
     )
 
 
-def read(path: str) -> ReadResult:
+def read(path: str, number: bool = False, start_line: int = 0, end_line: int = 0) -> ReadResult:
     normalized_path = _normalize_request_path(path)
-    response = _runtime().read(ReadRequest(path=normalized_path))
+    response = _runtime().read(
+        ReadRequest(
+            path=normalized_path,
+            number=number,
+            start_line=start_line,
+            end_line=end_line,
+        )
+    )
     return ReadResult(path=_normalize_runtime_path(response.path), content=response.content)
 
 
-def write(path: str, content: str) -> WriteResult:
+def write(path: str, content: str, start_line: int = 0, end_line: int = 0) -> WriteResult:
     normalized_path = _normalize_request_path(path)
-    _runtime().write(WriteRequest(path=normalized_path, content=content))
-    return WriteResult(path=_normalize_runtime_path(normalized_path), bytes_written=len(content.encode("utf-8")))
+    _runtime().write(
+        WriteRequest(
+            path=normalized_path,
+            content=content,
+            start_line=start_line,
+            end_line=end_line,
+        )
+    )
+    return WriteResult(
+        path=_normalize_runtime_path(normalized_path),
+        bytes_written=len(content.encode("utf-8")),
+        start_line=start_line,
+        end_line=end_line,
+    )
 
 
 def delete(path: str) -> DeleteResult:
@@ -228,11 +331,33 @@ def delete(path: str) -> DeleteResult:
     return DeleteResult(path=_normalize_runtime_path(normalized_path))
 
 
-def answer(answer: str, refs: List[str] | None = None) -> AnswerResult:
-    final_refs = []
+def mkdir(path: str) -> MkDirResult:
+    normalized_path = _normalize_request_path(path)
+    _runtime().mk_dir(MkDirRequest(path=normalized_path))
+    return MkDirResult(path=_normalize_runtime_path(normalized_path))
+
+
+def move(from_name: str, to_name: str) -> MoveResult:
+    normalized_from = _normalize_request_path(from_name)
+    normalized_to = _normalize_request_path(to_name)
+    _runtime().move(MoveRequest(from_name=normalized_from, to_name=normalized_to))
+    return MoveResult(
+        from_name=_normalize_runtime_path(normalized_from),
+        to_name=_normalize_runtime_path(normalized_to),
+    )
+
+
+def answer(message: str, outcome: OutcomeName, refs: builtins.list[str] | None = None) -> AnswerResult:
+    final_refs: builtins.list[str] = []
     for ref in refs or []:
         cleaned = (ref or "").strip()
         if cleaned and cleaned not in final_refs:
             final_refs.append(cleaned)
-    _runtime().answer(AnswerRequest(answer=answer, refs=final_refs))
-    return AnswerResult(answer=answer, refs=final_refs)
+    _runtime().answer(
+        AnswerRequest(
+            message=message,
+            outcome=_OUTCOME_BY_NAME[outcome],
+            refs=final_refs,
+        )
+    )
+    return AnswerResult(message=message, outcome=outcome, refs=final_refs)

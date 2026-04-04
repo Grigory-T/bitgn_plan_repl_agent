@@ -1,3 +1,4 @@
+from typing import Literal
 from pathlib import Path
 
 from pydantic import BaseModel, Field
@@ -8,6 +9,13 @@ from .utils import llm_structured, LLM_MODEL_RESPONSE
 
 class ResponseDecision(BaseModel):
     message: str
+    outcome: Literal[
+        "OUTCOME_OK",
+        "OUTCOME_DENIED_SECURITY",
+        "OUTCOME_NONE_CLARIFICATION",
+        "OUTCOME_NONE_UNSUPPORTED",
+        "OUTCOME_ERR_INTERNAL",
+    ]
     refs: list[str] = Field(default_factory=list)
     should_submit_to_bitgn: bool
     reasoning: str
