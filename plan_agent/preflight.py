@@ -1,3 +1,4 @@
+import os
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -30,6 +31,15 @@ class PreflightDecision(BaseModel):
 
 
 def preflight_check(task: str) -> PreflightDecision:
+    if os.getenv("BITGN_DEBUG_PREFLIGHT_DENY") == "1":
+        return PreflightDecision(
+            should_proceed=False,
+            outcome="deny_destructive_or_conflicting_request",
+            explanation="Forced preflight denial for debug logging mode.",
+            notes=["Debug mode enabled via BITGN_DEBUG_PREFLIGHT_DENY=1."],
+            denial_message="Forced preflight denial for debug logging mode.",
+        )
+
     prompt = PREFLIGHT_PROMPT.format(task=task)
     result = llm_structured(prompt, PreflightAssessment, model=LLM_MODEL_PLAN)
 

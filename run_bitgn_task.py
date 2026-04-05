@@ -7,6 +7,7 @@ import uuid
 from pathlib import Path
 import argparse
 import re
+from datetime import datetime
 
 
 os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
@@ -46,9 +47,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="BitGN API host",
     )
     parser.add_argument(
+        "-d",
+        "--debug-preflight-deny",
+        action="store_true",
+        help="Force preflight to deny so logs can be inspected without running the full agent flow",
+    )
+    parser.add_argument(
         "--no-clean",
         action="store_true",
-        help="Preserve existing logs and work before starting the run",
+        help="Preserve existing work before starting the run",
     )
     return parser
 
@@ -92,19 +99,18 @@ def parse_task_spec(task_spec: str) -> list[str]:
     return task_ids
 
 
-def clear_directories(project: Path) -> None:
-    for dir_name in ("logs", "work"):
-        dir_path = project / dir_name
-        if not dir_path.exists():
-            continue
-        for item in dir_path.iterdir():
-            try:
-                if item.is_dir():
-                    shutil.rmtree(item)
-                else:
-                    item.unlink()
-            except FileNotFoundError:
-                pass
+def clear_work_directory(project: Path) -> None:
+    dir_path = project / "work"
+    if not dir_path.exists():
+        return
+    for item in dir_path.iterdir():
+        try:
+            if item.is_dir():
+                shutil.rmtree(item)
+            else:
+                item.unlink()
+        except FileNotFoundError:
+            pass
 
 
 def create_run_dir(project: Path) -> Path:
@@ -226,10 +232,11 @@ def main() -> int:
     task_ids = parse_task_spec(args.task_id)
 
     if not args.no_clean:
-        clear_directories(project)
+        clear_work_directory(project)
 
     batch_results: list[tuple[str, float | None, int, list[str]]] = []
     worst_returncode = 0
+    batch_log_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     for index, task_id in enumerate(task_ids, start=1):
         trial = client.start_playground(
@@ -250,10 +257,12 @@ def main() -> int:
         _print_section("Runtime")
         print(f"HARNESS_URL {trial.harness_url}", flush=True)
 
-        before = {p.name for p in (project / "logs").iterdir() if p.is_dir()} if (project / "logs").exists() else set()
-
         os.environ["BITGN_HARNESS_URL"] = trial.harness_url
         os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
+        if args.debug_preflight_deny:
+            os.environ["BITGN_DEBUG_PREFLIGHT_DENY"] = "1"
+        else:
+            os.environ.pop("BITGN_DEBUG_PREFLIGHT_DENY", None)
 
         reset_persistent_globals()
         initialize_runtime_globals()
@@ -269,7 +278,11 @@ def main() -> int:
 
         try:
             os.chdir(run_dir)
-            agent_result, log_dir, step_results = run_agent(trial.instruction)
+            agent_result, log_dir, step_results = run_agent(
+                trial.instruction,
+                task_id=task_id,
+                batch_id=batch_log_id,
+            )
         except Exception as exc:
             agent_result = f"Runner error: {exc}"
             proc_returncode = 1
@@ -314,9 +327,6 @@ def main() -> int:
 
         print(f"RUNNER_EXIT {proc_returncode}", flush=True)
 
-        after = {p.name for p in (project / "logs").iterdir() if p.is_dir()} if (project / "logs").exists() else set()
-        new_logs = sorted(after - before)
-
         result = client.end_trial(EndTrialRequest(trial_id=trial.trial_id))
         score = result.score if result.HasField("score") else None
         _print_section("Evaluation")
@@ -328,8 +338,8 @@ def main() -> int:
             print("- (none)", flush=True)
 
         _print_section("Logs")
-        for new_log_dir in new_logs:
-            log_path = project / "logs" / new_log_dir
+        if log_dir:
+            log_path = Path(log_dir)
             print(str(log_path), flush=True)
             record_bitgn_evaluation(
                 log_path,
@@ -337,6 +347,8 @@ def main() -> int:
                 score=str(score),
                 details=list(result.score_detail),
             )
+        else:
+            print("(none)", flush=True)
 
         batch_results.append((task_id, score, proc_returncode, list(result.score_detail)))
         worst_returncode = max(worst_returncode, proc_returncode)

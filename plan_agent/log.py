@@ -1,14 +1,22 @@
 import json
 from datetime import datetime
 from pathlib import Path
+import re
 
 from .plan import Plan
 
 
-def _init_log_dir() -> Path:
-    base = Path(__file__).resolve().parent.parent / "logs" / datetime.now().strftime("%Y%m%d_%H%M%S")
-    base.mkdir(parents=True, exist_ok=True)
-    return base
+def _sanitize_log_segment(value: str) -> str:
+    cleaned = re.sub(r"[^A-Za-z0-9._-]+", "_", value.strip())
+    return cleaned.strip("._-") or "task"
+
+
+def _init_log_dir(task_id: str | None = None, batch_id: str | None = None) -> Path:
+    batch_segment = _sanitize_log_segment(batch_id) if batch_id else datetime.now().strftime("%Y%m%d_%H%M%S")
+    base = Path(__file__).resolve().parent.parent / "logs" / batch_segment
+    log_dir = base / _sanitize_log_segment(task_id) if task_id else base
+    log_dir.mkdir(parents=True, exist_ok=True)
+    return log_dir
 
 
 def _append_log(path: Path, content: str) -> None:

@@ -21,8 +21,8 @@ def _finalize_run(log_dir, result: str, completed_steps: list[tuple[PlanStep, st
     return result, str(log_dir), step_results
 
 
-def run_agent(task: str) -> tuple[str, str, list[str]]:
-    log_dir = _init_log_dir()
+def run_agent(task: str, task_id: str | None = None, batch_id: str | None = None) -> tuple[str, str, list[str]]:
+    log_dir = _init_log_dir(task_id=task_id, batch_id=batch_id)
     preflight = preflight_check(task)
     _write_log(
         log_dir / "preflight.txt",
