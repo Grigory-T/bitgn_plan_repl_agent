@@ -68,12 +68,6 @@ Run logs are written on `bitgn` under:
 ~/bitgn/plan_repl_agent/logs/
 ```
 
-Temporary run workspaces are created under:
-
-```bash
-~/bitgn/plan_repl_agent/work/
-```
-
 ## TECH
 
 ### Current Runtime Model
@@ -98,7 +92,7 @@ Runtime plane:
 ### Current Structure
 
 - [run_bitgn_task.py](/home/linuxuser/bitgn/plan_repl_agent/run_bitgn_task.py)
-  Main launcher. Starts playgrounds, configures runtime, runs the agent, submits the final answer, and records evaluation logs.
+  Main launcher. Spawns one worker process per task, runs each task independently, retries runner errors once per task, submits the final answer, and records task-local evaluation logs.
 
 - [plan_agent/](/home/linuxuser/bitgn/plan_repl_agent/plan_agent)
   Planning and execution loop.
@@ -127,15 +121,10 @@ Runtime plane:
 
 ### Dependency On `sample-agents`
 
-This repo still depends on `sample-agents` for harness imports:
+This repo no longer imports runtime or harness code from `sample-agents`.
+The current runner and PAC1 runtime use vendored client code from [bitgn_sdk/](/home/linuxuser/bitgn/plan_repl_agent/bitgn_sdk).
 
-- `run_bitgn_task.py` prepends:
-  `~/bitgn/sample-agents/sandbox-py`
-- from there it imports:
-  `bitgn.harness_connect`
-  `bitgn.harness_pb2`
-
-So `sample-agents` must exist on `bitgn` and remain compatible.
+`sample-agents` is still kept locally as a reference repo for adaptation and version comparison.
 
 ### Current `sample-agents` State
 
@@ -174,5 +163,5 @@ Validated on `bitgn`:
 
 - `.env` is ignored by Git
 - `.venv/` is ignored by Git
-- `logs/` and `work/` are ignored by Git
+- `logs/` is ignored by Git
 - `sample-agents` should be treated as an external reference/source repo, not as the main place for local edits

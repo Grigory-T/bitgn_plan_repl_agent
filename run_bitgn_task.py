@@ -1,29 +1,20 @@
 #!/usr/bin/env python3
 
-import os
-import sys
-import shutil
-import time
-import uuid
-from pathlib import Path
 import argparse
+import os
 import re
+import subprocess
+import sys
+import time
 from datetime import datetime
+from pathlib import Path
 
 
 os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
 sys.dont_write_bytecode = True
 
 
-def _print_section(title: str) -> None:
-    print(f"\n[{title}]", flush=True)
-
-
-def _short_text(value: str, limit: int = 240) -> str:
-    text = " ".join((value or "").strip().split())
-    if len(text) <= limit:
-        return text
-    return text[:limit - 3].rstrip() + "..."
+MAX_ATTEMPTS = 2
 
 
 def _score_text(score: float | None) -> str:
@@ -65,9 +56,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Force preflight to deny so logs can be inspected without running the full agent flow",
     )
     parser.add_argument(
-        "--no-clean",
+        "--worker-mode",
         action="store_true",
-        help="Preserve existing work before starting the run",
+        help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
+        "--batch-id",
+        help=argparse.SUPPRESS,
     )
     return parser
 
@@ -111,44 +106,132 @@ def parse_task_spec(task_spec: str) -> list[str]:
     return task_ids
 
 
-def clear_work_directory(project: Path) -> None:
-    dir_path = project / "work"
-    if not dir_path.exists():
-        return
-    for item in dir_path.iterdir():
-        try:
-            if item.is_dir():
-                shutil.rmtree(item)
-            else:
-                item.unlink()
-        except FileNotFoundError:
-            pass
+def _task_log_dir(task_id: str, batch_id: str):
+    from plan_agent.log import _init_log_dir
+
+    return _init_log_dir(task_id=task_id, batch_id=batch_id)
 
 
-def create_run_dir(project: Path) -> Path:
-    run_id = uuid.uuid4().hex[:12]
-    run_dir = project / "work" / run_id
-    run_dir.mkdir(parents=True, exist_ok=False)
-    return run_dir
+def _write_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content.rstrip() + "\n", encoding="utf-8")
+
+
+def _append_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(content.rstrip() + "\n")
+
+
+def _write_runner_state(
+    log_dir: Path,
+    *,
+    batch_id: str,
+    task_id: str,
+    benchmark_id: str,
+    attempt: int,
+    status: str,
+    started_at: str | None = None,
+    finished_at: str | None = None,
+    trial_id: str | None = None,
+    harness_url: str | None = None,
+    runner_exit: int | None = None,
+    elapsed_seconds: float | None = None,
+    score: float | None = None,
+    score_details: list[str] | None = None,
+) -> None:
+    lines = [
+        "Batch ID",
+        batch_id,
+        "",
+        "Task ID",
+        task_id,
+        "",
+        "Benchmark ID",
+        benchmark_id,
+        "",
+        "Attempt",
+        str(attempt),
+        "",
+        "Status",
+        status,
+        "",
+        "Started At",
+        started_at or "(not set)",
+        "",
+        "Finished At",
+        finished_at or "(not set)",
+        "",
+        "Trial ID",
+        trial_id or "(not set)",
+        "",
+        "Harness URL",
+        harness_url or "(not set)",
+        "",
+        "Runner Exit",
+        "(not set)" if runner_exit is None else str(runner_exit),
+        "",
+        "Elapsed",
+        "(not set)" if elapsed_seconds is None else _duration_text(elapsed_seconds),
+        "",
+        "Score",
+        _score_text(score),
+        "",
+        "Score Details",
+    ]
+
+    if score_details:
+        lines.extend(score_details)
+    else:
+        lines.append("(none)")
+
+    _write_text(log_dir / "runner_state.txt", "\n".join(lines))
+
+
+def _append_attempt(log_dir: Path, *, attempt: int, event: str, details: str) -> None:
+    lines = [
+        f"Attempt {attempt}",
+        f"Event: {event}",
+        "Details:",
+        details.strip() or "(none)",
+        "",
+    ]
+    _append_text(log_dir / "attempts.txt", "\n".join(lines))
 
 
 def write_task_result(
     log_dir: Path,
     *,
+    task_id: str,
+    benchmark_id: str,
+    trial_id: str | None,
     task: str,
     harness_url: str | None,
     elapsed_seconds: float,
+    runner_exit: int,
     agent_result: str,
     final_response: str,
     outcome: str,
     refs: list[str],
 ) -> None:
     lines = [
+        "Task ID",
+        task_id,
+        "",
+        "Benchmark ID",
+        benchmark_id,
+        "",
+        "Trial ID",
+        trial_id or "(not set)",
+        "",
         "Task",
         task.strip(),
         "",
         "BitGN Harness URL",
         harness_url or "(not set)",
+        "",
+        "Runner Exit",
+        str(runner_exit),
         "",
         "Elapsed",
         _duration_text(elapsed_seconds),
@@ -176,16 +259,17 @@ def write_task_result(
         "pending",
     ])
 
-    (log_dir / "task_result.txt").write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    _write_text(log_dir / "task_result.txt", "\n".join(lines))
 
 
-def record_bitgn_evaluation(log_dir: Path, *, trial_id: str, score: str, details: list[str]) -> None:
+def record_bitgn_evaluation(log_dir: Path, *, trial_id: str | None, score: float | None, details: list[str]) -> None:
+    score_text = _score_text(score)
     evaluation_lines = [
         "Trial ID",
-        trial_id,
+        trial_id or "(not set)",
         "",
         "Score",
-        score,
+        score_text,
         "",
         "Details",
     ]
@@ -194,49 +278,29 @@ def record_bitgn_evaluation(log_dir: Path, *, trial_id: str, score: str, details
     else:
         evaluation_lines.append("(none)")
 
-    evaluation_text = "\n".join(evaluation_lines).rstrip() + "\n"
-    (log_dir / "bitgn_evaluation.txt").write_text(evaluation_text, encoding="utf-8")
+    evaluation_text = "\n".join(evaluation_lines)
+    _write_text(log_dir / "bitgn_evaluation.txt", evaluation_text)
 
     task_result_path = log_dir / "task_result.txt"
     if task_result_path.exists():
         existing = task_result_path.read_text(encoding="utf-8").rstrip()
         marker = "BitGN Evaluation\npending"
         if marker in existing:
-            updated = existing.replace(marker, "BitGN Evaluation\n" + evaluation_text.rstrip(), 1)
+            updated = existing.replace(marker, "BitGN Evaluation\n" + evaluation_text, 1)
         else:
-            updated = existing + "\n\nBitGN Evaluation\n" + evaluation_text.rstrip()
-    else:
-        updated = "\n".join([
-            "Task",
-            "(missing)",
-            "",
-            "BitGN Harness URL",
-            "(missing)",
-            "",
-            "Agent Result",
-            "(missing)",
-            "",
-            "Final Response",
-            "(missing)",
-            "",
-            "Final Outcome",
-            "(missing)",
-            "",
-            "Final Refs",
-            "(none)",
-            "",
-            "BitGN Evaluation",
-            evaluation_text.rstrip(),
-        ])
-
-    task_result_path.write_text(updated.rstrip() + "\n", encoding="utf-8")
+            updated = existing + "\n\nBitGN Evaluation\n" + evaluation_text
+        _write_text(task_result_path, updated)
 
 
-def main() -> int:
-    parser = build_parser()
-    args = parser.parse_args()
-
-    project = Path(__file__).resolve().parent
+def _run_one_attempt(
+    *,
+    task_id: str,
+    benchmark_id: str,
+    benchmark_host: str,
+    debug_preflight_deny: bool,
+    batch_id: str,
+    attempt: int,
+) -> int:
     from bitgn_sdk.harness_connect import HarnessServiceClientSync
     from bitgn_sdk.harness_pb2 import EndTrialRequest, StartPlaygroundRequest
     from plan_agent.executor import initialize_runtime_globals, reset_persistent_globals
@@ -244,39 +308,49 @@ def main() -> int:
     from plan_agent.run_agent import run_agent
     import bitgn_runtime
 
-    client = HarnessServiceClientSync(args.benchmark_host)
-    task_ids = parse_task_spec(args.task_id)
+    log_dir = _task_log_dir(task_id, batch_id)
+    started_at = datetime.now().isoformat(timespec="seconds")
+    started_monotonic = time.monotonic()
+    _write_runner_state(
+        log_dir,
+        batch_id=batch_id,
+        task_id=task_id,
+        benchmark_id=benchmark_id,
+        attempt=attempt,
+        status="running",
+        started_at=started_at,
+    )
 
-    if not args.no_clean:
-        clear_work_directory(project)
+    client = HarnessServiceClientSync(benchmark_host)
+    trial = None
+    task_text = ""
+    harness_url = None
+    agent_result = ""
+    final_message = ""
+    final_outcome = "OUTCOME_ERR_INTERNAL"
+    final_refs: list[str] = []
+    proc_returncode = 0
+    score = None
+    score_details: list[str] = []
 
-    batch_results: list[tuple[str, float | None, int, list[str], str]] = []
-    worst_returncode = 0
-    batch_log_id = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    for index, task_id in enumerate(task_ids, start=1):
-        task_started_at = time.monotonic()
+    try:
         trial = client.start_playground(
             StartPlaygroundRequest(
-                benchmark_id=args.benchmark_id,
+                benchmark_id=benchmark_id,
                 task_id=task_id,
             )
         )
-
-        print("", flush=True)
-        print("=" * 72, flush=True)
-        if len(task_ids) > 1:
-            print(f"BATCH {index}/{len(task_ids)}", flush=True)
-        print(f"TASK {task_id}", flush=True)
-        print(f"TRIAL_ID {trial.trial_id}", flush=True)
-        _print_section("Instruction")
-        print(trial.instruction)
-        _print_section("Runtime")
-        print(f"HARNESS_URL {trial.harness_url}", flush=True)
+        task_text = trial.instruction
+        harness_url = trial.harness_url
+        _append_attempt(
+            log_dir,
+            attempt=attempt,
+            event="start_playground",
+            details=f"trial_id={trial.trial_id}\nharness_url={trial.harness_url}",
+        )
 
         os.environ["BITGN_HARNESS_URL"] = trial.harness_url
-        os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
-        if args.debug_preflight_deny:
+        if debug_preflight_deny:
             os.environ["BITGN_DEBUG_PREFLIGHT_DENY"] = "1"
         else:
             os.environ.pop("BITGN_DEBUG_PREFLIGHT_DENY", None)
@@ -286,116 +360,184 @@ def main() -> int:
         bitgn_runtime.reset()
         bitgn_runtime.configure(trial.harness_url)
 
-        run_dir = create_run_dir(project)
-        original_cwd = Path.cwd()
-        log_dir = None
-        proc_returncode = 0
-
-        print(f"RUN_DIR {run_dir}", flush=True)
-
-        try:
-            os.chdir(run_dir)
-            agent_result, log_dir, step_results = run_agent(
-                trial.instruction,
-                task_id=task_id,
-                batch_id=batch_log_id,
-            )
-        except Exception as exc:
-            agent_result = f"Runner error: {exc}"
-            proc_returncode = 1
-            step_results = []
-        finally:
-            os.chdir(original_cwd)
-            shutil.rmtree(run_dir, ignore_errors=True)
-
+        agent_result, _, step_results = run_agent(
+            trial.instruction,
+            task_id=task_id,
+            batch_id=batch_id,
+        )
         response = decide_response(
             task=trial.instruction,
             agent_answer=agent_result,
             step_results=step_results,
-            log_dir=log_dir,
+            log_dir=str(log_dir),
         )
+        final_message = response.message
+        final_outcome = response.outcome
+        final_refs = response.refs
 
-        if log_dir:
-            log_dir_path = Path(log_dir)
-            (log_dir_path / "final_response.txt").write_text(response.message.rstrip() + "\n", encoding="utf-8")
-            elapsed_seconds = time.monotonic() - task_started_at
-            write_task_result(
-                log_dir_path,
-                task=trial.instruction,
-                harness_url=trial.harness_url,
-                elapsed_seconds=elapsed_seconds,
-                agent_result=agent_result,
-                final_response=response.message,
-                outcome=response.outcome,
-                refs=response.refs,
-            )
-        else:
-            elapsed_seconds = time.monotonic() - task_started_at
+        (log_dir / "final_response.txt").write_text(final_message.rstrip() + "\n", encoding="utf-8")
 
         if response.should_submit_to_bitgn:
-            bitgn_runtime.answer(response.message, response.outcome, response.refs)
+            bitgn_runtime.answer(final_message, final_outcome, final_refs)
 
-        _print_section("Result")
-        print(f"AGENT { _short_text(agent_result) }", flush=True)
-        print(f"ANSWER { _short_text(response.message) }", flush=True)
-        print(f"OUTCOME {response.outcome}", flush=True)
-        if response.refs:
-            print("REFS", flush=True)
-            for ref in response.refs:
-                print(f"- {ref}", flush=True)
-        else:
-            print("REFS (none)", flush=True)
+    except Exception as exc:
+        proc_returncode = 1
+        agent_result = f"Runner error: {exc}"
+        final_message = f"Internal runner error: {exc}"
+        final_outcome = "OUTCOME_ERR_INTERNAL"
+        final_refs = []
+        _append_attempt(
+            log_dir,
+            attempt=attempt,
+            event="error",
+            details=agent_result,
+        )
+        if trial is not None:
+            try:
+                bitgn_runtime.answer(final_message, final_outcome, final_refs)
+            except Exception as submit_exc:
+                _append_attempt(
+                    log_dir,
+                    attempt=attempt,
+                    event="internal_error_submit_failed",
+                    details=str(submit_exc),
+                )
+    finally:
+        elapsed_seconds = time.monotonic() - started_monotonic
+        if trial is not None:
+            try:
+                result = client.end_trial(EndTrialRequest(trial_id=trial.trial_id))
+                score = result.score if result.HasField("score") else None
+                score_details = list(result.score_detail)
+            except Exception as end_exc:
+                proc_returncode = 1
+                score_details = [f"end_trial failed: {end_exc}"]
+                _append_attempt(
+                    log_dir,
+                    attempt=attempt,
+                    event="end_trial_failed",
+                    details=str(end_exc),
+                )
 
-        print(f"RUNNER_EXIT {proc_returncode}", flush=True)
-        print(f"DURATION {_duration_text(elapsed_seconds)}", flush=True)
+        write_task_result(
+            log_dir,
+            task_id=task_id,
+            benchmark_id=benchmark_id,
+            trial_id=trial.trial_id if trial is not None else None,
+            task=task_text or task_id,
+            harness_url=harness_url,
+            elapsed_seconds=elapsed_seconds,
+            runner_exit=proc_returncode,
+            agent_result=agent_result or "(none)",
+            final_response=final_message or "(none)",
+            outcome=final_outcome,
+            refs=final_refs,
+        )
+        record_bitgn_evaluation(
+            log_dir,
+            trial_id=trial.trial_id if trial is not None else None,
+            score=score,
+            details=score_details,
+        )
+        _write_runner_state(
+            log_dir,
+            batch_id=batch_id,
+            task_id=task_id,
+            benchmark_id=benchmark_id,
+            attempt=attempt,
+            status="completed" if proc_returncode == 0 else "errored",
+            started_at=started_at,
+            finished_at=datetime.now().isoformat(timespec="seconds"),
+            trial_id=trial.trial_id if trial is not None else None,
+            harness_url=harness_url,
+            runner_exit=proc_returncode,
+            elapsed_seconds=elapsed_seconds,
+            score=score,
+            score_details=score_details,
+        )
 
-        result = client.end_trial(EndTrialRequest(trial_id=trial.trial_id))
-        score = result.score if result.HasField("score") else None
-        _print_section("Evaluation")
-        print(f"SCORE {_score_text(score)}", flush=True)
-        if result.score_detail:
-            for item in result.score_detail:
-                print(f"- {item}", flush=True)
-        else:
-            print("- (none)", flush=True)
+    return proc_returncode
 
-        _print_section("Logs")
-        if log_dir:
-            log_path = Path(log_dir)
-            print(str(log_path), flush=True)
-            record_bitgn_evaluation(
-                log_path,
-                trial_id=trial.trial_id,
-                score=str(score),
-                details=list(result.score_detail),
+
+def _worker_main(args: argparse.Namespace) -> int:
+    task_ids = parse_task_spec(args.task_id)
+    if len(task_ids) != 1:
+        raise ValueError("--worker-mode requires exactly one task id")
+
+    task_id = task_ids[0]
+    batch_id = args.batch_id or datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_dir = _task_log_dir(task_id, batch_id)
+
+    last_returncode = 1
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        returncode = _run_one_attempt(
+            task_id=task_id,
+            benchmark_id=args.benchmark_id,
+            benchmark_host=args.benchmark_host,
+            debug_preflight_deny=args.debug_preflight_deny,
+            batch_id=batch_id,
+            attempt=attempt,
+        )
+        last_returncode = returncode
+        if returncode == 0:
+            return 0
+        if attempt < MAX_ATTEMPTS:
+            _append_attempt(
+                log_dir,
+                attempt=attempt,
+                event="retry_scheduled",
+                details=f"retrying task after runner error; next_attempt={attempt + 1}",
             )
-        else:
-            print("(none)", flush=True)
 
-        batch_results.append((task_id, score, proc_returncode, list(result.score_detail), _duration_text(elapsed_seconds)))
-        worst_returncode = max(worst_returncode, proc_returncode)
+    return last_returncode
 
-    if len(batch_results) > 1:
-        print("", flush=True)
-        print("=" * 72, flush=True)
-        _print_section("Batch Stats")
-        passed = 0
-        scored = 0
-        total = 0.0
-        for task_id, score, returncode, details, duration_text in batch_results:
-            if score is not None:
-                scored += 1
-                total += score
-                if score == 1.0:
-                    passed += 1
-            status = "ok" if returncode == 0 else f"rc={returncode}"
-            score_text = _score_text(score)
-            detail_text = details[0] if details else "-"
-            print(f"{task_id} score={score_text} {status} time={duration_text} {detail_text}")
-        avg_text = "none" if not scored else f"{(total / scored):.2f}"
-        print(f"TOTAL pass={passed}/{len(batch_results)} avg={avg_text}")
 
-    return 0 if worst_returncode == 0 else worst_returncode
+def _spawn_worker(script_path: Path, args: argparse.Namespace, task_id: str, batch_id: str) -> subprocess.Popen:
+    cmd = [
+        sys.executable,
+        str(script_path),
+        "--worker-mode",
+        "--task-id",
+        task_id,
+        "--benchmark-id",
+        args.benchmark_id,
+        "--benchmark-host",
+        args.benchmark_host,
+        "--batch-id",
+        batch_id,
+    ]
+    if args.debug_preflight_deny:
+        cmd.append("--debug-preflight-deny")
+
+    env = os.environ.copy()
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+
+    return subprocess.Popen(
+        cmd,
+        cwd=str(script_path.parent),
+        env=env,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+
+def _parent_main(args: argparse.Namespace) -> int:
+    task_ids = parse_task_spec(args.task_id)
+    batch_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+    script_path = Path(__file__).resolve()
+
+    processes = [_spawn_worker(script_path, args, task_id, batch_id) for task_id in task_ids]
+    exit_codes = [process.wait() for process in processes]
+    return max(exit_codes, default=0)
+
+
+def main() -> int:
+    parser = build_parser()
+    args = parser.parse_args()
+
+    if args.worker_mode:
+        return _worker_main(args)
+    return _parent_main(args)
 
 
 if __name__ == "__main__":

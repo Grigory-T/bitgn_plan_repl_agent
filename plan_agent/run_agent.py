@@ -38,10 +38,13 @@ def run_agent(task: str, task_id: str | None = None, batch_id: str | None = None
         result = f"Request denied at preflight: {preflight.denial_message or preflight.explanation}"
         return _finalize_run(log_dir, result, [])
 
-    plan: Plan = create_plan(task)
+    plan, plan_warnings = create_plan(task)
     remaining_steps: list[PlanStep] = list(plan.steps)
     completed_steps: list[tuple[PlanStep, str]] = []
-    _append_log(log_dir / "plan.txt", "Initial plan:\n" + _format_plan(plan))
+    initial_plan_text = "Initial plan:\n" + _format_plan(plan)
+    if plan_warnings:
+        initial_plan_text += "\n\nPlan validation warnings:\n" + "\n".join(plan_warnings)
+    _append_log(log_dir / "plan.txt", initial_plan_text)
 
     for _ in range(MAX_TOTAL_STEPS):
         if not remaining_steps:
@@ -80,16 +83,19 @@ def run_agent(task: str, task_id: str | None = None, batch_id: str | None = None
             return _finalize_run(log_dir, result, completed_steps)
 
         if decision.next_action == "replan_remaining_steps":
-            plan = replan_remaining(
+            plan, plan_warnings = replan_remaining(
                 task=task,
                 completed_steps=completed_steps,
                 remaining_steps=remaining_steps,
                 after_step_decision=decision,
             )
             remaining_steps = list(plan.steps)
+            replan_text = f"Replan after step {step_number}:\n" + _format_plan(plan, start_step=step_number + 1)
+            if plan_warnings:
+                replan_text += "\n\nPlan validation warnings:\n" + "\n".join(plan_warnings)
             _append_log(
                 log_dir / "plan.txt",
-                f"Replan after step {step_number}:\n" + _format_plan(plan, start_step=step_number + 1),
+                replan_text,
             )
 
     if remaining_steps:

@@ -55,11 +55,11 @@ def _workspace_tree_overview() -> str:
     return tree_text[:PLAN_TREE_MAX_CHARS].rstrip() + "\n... [truncated]"
 
 
-def create_plan(task: str) -> Plan:
+def create_plan(task: str) -> tuple[Plan, list[str]]:
     prompt = PLAN_PROMPT.format(task=task, workspace_tree=_workspace_tree_overview())
     plan = llm_structured(prompt, Plan, model=LLM_MODEL_PLAN)
-    check_plan(plan)
-    return plan
+    warnings = check_plan(plan)
+    return plan, warnings
 
 def make_after_step_decision(
     task: str,
@@ -79,7 +79,7 @@ def replan_remaining(
     completed_steps: List[tuple[PlanStep, str]],
     remaining_steps: List[PlanStep],
     after_step_decision: AfterStepDecision,
-) -> Plan:
+) -> tuple[Plan, list[str]]:
     prompt = REPLAN_REMAINING_PROMPT.format(
         task=task,
         completed_steps=format_completed_steps(completed_steps),
@@ -87,8 +87,8 @@ def replan_remaining(
         reasons_for_replan_remaining_steps=after_step_decision.reasons_for_replan_remaining_steps,
     )
     plan = llm_structured(prompt, Plan, model=LLM_MODEL_REPLAN)
-    check_plan(plan)
-    return plan
+    warnings = check_plan(plan)
+    return plan, warnings
 
 
 def format_completed_steps(completed_steps: List[tuple[PlanStep, str]]) -> str:
@@ -140,7 +140,7 @@ def format_remaining_steps(remaining_steps: List[PlanStep], start_step: int = 1)
     return "\n".join(lines).rstrip()
 
 
-def check_plan(plan: Plan):
+def check_plan(plan: Plan) -> list[str]:
     """
     Validate plan consistency:
     1. Input variables must be outputs from previous steps (name + dtype match)
@@ -150,7 +150,7 @@ def check_plan(plan: Plan):
     Logs warnings but does not interrupt execution.
     """
     if not plan.steps:
-        return
+        return []
     
     warnings = []
     
@@ -212,9 +212,4 @@ def check_plan(plan: Plan):
                     f"({output_var.variable_data_type}), but it's not used by any subsequent step."
                 )
     
-    # Log all warnings
-    if warnings:
-        print("\n=== Plan Validation Warnings ===")
-        for warning in warnings:
-            print(warning)
-        print("================================\n")
+    return warnings
