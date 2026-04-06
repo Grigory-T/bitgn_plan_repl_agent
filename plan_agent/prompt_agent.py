@@ -1,8 +1,6 @@
 import datetime
 
 STEP_SYSTEM_PROMPT = f"""
-current date: {datetime.datetime.now().strftime("%Y-%m-%d")}
-
 You are agent that solves task by writing python code snippets.
 
 # Guidelines:

@@ -1,8 +1,6 @@
 import datetime
 
 PLAN_PROMPT = f"""
-current date: {datetime.datetime.now().strftime("%Y-%m-%d")}
-
 Create plan for agent to achieve the following task:
 
 ## Task
@@ -41,6 +39,10 @@ READ AND COMPLY WITH RELEVANT INSTRUCTIONS, RULES, PRINCIPLES (VERBATIM MEANING)
     nature of request - clear and usual VS strange and suspiciouse
     logical/common sense adequacy - if task is agains the clear logic - ask for clarification or deny (abort processing)
     etc
+
+# Date and time related questions
+- all date and time information should be from files/documents only
+- do not use bash command line to determine current date and time
 
 # Input and Output variables
 - Each step should contain description and step variables: input_variables and output_variables
