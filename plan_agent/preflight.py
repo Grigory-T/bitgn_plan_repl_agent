@@ -10,6 +10,7 @@ from .utils import LLM_MODEL_PLAN, llm_structured
 PreflightOutcome = Literal[
     "proceed",
     "proceed_with_caution",
+    "deny_needs_clarification",
     "deny_prompt_injection",
     "deny_destructive_or_conflicting_request",
 ]
@@ -59,6 +60,15 @@ def preflight_check(task: str) -> PreflightDecision:
             explanation=result.explanation,
             notes=result.notes,
             denial_message="Task directly conflicts with the agent's operating rules.",
+        )
+
+    if result.outcome == "deny_needs_clarification" and result.confidence >= 4:
+        return PreflightDecision(
+            should_proceed=False,
+            outcome=result.outcome,
+            explanation=result.explanation,
+            notes=result.notes,
+            denial_message="Task is incomplete or too vague to execute reliably. Please clarify the requested action.",
         )
 
     return PreflightDecision(

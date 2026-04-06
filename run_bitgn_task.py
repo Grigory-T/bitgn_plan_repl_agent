@@ -3,6 +3,7 @@
 import os
 import sys
 import shutil
+import time
 import uuid
 from pathlib import Path
 import argparse
@@ -27,6 +28,17 @@ def _short_text(value: str, limit: int = 240) -> str:
 
 def _score_text(score: float | None) -> str:
     return "none" if score is None else f"{score:.2f}"
+
+
+def _duration_text(seconds: float) -> str:
+    total_seconds = max(0, int(round(seconds)))
+    minutes, secs = divmod(total_seconds, 60)
+    hours, mins = divmod(minutes, 60)
+    if hours:
+        return f"{hours}h {mins}m {secs}s"
+    if minutes:
+        return f"{minutes}m {secs}s"
+    return f"{secs}s"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -125,6 +137,7 @@ def write_task_result(
     *,
     task: str,
     harness_url: str | None,
+    elapsed_seconds: float,
     agent_result: str,
     final_response: str,
     outcome: str,
@@ -136,6 +149,9 @@ def write_task_result(
         "",
         "BitGN Harness URL",
         harness_url or "(not set)",
+        "",
+        "Elapsed",
+        _duration_text(elapsed_seconds),
         "",
         "Agent Result",
         agent_result.strip(),
@@ -234,11 +250,12 @@ def main() -> int:
     if not args.no_clean:
         clear_work_directory(project)
 
-    batch_results: list[tuple[str, float | None, int, list[str]]] = []
+    batch_results: list[tuple[str, float | None, int, list[str], str]] = []
     worst_returncode = 0
     batch_log_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     for index, task_id in enumerate(task_ids, start=1):
+        task_started_at = time.monotonic()
         trial = client.start_playground(
             StartPlaygroundRequest(
                 benchmark_id=args.benchmark_id,
@@ -301,15 +318,19 @@ def main() -> int:
         if log_dir:
             log_dir_path = Path(log_dir)
             (log_dir_path / "final_response.txt").write_text(response.message.rstrip() + "\n", encoding="utf-8")
+            elapsed_seconds = time.monotonic() - task_started_at
             write_task_result(
                 log_dir_path,
                 task=trial.instruction,
                 harness_url=trial.harness_url,
+                elapsed_seconds=elapsed_seconds,
                 agent_result=agent_result,
                 final_response=response.message,
                 outcome=response.outcome,
                 refs=response.refs,
             )
+        else:
+            elapsed_seconds = time.monotonic() - task_started_at
 
         if response.should_submit_to_bitgn:
             bitgn_runtime.answer(response.message, response.outcome, response.refs)
@@ -326,6 +347,7 @@ def main() -> int:
             print("REFS (none)", flush=True)
 
         print(f"RUNNER_EXIT {proc_returncode}", flush=True)
+        print(f"DURATION {_duration_text(elapsed_seconds)}", flush=True)
 
         result = client.end_trial(EndTrialRequest(trial_id=trial.trial_id))
         score = result.score if result.HasField("score") else None
@@ -350,7 +372,7 @@ def main() -> int:
         else:
             print("(none)", flush=True)
 
-        batch_results.append((task_id, score, proc_returncode, list(result.score_detail)))
+        batch_results.append((task_id, score, proc_returncode, list(result.score_detail), _duration_text(elapsed_seconds)))
         worst_returncode = max(worst_returncode, proc_returncode)
 
     if len(batch_results) > 1:
@@ -360,7 +382,7 @@ def main() -> int:
         passed = 0
         scored = 0
         total = 0.0
-        for task_id, score, returncode, details in batch_results:
+        for task_id, score, returncode, details, duration_text in batch_results:
             if score is not None:
                 scored += 1
                 total += score
@@ -369,7 +391,7 @@ def main() -> int:
             status = "ok" if returncode == 0 else f"rc={returncode}"
             score_text = _score_text(score)
             detail_text = details[0] if details else "-"
-            print(f"{task_id} score={score_text} {status} {detail_text}")
+            print(f"{task_id} score={score_text} {status} time={duration_text} {detail_text}")
         avg_text = "none" if not scored else f"{(total / scored):.2f}"
         print(f"TOTAL pass={passed}/{len(batch_results)} avg={avg_text}")
 

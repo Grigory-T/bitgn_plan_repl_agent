@@ -50,9 +50,14 @@ Rules:
 - Choose the outcome that best reflects the final state
 - Use `OUTCOME_DENIED_SECURITY` for security denial, `OUTCOME_NONE_CLARIFICATION` when more info is required, `OUTCOME_NONE_UNSUPPORTED` when the task cannot be supported under the rules, `OUTCOME_ERR_INTERNAL` for agent/runtime failure, and `OUTCOME_OK` only when the task was completed
 
-# Response/answer formulation
+# Response/answer/message formulation
 - you need to carefully consider how to formulate response/anser
-- look for any rules/recommendations in instructions on how to formulate response/anser
+- look for any rules/recommendations in instructions on how to formulate response/answer
 - follow these rules/recommendations strictly (verbatim literal exection)
+
+# Response/answer/message format and wording
+- if task or instruction/rule require specific answer format (number, 2 words, status from predifined list etc) - **you should literally follow that**
+- if response/answer format and wording is requested - do not use descriptive answer, do not add comments and notes. literally follow requested format
+- if now specific format is set - use your expertise to formulate final message
 
 """
