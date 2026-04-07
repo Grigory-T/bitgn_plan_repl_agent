@@ -3,7 +3,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 
-from .prompt_response import RESPONSE_DECISION_PROMPT
+from .prompt_response import build_response_decision_prompt
 from .utils import llm_structured, LLM_MODEL_RESPONSE
 
 
@@ -32,7 +32,7 @@ def decide_response(
     log_dir: str | None = None,
 ) -> ResponseDecision:
     summarized_steps = "\n".join(f"- {result}" for result in (step_results or [])) or "(none)"
-    prompt = RESPONSE_DECISION_PROMPT.format(
+    prompt = build_response_decision_prompt(
         task=task,
         agent_answer=agent_answer,
         step_results=summarized_steps,

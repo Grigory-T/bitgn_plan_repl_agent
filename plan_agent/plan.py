@@ -2,7 +2,7 @@ import json
 from typing import List, Optional, Literal
 from pydantic import BaseModel, Field
 from .utils import llm_structured, LLM_MODEL_PLAN, LLM_MODEL_DECISION, LLM_MODEL_REPLAN
-from .prompt_plan import PLAN_PROMPT, DECISION_PROMPT, REPLAN_REMAINING_PROMPT
+from .prompt_plan import build_plan_prompt, build_decision_prompt, build_replan_remaining_prompt
 import bitgn_runtime
 
 
@@ -56,7 +56,7 @@ def _workspace_tree_overview() -> str:
 
 
 def create_plan(task: str) -> tuple[Plan, list[str]]:
-    prompt = PLAN_PROMPT.format(task=task, workspace_tree=_workspace_tree_overview())
+    prompt = build_plan_prompt(task=task, workspace_tree=_workspace_tree_overview())
     plan = llm_structured(prompt, Plan, model=LLM_MODEL_PLAN)
     warnings = check_plan(plan)
     return plan, warnings
@@ -66,7 +66,7 @@ def make_after_step_decision(
     completed_steps: List[tuple[PlanStep, str]],
     remaining_steps: List[PlanStep],
 ) -> AfterStepDecision:
-    prompt = DECISION_PROMPT.format(
+    prompt = build_decision_prompt(
         task=task,
         completed_steps=format_completed_steps(completed_steps),
         remaining_steps=format_remaining_steps(remaining_steps, start_step=len(completed_steps) + 1),
@@ -80,7 +80,7 @@ def replan_remaining(
     remaining_steps: List[PlanStep],
     after_step_decision: AfterStepDecision,
 ) -> tuple[Plan, list[str]]:
-    prompt = REPLAN_REMAINING_PROMPT.format(
+    prompt = build_replan_remaining_prompt(
         task=task,
         completed_steps=format_completed_steps(completed_steps),
         remaining_steps=format_remaining_steps(remaining_steps, start_step=len(completed_steps) + 1),

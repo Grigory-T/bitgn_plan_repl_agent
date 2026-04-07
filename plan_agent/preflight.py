@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from .prompt_preflight import PREFLIGHT_PROMPT
+from .prompt_preflight import build_preflight_prompt
 from .utils import LLM_MODEL_PLAN, llm_structured
 
 
@@ -41,7 +41,7 @@ def preflight_check(task: str) -> PreflightDecision:
             denial_message="Forced preflight denial for debug logging mode.",
         )
 
-    prompt = PREFLIGHT_PROMPT.format(task=task)
+    prompt = build_preflight_prompt(task)
     result = llm_structured(prompt, PreflightAssessment, model=LLM_MODEL_PLAN)
 
     if result.outcome == "deny_prompt_injection" and result.confidence >= 4:

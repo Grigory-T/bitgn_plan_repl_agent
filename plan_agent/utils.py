@@ -1,10 +1,11 @@
 import os
-import json
 import ast
+import json
 from typing import Literal, List
 from openai import OpenAI
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from .json_schemas import get_schema_dict
 
 load_dotenv()
 
@@ -16,7 +17,7 @@ LLM_MODEL_DECISION = plan_model
 LLM_MODEL_REPLAN = plan_model
 LLM_MODEL_RESPONSE = plan_model
 
-LLM_MODEL_AGENT = "openai/gpt-5.4-mini:nitro"
+LLM_MODEL_AGENT = "z-ai/glm-5:nitro"
 
 # "z-ai/glm-5:nitro"
 # xiaomi/mimo-v2-pro
@@ -42,19 +43,17 @@ LLM_MODEL_AGENT = "openai/gpt-5.4-mini:nitro"
 
 def llm_structured(prompt: str, response_model: type[BaseModel], model: str | None = None) -> BaseModel:
     client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
-    schema = response_model.model_json_schema()
-    req = json.dumps(schema, ensure_ascii=False)
-    full = f"{prompt}\n\nReturn only JSON matching this: {req}"
+    schema = get_schema_dict(response_model.__name__) or response_model.model_json_schema()
     try:
         resp = client.chat.completions.create(
             model=model or LLM_MODEL_PLAN,
-            messages=[{"role": "user", "content": full}],
+            messages=[{"role": "user", "content": prompt}],
             temperature=0,
             response_format={
                 "type": "json_schema",
                 "json_schema": {
                     "name": "response_schema",
-                    "strict": False,
+                    "strict": True,
                     "schema": schema
                 }
             },
@@ -64,7 +63,30 @@ def llm_structured(prompt: str, response_model: type[BaseModel], model: str | No
     except Exception as exc:
         raise RuntimeError(f"Structured LLM request failed: {exc}") from exc
     content = resp.choices[0].message.content
-    return response_model.model_validate_json(content)
+    return _validate_structured_response(content, response_model)
+
+
+def _validate_structured_response(content: str, response_model: type[BaseModel]) -> BaseModel:
+    try:
+        return response_model.model_validate_json(content)
+    except Exception:
+        cleaned = _extract_json_object(content)
+        return response_model.model_validate_json(cleaned)
+
+
+def _extract_json_object(content: str) -> str:
+    text = (content or "").strip()
+    if not text:
+        raise ValueError("Structured response is empty.")
+
+    start = text.find("{")
+    end = text.rfind("}")
+    if start == -1 or end == -1 or end < start:
+        raise ValueError(f"Structured response does not contain a JSON object: {text[:200]!r}")
+
+    candidate = text[start : end + 1]
+    json.loads(candidate)
+    return candidate
 
 
 

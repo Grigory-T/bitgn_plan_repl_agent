@@ -1,4 +1,8 @@
-RESPONSE_DECISION_PROMPT = """You are preparing the FINAL RESPONSE after the agent has already finished its work.
+from .json_schemas import RESPONSE_DECISION_SCHEMA_JSON
+
+
+def build_response_decision_prompt(task: str, agent_answer: str, step_results: str) -> str:
+    return f"""You are preparing the FINAL RESPONSE after the agent has already finished its work.
 
 The execution phase is already over. You must NOT invent new research, new tool calls, or new facts.
 You must only transform the agent's work result into the final response.
@@ -14,7 +18,7 @@ Include all relevant refs to return (**directly or indirectly used**)
 {step_results}
 
 Return a JSON object with these fields:
-- message: the final answer that should be submitted (follow the instructions/format requirments literally)
+- message: the final answer that should be submitted (follow the instructions/format requirements literally)
 - message: should not contain refs
 - outcome: one of OUTCOME_DENIED_SECURITY, OUTCOME_NONE_UNSUPPORTED, OUTCOME_NONE_CLARIFICATION, OUTCOME_OK, OUTCOME_ERR_INTERNAL
 - refs: list of grounding refs inferred only from the step results (**directly or indirectly used**)
@@ -31,7 +35,9 @@ OUTCOME_NONE_UNSUPPORTED
 
 OUTCOME_NONE_CLARIFICATION
 - The task could be completed with existing capabilities, but required input is missing, ambiguous, or cannot be safely inferred.
-- Examples: missing identity, unclear target file, multiple possible matches, missing recipient details.
+    Examples: missing identity, unclear target file, multiple possible matches, missing recipient details.
+- The task contains conflicting requirments or contradictions, which should be clarified
+    Examples: two files give mandatory instructions to do different things, which cannot be done simultaniously (mutually exclusive actions)
 
 OUTCOME_OK
 - The task was completed successfully.
@@ -51,13 +57,19 @@ Rules:
 - Use `OUTCOME_DENIED_SECURITY` for security denial, `OUTCOME_NONE_CLARIFICATION` when more info is required, `OUTCOME_NONE_UNSUPPORTED` when the task cannot be supported under the rules, `OUTCOME_ERR_INTERNAL` for agent/runtime failure, and `OUTCOME_OK` only when the task was completed
 
 # Response/answer/message formulation
-- you need to carefully consider how to formulate response/anser
+- you need to carefully consider how to formulate the response/answer
 - look for any rules/recommendations in instructions on how to formulate response/answer
-- follow these rules/recommendations strictly (verbatim literal exection)
+- follow these rules/recommendations strictly (verbatim literal execution)
 
 # Response/answer/message format and wording
-- if task or instruction/rule require specific answer format (number, 2 words, status from predifined list etc) - **you should literally follow that**
-- if response/answer format and wording is requested - do not use descriptive answer, do not add comments and notes. literally follow requested format
-- if now specific format is set - use your expertise to formulate final message
+- if the task or instruction/rule requires a specific answer format (number, 2 words, status from a predefined list, etc.) - **you should literally follow that**
+- if a response/answer format and wording is requested - do not use a descriptive answer, and do not add comments or notes. Literally follow the requested format
+- if no specific format is set - use your expertise to formulate the final message
 
-"""
+# EXECT TASK WORDING
+- when evaluation the task status result (final outcome) you should consider only task formulation
+- e.g. when task is review emails: if emails were reviewed - task should be consider as `OUTCOME_OK`, since technically task is done. result of reviewing emails is not matter here
+
+Return only JSON matching this schema:
+{RESPONSE_DECISION_SCHEMA_JSON}
+""".strip()
