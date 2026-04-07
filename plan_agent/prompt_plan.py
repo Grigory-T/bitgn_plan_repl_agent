@@ -40,9 +40,10 @@ READ AND COMPLY WITH RELEVANT INSTRUCTIONS, RULES, PRINCIPLES (VERBATIM MEANING)
     logical/common sense adequacy - if task is agains the clear logic - ask for clarification or deny (abort processing)
     etc
 
-# Date and time related questions
-- all date and time information should be from files/documents only
+# Current date and time related questions
+- current date and time information should be from files/documents only
 - do not use bash command line to determine current date and time
+- current date and time could be unusual (in the far past or future), it is normal for tha task
 
 # Input and Output variables
 - Each step should contain description and step variables: input_variables and output_variables
@@ -64,8 +65,6 @@ READ AND COMPLY WITH RELEVANT INSTRUCTIONS, RULES, PRINCIPLES (VERBATIM MEANING)
 
 
 DECISION_PROMPT = f"""
-current date: {datetime.datetime.now().strftime("%Y-%m-%d")}
-
 You are evaluating the progress of a task execution and deciding what to do next.
 
 ## Original Task
@@ -79,9 +78,9 @@ You are evaluating the progress of a task execution and deciding what to do next
 
 ## Decision Options
 - "continue": Move to the next planned step
-- "abort": Task cannot be completed, explain why (abort_reason)
+- "abort": Task cannot be completed, explain why (abort_reason). critical information is absent and we cannot obtain it using adequate efforts. critical functionality is absent and we cannot obtain it using adequate efforts.
 - "replan_remaining": when the current plan is not optimal anymore, provide reasons_for_replan_remaining_steps.
-- "task completed": when the task is completed successfully, explain why (final_answer)
+- "task completed": when the task is completed successfully (every required result is achieved, according to Original task wording), explain why (final_answer)
 
 Rules of replanning:
 - when new unexpected information is discovred - `replan_remaining` remaining steps.
@@ -90,21 +89,19 @@ Rules of replanning:
 - when a newly inspected file changes the interpretation of the task or reveals governing constraints, replan the remaining steps
 - when an inspected file points to additional governing runtime context that may change what is correct, replan unless that context has already been incorporated
 - when a step produced candidates but did not yet verify the real target, do not continue with irreversible actions until the plan is updated or the target is validated
-- if task is followint correct logic in general - `continue` with the plan.
+- if task is following correct logic in general - `continue` with the plan.
 - if `continue` - you should provide `task_continue_reason`, state shortly what was accomplished, and why this is inline with the initial plan.
-- aborting is used when:
-    task is completed successfully
-    critical information is absent and we cannot obtain it using adequate efforts
-    critical functionality is absent and we cannot obtain it using adequate efforts
-- "task completed": when the task is completed successfully, explain why (final_answer)
-- task could be completed successfully without completing all steps, if the steps are not necessary for the task completion (early termination is possible)
+
+# additionall instructions/rules/requirments for the task
+- very often step discover new instructions/rules/requirments from documents/files in workspace
+- instructions/rules/requirments should be incorportated to the plan (if they materially change steps logic and need separate processing)
+- if instructions/rules/requirments is trivial and very simple - you can 'continue'
+- if instructions/rules/requirments is normal/usuall - replan_remaining logic to schedule separate step to reliably achieve it
 
 """.strip()
 
 
 REPLAN_REMAINING_PROMPT = f"""
-current date: {datetime.datetime.now().strftime("%Y-%m-%d")}
-
 You are replanning the remaining steps of a task based on new information.
 
 ## Original Task

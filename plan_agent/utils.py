@@ -10,13 +10,21 @@ load_dotenv()
 
 LLM_REQUEST_TIMEOUT_SECONDS = 300
 
-LLM_MODEL_PLAN = "openai/gpt-4.1"
-LLM_MODEL_DECISION = "openai/gpt-4.1"
-LLM_MODEL_REPLAN = "openai/gpt-4.1"
-LLM_MODEL_RESPONSE = "openai/gpt-4.1"
+plan_model = "openai/gpt-5.4-mini:nitro"
+LLM_MODEL_PLAN = plan_model
+LLM_MODEL_DECISION = plan_model
+LLM_MODEL_REPLAN = plan_model
+LLM_MODEL_RESPONSE = plan_model
 
-LLM_MODEL_AGENT = "z-ai/glm-5-turbo:nitro"
+LLM_MODEL_AGENT = "openai/gpt-5.4-mini:nitro"
 
+# "z-ai/glm-5:nitro"
+# xiaomi/mimo-v2-pro
+# minimax/minimax-m2.7
+
+# "z-ai/glm-5-turbo:nitro"
+# z-ai/glm-5
+# "openai/gpt-4.1"
 # minimax/minimax-m2.7
 # openai/gpt-oss-120b:nitro
 # google/gemini-3-flash-preview
