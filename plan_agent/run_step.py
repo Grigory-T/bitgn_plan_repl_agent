@@ -10,7 +10,7 @@ from .log import _append_step_log, _append_reasoning, _write_log
 
 MAX_ITERATIONS_PER_STEP = 30
 INITIAL_TREE_MAX_CHARS = 6000
-MAX_EMPTY_LLM_REPLIES_PER_STEP = 20
+MAX_EMPTY_LLM_REPLIES_PER_STEP = 25
 MAX_TOTAL_EMPTY_LLM_REPLIES_PER_STEP = 60
 
 
@@ -18,6 +18,33 @@ def _truncate_for_prompt(text: str, limit: int = INITIAL_TREE_MAX_CHARS) -> str:
     if len(text) <= limit:
         return text
     return text[:limit].rstrip() + "\n... [truncated]"
+
+
+def _build_input_variables_code(current_step) -> str | None:
+    input_vars = current_step.input_variables or []
+    names: list[str] = []
+
+    if isinstance(input_vars, dict):
+        names = [name for name in input_vars.keys() if name]
+    else:
+        for var in input_vars:
+            name = getattr(var, "variable_name", "")
+            if name:
+                names.append(name)
+
+    if not names:
+        return None
+
+    quoted_names = ", ".join(repr(name) for name in names)
+    return f"""variable_names = [{quoted_names}]
+print("INPUT VARIABLES SNAPSHOT")
+for variable_name in variable_names:
+    print("=" * 80)
+    print(f"NAME: {{variable_name}}")
+    print(f"TYPE: {{type(globals().get(variable_name)).__name__}}")
+    print("VALUE:")
+    print(globals().get(variable_name))
+print("=" * 80)"""
 
 
 def _matches_literal_dtype(value: Any, dtype: Any) -> bool:
@@ -99,7 +126,7 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
     _append_step_log(messages_log, "system", system_prompt)
     _append_step_log(messages_log, "user", user_prompt)
 
-    initial_tree_code = "print(bitgn.tree('/'))"
+    initial_tree_code = "print(bitgn.tree_with_line_counts('/'))"
     initial_assistant_msg = f"<python>\n{initial_tree_code}\n</python>"
     messages.append({"role": "assistant", "content": initial_assistant_msg})
     _append_step_log(messages_log, "assistant 0", initial_assistant_msg)
@@ -117,6 +144,26 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
     )
     messages.append({"role": "user", "content": initial_block_result})
     _append_step_log(messages_log, "user 0", initial_block_result)
+
+    input_variables_code = _build_input_variables_code(current_step)
+    if input_variables_code:
+        initial_input_msg = f"<python>\n{input_variables_code}\n</python>"
+        messages.append({"role": "assistant", "content": initial_input_msg})
+        _append_step_log(messages_log, "assistant input", initial_input_msg)
+
+        input_variables_response = execute_python(input_variables_code)
+        input_result_parts = []
+        if input_variables_response.stdout:
+            input_result_parts.append(f"\n**STDOUT:**\n{input_variables_response.stdout}")
+        if input_variables_response.stderr:
+            input_result_parts.append(f"**STDERR:**\n{input_variables_response.stderr}")
+        input_block_result = (
+            "Code execution result:\n" + "\n\n".join(input_result_parts)
+            if input_result_parts
+            else "Code execution result: (no output)"
+        )
+        messages.append({"role": "user", "content": input_block_result})
+        _append_step_log(messages_log, "user input", input_block_result)
 
     completed_turns = 0
     empty_replies = 0
@@ -256,7 +303,7 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
 
                 'Do not include other code tags. Only one <python> block with two assignments.'
                 'All other **Output variables required** - should be set in separate python block.'
-                'So firstly set all required variables. Then in separate step assign final two variables: `step_status` and `final_answer`'
+                'So firstly set all required variables in separate step. Then in **separate** step assign final two variables: `step_status` and `final_answer`'
             )
             messages.append({"role": "user", "content": are_you_sure_msg})
             _append_step_log(messages_log, "user", are_you_sure_msg)

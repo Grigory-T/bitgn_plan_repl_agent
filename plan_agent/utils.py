@@ -11,13 +11,20 @@ load_dotenv()
 
 LLM_REQUEST_TIMEOUT_SECONDS = 300
 
+# plan_model = "openai/gpt-4.1:nitro"
 plan_model = "openai/gpt-5.4-mini:nitro"
+
 LLM_MODEL_PLAN = plan_model
 LLM_MODEL_DECISION = plan_model
 LLM_MODEL_REPLAN = plan_model
 LLM_MODEL_RESPONSE = plan_model
 
-LLM_MODEL_AGENT = "z-ai/glm-5:nitro"
+# LLM_MODEL_AGENT = "openai/gpt-oss-120b"
+LLM_MODEL_AGENT = "z-ai/glm-5.1:nitro"
+
+
+
+# "z-ai/glm-5:nitro"
 
 # "z-ai/glm-5:nitro"
 # xiaomi/mimo-v2-pro

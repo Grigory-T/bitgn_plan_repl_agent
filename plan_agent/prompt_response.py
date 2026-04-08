@@ -31,13 +31,16 @@ OUTCOME_DENIED_SECURITY
 OUTCOME_NONE_UNSUPPORTED
 - The task cannot be completed because the required capability does not exist in this system/workspace.
 - The blocker is functional, not informational.
-- Examples: no email mechanism, no browser/tool/API needed for the task, no supported way to perform the required action.
+    Examples: no email mechanism, no browser/tool/API needed for the task, no supported way to perform the required action, no relevant instruments.
+- This outcome should be chosen when task is understandable, but system/environment DOES NOT give instruments needed to complete task.
 
 OUTCOME_NONE_CLARIFICATION
 - The task could be completed with existing capabilities, but required input is missing, ambiguous, or cannot be safely inferred.
-    Examples: missing identity, unclear target file, multiple possible matches, missing recipient details.
+    Examples: missing files, missing identity, unclear target file, multiple possible matches, missing recipient details.
 - The task contains conflicting requirments or contradictions, which should be clarified
     Examples: two files give mandatory instructions to do different things, which cannot be done simultaniously (mutually exclusive actions)
+- The blocker is informational, not functional.
+- This outcome should be chosen when some info/data/files is missing, which prevents us from completing task.
 
 OUTCOME_OK
 - The task was completed successfully.

@@ -236,6 +236,51 @@ def tree(path: str = "/", level: int = 0) -> str:
     return "\n".join([root_label, *body])
 
 
+def _count_lines(text: str) -> int:
+    if not text:
+        return 0
+    return text.count("\n") + (0 if text.endswith("\n") else 1)
+
+
+def tree_with_line_counts(path: str = "/", level: int = 0) -> str:
+    result = tree_data(path=path, level=level)
+    root_label = _normalize_runtime_path(path)
+
+    if result.root.name and not result.root.is_dir and not result.root.children:
+        try:
+            file_text = read(root_label).content
+            return f"{root_label} [{_count_lines(file_text)}]"
+        except Exception:
+            return root_label
+
+    def _join_child_path(parent_path: str, child_name: str) -> str:
+        if parent_path == "/":
+            return _normalize_runtime_path(child_name)
+        return _normalize_runtime_path(f"{parent_path}/{child_name}")
+
+    def _walk(node: TreeNode, parent_path: str, depth: int) -> builtins.list[str]:
+        lines: builtins.list[str] = []
+        indent = "  " * depth
+        for child in sorted(node.children, key=lambda item: (not item.is_dir, item.name)):
+            child_path = _join_child_path(parent_path, child.name)
+            if child.is_dir:
+                lines.append(f"{indent}{child.name}/")
+            else:
+                try:
+                    line_count = _count_lines(read(child_path).content)
+                    lines.append(f"{indent}{child.name} [{line_count}]")
+                except Exception:
+                    lines.append(f"{indent}{child.name}")
+            if child.children:
+                lines.extend(_walk(child, child_path, depth + 1))
+        return lines
+
+    body = _walk(result.root, root_label, 1)
+    if not body:
+        return root_label
+    return "\n".join([root_label, *body])
+
+
 def find(name: str, root: str = "/", kind: Literal["all", "files", "dirs"] = "all", limit: int = 10) -> FindResult:
     type_value = {
         "all": FindRequest.TYPE_ALL,

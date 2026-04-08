@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -9,12 +10,17 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 
 os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
 sys.dont_write_bytecode = True
+load_dotenv()
 
 
-MAX_ATTEMPTS = 2
+LEADERBOARD_RUN_NAME = "key_concept:plan_repl_agent"
+DEFAULT_WORKERS = 10
+RUNS_DIR = Path(__file__).resolve().parent / "runs"
 
 
 def _score_text(score: float | None) -> str:
@@ -64,6 +70,62 @@ def build_parser() -> argparse.ArgumentParser:
         "--batch-id",
         help=argparse.SUPPRESS,
     )
+    parser.add_argument(
+        "--trial-id",
+        help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=DEFAULT_WORKERS,
+        help=f"Maximum number of task worker processes to run in parallel (default: {DEFAULT_WORKERS})",
+    )
+    return parser
+
+
+def build_lifecycle_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Manage BitGN PAC1 leaderboard runs in separate stages.")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    start_parser = subparsers.add_parser("start-run", help="Create a leaderboard run and store local run state")
+    start_parser.add_argument(
+        "--task-id",
+        required=True,
+        help="Task spec: one task (`t04` or `4`), comma list (`t01,t03,8`), or inclusive range (`1-5` or `t01-t05`)",
+    )
+    start_parser.add_argument(
+        "--benchmark-id",
+        default="bitgn/pac1-dev",
+        help="BitGN benchmark id",
+    )
+    start_parser.add_argument(
+        "--benchmark-host",
+        default=os.getenv("BENCHMARK_HOST", "https://api.bitgn.com"),
+        help="BitGN API host",
+    )
+
+    run_parser = subparsers.add_parser("run-tasks", help="Run a subset of tasks for an existing leaderboard run")
+    run_parser.add_argument("--run-id", required=True, help="Existing run id, or 'latest'")
+    run_parser.add_argument(
+        "--task-id",
+        help="Optional task subset to run. If omitted, runs all tasks not yet completed locally.",
+    )
+    run_parser.add_argument(
+        "--workers",
+        type=int,
+        default=DEFAULT_WORKERS,
+        help=f"Maximum number of task worker processes to run in parallel (default: {DEFAULT_WORKERS})",
+    )
+    run_parser.add_argument(
+        "-d",
+        "--debug-preflight-deny",
+        action="store_true",
+        help="Force preflight to deny so logs can be inspected without running the full agent flow",
+    )
+
+    end_parser = subparsers.add_parser("end-run", help="Submit a leaderboard run explicitly")
+    end_parser.add_argument("--run-id", required=True, help="Existing run id, or 'latest'")
+
     return parser
 
 
@@ -112,6 +174,24 @@ def _task_log_dir(task_id: str, batch_id: str):
     return _init_log_dir(task_id=task_id, batch_id=batch_id)
 
 
+def _batch_log_dir(batch_id: str):
+    from plan_agent.log import _init_log_dir
+
+    return _init_log_dir(batch_id=batch_id)
+
+
+def _run_dir(run_id: str) -> Path:
+    return RUNS_DIR / run_id
+
+
+def _run_state_path(run_id: str) -> Path:
+    return _run_dir(run_id) / "run_state.json"
+
+
+def _latest_run_path() -> Path:
+    return RUNS_DIR / "latest_run.txt"
+
+
 def _write_text(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content.rstrip() + "\n", encoding="utf-8")
@@ -121,6 +201,48 @@ def _append_text(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
         handle.write(content.rstrip() + "\n")
+
+
+def _write_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def _read_json(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _resolve_run_id(run_id: str) -> str:
+    if run_id != "latest":
+        return run_id
+    latest_path = _latest_run_path()
+    if not latest_path.exists():
+        raise FileNotFoundError("No latest run recorded.")
+    return latest_path.read_text(encoding="utf-8").strip()
+
+
+def _load_run_state(run_id: str) -> dict:
+    resolved_run_id = _resolve_run_id(run_id)
+    path = _run_state_path(resolved_run_id)
+    if not path.exists():
+        raise FileNotFoundError(f"Run state not found: {path}")
+    payload = _read_json(path)
+    payload["run_id"] = resolved_run_id
+    return payload
+
+
+def _save_run_state(state: dict) -> None:
+    run_id = state["run_id"]
+    _write_json(_run_state_path(run_id), state)
+    _write_text(_latest_run_path(), run_id)
+
+
+def _human_started_at() -> str:
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _print_command_started() -> None:
+    print(f"STARTED_AT {_human_started_at()}")
 
 
 def _write_runner_state(
@@ -292,6 +414,88 @@ def record_bitgn_evaluation(log_dir: Path, *, trial_id: str | None, score: float
         _write_text(task_result_path, updated)
 
 
+def _bitgn_api_key() -> str:
+    return (os.getenv("BITGN_API_KEY") or "").strip()
+
+
+def _leaderboard_mode_enabled() -> bool:
+    return bool(_bitgn_api_key())
+
+
+def _parse_task_result_summary(task_dir: Path) -> dict:
+    summary = {
+        "runner_exit": None,
+        "outcome": None,
+        "score": None,
+        "details": [],
+    }
+    task_result_path = task_dir / "task_result.txt"
+    if task_result_path.exists():
+        section = None
+        for raw_line in task_result_path.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if not line:
+                continue
+            if line == "Runner Exit":
+                section = "runner_exit"
+                continue
+            if line == "Final Outcome":
+                section = "outcome"
+                continue
+            if section == "runner_exit":
+                try:
+                    summary["runner_exit"] = int(line)
+                except ValueError:
+                    summary["runner_exit"] = None
+                section = None
+                continue
+            if section == "outcome":
+                summary["outcome"] = line
+                section = None
+                continue
+
+    evaluation_path = task_dir / "bitgn_evaluation.txt"
+    if evaluation_path.exists():
+        section = None
+        for raw_line in evaluation_path.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if not line:
+                continue
+            if line == "Score":
+                section = "score"
+                continue
+            if line == "Details":
+                section = "details"
+                continue
+            if line == "Trial ID":
+                section = None
+                continue
+            if section == "score":
+                try:
+                    summary["score"] = float(line)
+                except ValueError:
+                    summary["score"] = None
+                section = None
+                continue
+            if section == "details":
+                summary["details"].append(line)
+
+    return summary
+
+
+def _refresh_run_task_state(state: dict, task_id: str, batch_id: str) -> None:
+    task_dir = _task_log_dir(task_id, batch_id)
+    task_state = state["tasks"][task_id]
+    parsed = _parse_task_result_summary(task_dir)
+    task_state["last_batch_id"] = batch_id
+    task_state["last_finished_at"] = datetime.now().isoformat(timespec="seconds")
+    task_state["last_runner_exit"] = parsed["runner_exit"]
+    task_state["last_outcome"] = parsed["outcome"]
+    task_state["last_score"] = parsed["score"]
+    task_state["last_details"] = parsed["details"]
+    task_state["status"] = "completed" if parsed["runner_exit"] == 0 else "local_error"
+
+
 def _run_one_attempt(
     *,
     task_id: str,
@@ -300,9 +504,10 @@ def _run_one_attempt(
     debug_preflight_deny: bool,
     batch_id: str,
     attempt: int,
+    trial_id: str | None = None,
 ) -> int:
     from bitgn_sdk.harness_connect import HarnessServiceClientSync
-    from bitgn_sdk.harness_pb2 import EndTrialRequest, StartPlaygroundRequest
+    from bitgn_sdk.harness_pb2 import EndTrialRequest, StartPlaygroundRequest, StartTrialRequest
     from plan_agent.executor import initialize_runtime_globals, reset_persistent_globals
     from plan_agent.response import decide_response
     from plan_agent.run_agent import run_agent
@@ -332,24 +537,46 @@ def _run_one_attempt(
     proc_returncode = 0
     score = None
     score_details: list[str] = []
+    should_end_trial = False
 
     try:
-        trial = client.start_playground(
-            StartPlaygroundRequest(
-                benchmark_id=benchmark_id,
-                task_id=task_id,
+        if trial_id:
+            trial = client.start_trial(
+                StartTrialRequest(trial_id=trial_id)
             )
-        )
+            start_event = "start_trial"
+        else:
+            trial = client.start_playground(
+                StartPlaygroundRequest(
+                    benchmark_id=benchmark_id,
+                    task_id=task_id,
+                )
+            )
+            start_event = "start_playground"
         task_text = trial.instruction
         harness_url = trial.harness_url
         _append_attempt(
             log_dir,
             attempt=attempt,
-            event="start_playground",
+            event=start_event,
             details=f"trial_id={trial.trial_id}\nharness_url={trial.harness_url}",
         )
 
         os.environ["BITGN_HARNESS_URL"] = trial.harness_url
+        if debug_preflight_deny:
+            reset_persistent_globals()
+            initialize_runtime_globals()
+            bitgn_runtime.reset()
+            bitgn_runtime.configure(trial.harness_url)
+            agent_result = "Request denied at preflight: Forced preflight denial for debug logging mode."
+            final_message = "Request denied at preflight: Forced preflight denial for debug logging mode."
+            final_outcome = "OUTCOME_DENIED_SECURITY"
+            final_refs = []
+            (log_dir / "final_response.txt").write_text(final_message + "\n", encoding="utf-8")
+            bitgn_runtime.answer(final_message, final_outcome, final_refs)
+            should_end_trial = True
+            return proc_returncode
+
         if debug_preflight_deny:
             os.environ["BITGN_DEBUG_PREFLIGHT_DENY"] = "1"
         else:
@@ -379,6 +606,7 @@ def _run_one_attempt(
 
         if response.should_submit_to_bitgn:
             bitgn_runtime.answer(final_message, final_outcome, final_refs)
+        should_end_trial = True
 
     except Exception as exc:
         proc_returncode = 1
@@ -392,19 +620,9 @@ def _run_one_attempt(
             event="error",
             details=agent_result,
         )
-        if trial is not None:
-            try:
-                bitgn_runtime.answer(final_message, final_outcome, final_refs)
-            except Exception as submit_exc:
-                _append_attempt(
-                    log_dir,
-                    attempt=attempt,
-                    event="internal_error_submit_failed",
-                    details=str(submit_exc),
-                )
     finally:
         elapsed_seconds = time.monotonic() - started_monotonic
-        if trial is not None:
+        if trial is not None and should_end_trial:
             try:
                 result = client.end_trial(EndTrialRequest(trial_id=trial.trial_id))
                 score = result.score if result.HasField("score") else None
@@ -418,6 +636,14 @@ def _run_one_attempt(
                     event="end_trial_failed",
                     details=str(end_exc),
                 )
+        elif trial is not None and proc_returncode != 0:
+            score_details = ["trial not ended; rerun manually"]
+            _append_attempt(
+                log_dir,
+                attempt=attempt,
+                event="trial_left_open",
+                details="Runner failed before final submission; trial was left open for manual rerun.",
+            )
 
         write_task_result(
             log_dir,
@@ -466,33 +692,27 @@ def _worker_main(args: argparse.Namespace) -> int:
 
     task_id = task_ids[0]
     batch_id = args.batch_id or datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_dir = _task_log_dir(task_id, batch_id)
-
-    last_returncode = 1
-    for attempt in range(1, MAX_ATTEMPTS + 1):
-        returncode = _run_one_attempt(
-            task_id=task_id,
-            benchmark_id=args.benchmark_id,
-            benchmark_host=args.benchmark_host,
-            debug_preflight_deny=args.debug_preflight_deny,
-            batch_id=batch_id,
-            attempt=attempt,
-        )
-        last_returncode = returncode
-        if returncode == 0:
-            return 0
-        if attempt < MAX_ATTEMPTS:
-            _append_attempt(
-                log_dir,
-                attempt=attempt,
-                event="retry_scheduled",
-                details=f"retrying task after runner error; next_attempt={attempt + 1}",
-            )
-
-    return last_returncode
+    return _run_one_attempt(
+        task_id=task_id,
+        benchmark_id=args.benchmark_id,
+        benchmark_host=args.benchmark_host,
+        debug_preflight_deny=args.debug_preflight_deny,
+        batch_id=batch_id,
+        attempt=1,
+        trial_id=args.trial_id,
+    )
 
 
-def _spawn_worker(script_path: Path, args: argparse.Namespace, task_id: str, batch_id: str) -> subprocess.Popen:
+def _spawn_worker(
+    *,
+    script_path: Path,
+    task_id: str,
+    batch_id: str,
+    benchmark_id: str,
+    benchmark_host: str,
+    debug_preflight_deny: bool,
+    trial_id: str | None = None,
+) -> subprocess.Popen:
     cmd = [
         sys.executable,
         str(script_path),
@@ -500,13 +720,15 @@ def _spawn_worker(script_path: Path, args: argparse.Namespace, task_id: str, bat
         "--task-id",
         task_id,
         "--benchmark-id",
-        args.benchmark_id,
+        benchmark_id,
         "--benchmark-host",
-        args.benchmark_host,
+        benchmark_host,
         "--batch-id",
         batch_id,
     ]
-    if args.debug_preflight_deny:
+    if trial_id:
+        cmd.extend(["--trial-id", trial_id])
+    if debug_preflight_deny:
         cmd.append("--debug-preflight-deny")
 
     env = os.environ.copy()
@@ -521,23 +743,429 @@ def _spawn_worker(script_path: Path, args: argparse.Namespace, task_id: str, bat
     )
 
 
+def _task_trial_map_for_run(benchmark_host: str, benchmark_id: str, task_ids: list[str], api_key: str, batch_id: str) -> tuple[str, dict[str, str]]:
+    from bitgn_sdk.harness_connect import HarnessServiceClientSync
+    from bitgn_sdk.harness_pb2 import GetRunRequest, StartRunRequest
+
+    client = HarnessServiceClientSync(benchmark_host)
+    run = client.start_run(
+        StartRunRequest(
+            benchmark_id=benchmark_id,
+            name=LEADERBOARD_RUN_NAME,
+            api_key=api_key,
+        )
+    )
+    run_info = client.get_run(GetRunRequest(run_id=run.run_id))
+    trial_map = {
+        trial.task_id: trial.trial_id
+        for trial in run_info.trials
+        if trial.task_id in task_ids
+    }
+    missing = [task_id for task_id in task_ids if task_id not in trial_map]
+    if missing:
+        raise RuntimeError(f"Missing prepared trials for tasks: {', '.join(missing)}")
+    return run.run_id, trial_map
+
+
+def _submit_run(benchmark_host: str, run_id: str) -> None:
+    from bitgn_sdk.harness_connect import HarnessServiceClientSync
+    from bitgn_sdk.harness_pb2 import SubmitRunRequest
+
+    client = HarnessServiceClientSync(benchmark_host)
+    client.submit_run(SubmitRunRequest(run_id=run_id, force=True))
+
+
+def _force_submit_unfinished_tasks(state: dict) -> list[str]:
+    from bitgn_sdk.harness_connect import HarnessServiceClientSync
+    from bitgn_sdk.harness_pb2 import EndTrialRequest, StartTrialRequest
+    import bitgn_runtime
+
+    unfinished = [
+        task_id
+        for task_id in state["task_ids"]
+        if state["tasks"][task_id]["status"] != "completed"
+    ]
+    if not unfinished:
+        return []
+
+    client = HarnessServiceClientSync(state["benchmark_host"])
+    finalized: list[str] = []
+    message = "Task was not completed during manual execution; submitting a conservative denial at end-run."
+    timestamp = datetime.now().isoformat(timespec="seconds")
+
+    for task_id in unfinished:
+        task_state = state["tasks"][task_id]
+        trial = client.start_trial(StartTrialRequest(trial_id=task_state["trial_id"]))
+        bitgn_runtime.reset()
+        bitgn_runtime.configure(trial.harness_url)
+        bitgn_runtime.answer(message, "OUTCOME_DENIED_SECURITY", [])
+        result = client.end_trial(EndTrialRequest(trial_id=trial.trial_id))
+
+        task_state["status"] = "completed"
+        task_state["last_started_at"] = task_state.get("last_started_at") or timestamp
+        task_state["last_finished_at"] = timestamp
+        task_state["last_runner_exit"] = 0
+        task_state["last_outcome"] = "OUTCOME_DENIED_SECURITY"
+        task_state["last_score"] = result.score if result.HasField("score") else None
+        task_state["last_details"] = list(result.score_detail)
+        finalized.append(task_id)
+
+    return finalized
+
+
+def _write_batch_runner_state(
+    batch_dir: Path,
+    *,
+    batch_id: str,
+    benchmark_id: str,
+    workers: int,
+    mode: str,
+    total_tasks: int,
+    pending_tasks: list[str],
+    running_tasks: list[str],
+    finished_tasks: list[str],
+    run_id: str | None = None,
+) -> None:
+    lines = [
+        "Batch ID",
+        batch_id,
+        "",
+        "Benchmark ID",
+        benchmark_id,
+        "",
+        "Mode",
+        mode,
+        "",
+        "Workers",
+        str(workers),
+        "",
+        "Run ID",
+        run_id or "(none)",
+        "",
+        "Total Tasks",
+        str(total_tasks),
+        "",
+        "Pending Tasks",
+    ]
+    lines.extend(pending_tasks or ["(none)"])
+    lines.extend([
+        "",
+        "Running Tasks",
+    ])
+    lines.extend(running_tasks or ["(none)"])
+    lines.extend([
+        "",
+        "Finished Tasks",
+    ])
+    if finished_tasks:
+        for task_id in finished_tasks:
+            lines.append(_format_finished_task_summary(batch_dir, task_id))
+    else:
+        lines.append("(none)")
+    _write_text(batch_dir / "batch_runner_state.txt", "\n".join(lines))
+
+
+def _format_finished_task_summary(batch_dir: Path, task_id: str) -> str:
+    task_dir = batch_dir / task_id
+    evaluation_path = task_dir / "bitgn_evaluation.txt"
+    if not evaluation_path.exists():
+        return f"{task_id} | score=none | details=(pending)"
+
+    score = "none"
+    details: list[str] = []
+    section = None
+    for raw_line in evaluation_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        if line == "Score":
+            section = "score"
+            continue
+        if line == "Details":
+            section = "details"
+            continue
+        if line == "Trial ID":
+            section = None
+            continue
+        if section == "score":
+            score = line
+            section = None
+            continue
+        if section == "details":
+            details.append(line)
+
+    details_text = "; ".join(details) if details else "(none)"
+    return f"{task_id} | score={score} | details={details_text}"
+
+
+def _run_worker_pool(
+    *,
+    script_path: Path,
+    benchmark_id: str,
+    benchmark_host: str,
+    debug_preflight_deny: bool,
+    workers: int,
+    task_ids: list[str],
+    batch_id: str,
+    trial_map: dict[str, str],
+    run_id: str | None,
+    run_state: dict | None = None,
+) -> int:
+    batch_dir = _batch_log_dir(batch_id)
+    worker_count = max(1, min(workers, len(task_ids)))
+    pending_tasks = list(task_ids)
+    active: list[tuple[str, subprocess.Popen]] = []
+    exit_codes: dict[str, int] = {}
+
+    _write_batch_runner_state(
+        batch_dir,
+        batch_id=batch_id,
+        benchmark_id=benchmark_id,
+        workers=worker_count,
+        mode="leaderboard" if run_id else "playground",
+        total_tasks=len(task_ids),
+        pending_tasks=pending_tasks,
+        running_tasks=[],
+        finished_tasks=[],
+        run_id=run_id,
+    )
+
+    while pending_tasks or active:
+        while pending_tasks and len(active) < worker_count:
+            task_id = pending_tasks.pop(0)
+            if run_state is not None:
+                task_state = run_state["tasks"][task_id]
+                task_state["status"] = "running"
+                task_state["last_batch_id"] = batch_id
+                task_state["last_started_at"] = datetime.now().isoformat(timespec="seconds")
+                _save_run_state(run_state)
+            process = _spawn_worker(
+                script_path=script_path,
+                task_id=task_id,
+                batch_id=batch_id,
+                benchmark_id=benchmark_id,
+                benchmark_host=benchmark_host,
+                debug_preflight_deny=debug_preflight_deny,
+                trial_id=trial_map.get(task_id),
+            )
+            active.append((task_id, process))
+
+        still_active: list[tuple[str, subprocess.Popen]] = []
+        for task_id, process in active:
+            returncode = process.poll()
+            if returncode is None:
+                still_active.append((task_id, process))
+                continue
+            exit_codes[task_id] = returncode
+            if run_state is not None:
+                _refresh_run_task_state(run_state, task_id, batch_id)
+                _save_run_state(run_state)
+        active = still_active
+
+        _write_batch_runner_state(
+            batch_dir,
+            batch_id=batch_id,
+            benchmark_id=benchmark_id,
+            workers=worker_count,
+            mode="leaderboard" if run_id else "playground",
+            total_tasks=len(task_ids),
+            pending_tasks=pending_tasks,
+            running_tasks=[task_id for task_id, _ in active],
+            finished_tasks=list(exit_codes.keys()),
+            run_id=run_id,
+        )
+
+        if pending_tasks or active:
+            time.sleep(0.5)
+
+    return max(exit_codes.values(), default=0)
+
+
 def _parent_main(args: argparse.Namespace) -> int:
     task_ids = parse_task_spec(args.task_id)
     batch_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     script_path = Path(__file__).resolve()
+    run_id = None
+    trial_map: dict[str, str] = {}
 
-    processes = [_spawn_worker(script_path, args, task_id, batch_id) for task_id in task_ids]
-    exit_codes = [process.wait() for process in processes]
-    return max(exit_codes, default=0)
+    if _leaderboard_mode_enabled():
+        run_id, trial_map = _task_trial_map_for_run(
+            benchmark_host=args.benchmark_host,
+            benchmark_id=args.benchmark_id,
+            task_ids=task_ids,
+            api_key=_bitgn_api_key(),
+            batch_id=batch_id,
+        )
+
+    try:
+        return _run_worker_pool(
+            script_path=script_path,
+            benchmark_id=args.benchmark_id,
+            benchmark_host=args.benchmark_host,
+            debug_preflight_deny=args.debug_preflight_deny,
+            workers=args.workers,
+            task_ids=task_ids,
+            batch_id=batch_id,
+            trial_map=trial_map,
+            run_id=run_id,
+        )
+    finally:
+        if run_id:
+            _submit_run(args.benchmark_host, run_id)
 
 
-def main() -> int:
+def _start_run_command(args: argparse.Namespace) -> int:
+    _print_command_started()
+    task_ids = parse_task_spec(args.task_id)
+    api_key = _bitgn_api_key()
+    if not api_key:
+        raise RuntimeError("BITGN_API_KEY is required for start-run.")
+
+    batch_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+    run_id, trial_map = _task_trial_map_for_run(
+        benchmark_host=args.benchmark_host,
+        benchmark_id=args.benchmark_id,
+        task_ids=task_ids,
+        api_key=api_key,
+        batch_id=batch_id,
+    )
+
+    state = {
+        "run_id": run_id,
+        "benchmark_id": args.benchmark_id,
+        "benchmark_host": args.benchmark_host,
+        "run_name": LEADERBOARD_RUN_NAME,
+        "created_at": datetime.now().isoformat(timespec="seconds"),
+        "submitted_at": None,
+        "status": "open",
+        "task_ids": task_ids,
+        "tasks": {
+            task_id: {
+                "trial_id": trial_map[task_id],
+                "status": "pending",
+                "last_batch_id": None,
+                "last_started_at": None,
+                "last_finished_at": None,
+                "last_runner_exit": None,
+                "last_outcome": None,
+                "last_score": None,
+                "last_details": [],
+            }
+            for task_id in task_ids
+        },
+    }
+    _save_run_state(state)
+    run_dir = _run_dir(run_id)
+    _write_text(
+        run_dir / "run_summary.txt",
+        "\n".join(
+            [
+                f"Run ID: {run_id}",
+                f"Benchmark ID: {args.benchmark_id}",
+                f"Run Name: {LEADERBOARD_RUN_NAME}",
+                f"Tasks: {', '.join(task_ids)}",
+            ]
+        ),
+    )
+    print(f"RUN_ID {run_id}")
+    print(f"RUN_STATE {run_dir / 'run_state.json'}")
+    return 0
+
+
+def _tasks_to_run_from_state(state: dict, task_spec: str | None) -> list[str]:
+    if task_spec:
+        requested = parse_task_spec(task_spec)
+        missing = [task_id for task_id in requested if task_id not in state["tasks"]]
+        if missing:
+            raise ValueError(f"Tasks not present in run {state['run_id']}: {', '.join(missing)}")
+        return requested
+
+    return [
+        task_id
+        for task_id in state["task_ids"]
+        if state["tasks"][task_id]["status"] != "completed"
+    ]
+
+
+def _run_tasks_command(args: argparse.Namespace) -> int:
+    _print_command_started()
+    state = _load_run_state(args.run_id)
+    if state.get("submitted_at"):
+        raise RuntimeError(f"Run {state['run_id']} is already submitted.")
+
+    task_ids = _tasks_to_run_from_state(state, args.task_id)
+    if not task_ids:
+        print(f"RUN_ID {state['run_id']}")
+        print("TASKS none")
+        return 0
+
+    batch_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+    script_path = Path(__file__).resolve()
+    trial_map = {task_id: state["tasks"][task_id]["trial_id"] for task_id in task_ids}
+    print(f"RUN_ID {state['run_id']}")
+    print(f"BATCH_ID {batch_id}")
+    print(f"TASKS {','.join(task_ids)}")
+
+    return _run_worker_pool(
+        script_path=script_path,
+        benchmark_id=state["benchmark_id"],
+        benchmark_host=state["benchmark_host"],
+        debug_preflight_deny=args.debug_preflight_deny,
+        workers=args.workers,
+        task_ids=task_ids,
+        batch_id=batch_id,
+        trial_map=trial_map,
+        run_id=state["run_id"],
+        run_state=state,
+    )
+
+
+def _end_run_command(args: argparse.Namespace) -> int:
+    _print_command_started()
+    state = _load_run_state(args.run_id)
+    if state.get("submitted_at"):
+        print(f"RUN_ID {state['run_id']}")
+        print(f"SUBMITTED_AT {state['submitted_at']}")
+        return 0
+    finalized = _force_submit_unfinished_tasks(state)
+    _submit_run(state["benchmark_host"], state["run_id"])
+    state["submitted_at"] = datetime.now().isoformat(timespec="seconds")
+    state["status"] = "submitted"
+    _save_run_state(state)
+    print(f"RUN_ID {state['run_id']}")
+    if finalized:
+        print(f"FORCE_SUBMITTED_TASKS {','.join(finalized)}")
+    print(f"SUBMITTED_AT {state['submitted_at']}")
+    return 0
+
+
+def _main_legacy(argv: list[str]) -> int:
     parser = build_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.worker_mode:
         return _worker_main(args)
     return _parent_main(args)
+
+
+def _main_lifecycle(argv: list[str]) -> int:
+    parser = build_lifecycle_parser()
+    args = parser.parse_args(argv)
+    if args.command == "start-run":
+        return _start_run_command(args)
+    if args.command == "run-tasks":
+        return _run_tasks_command(args)
+    if args.command == "end-run":
+        return _end_run_command(args)
+    raise ValueError(f"Unsupported command: {args.command}")
+
+
+def main() -> int:
+    lifecycle_commands = {"start-run", "run-tasks", "end-run"}
+    argv = sys.argv[1:]
+    if argv and argv[0] in lifecycle_commands:
+        return _main_lifecycle(argv)
+    return _main_legacy(argv)
 
 
 if __name__ == "__main__":
