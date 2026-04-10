@@ -31,7 +31,7 @@ Environment loading notes:
 - you can still override a value inline for one command, for example:
 
 ```bash
-BITGN_API_KEY= .venv/bin/python3 run_bitgn_task.py --task-id t22 --benchmark-id bitgn/pac1-dev
+BITGN_API_KEY= .venv/bin/python3 run_bitgn_task.py --task-id t22 --benchmark-id bitgn/pac1-prod
 ```
 
 Important env vars:
@@ -67,28 +67,33 @@ and then runs a remote syntax check on `bitgn`.
 ```bash
 cd /home/linuxuser/bitgn/plan_repl_agent
 ./setup_venv.sh
-.venv/bin/python3 run_bitgn_task.py start-run --task-id t01-t40 --benchmark-id bitgn/pac1-dev
+.venv/bin/python3 run_bitgn_task.py start-run --task-id t01-t40 --benchmark-id bitgn/pac1-prod
 ```
 
 Recommended staged flow:
 
 ```bash
-.venv/bin/python3 run_bitgn_task.py start-run --task-id t01-t40 --benchmark-id bitgn/pac1-dev
+.venv/bin/python3 run_bitgn_task.py start-run --task-id t01-t40 --benchmark-id bitgn/pac1-prod
 .venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t01-t10 --workers 10
 .venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t11-t20 --workers 10
 .venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t14,t18,t19 --workers 3
+.venv/bin/python3 run_bitgn_task.py status --run-id latest
 .venv/bin/python3 run_bitgn_task.py end-run --run-id latest
 ```
 
 Notes:
 
 - `start-run` requires `BITGN_API_KEY`
+- for production, switch only `--benchmark-id` to `bitgn/pac1-prod`
+- the runner tolerates missing score/details fields and waits for prepared trials before starting task workers
 - `run-tasks` and `end-run` operate on the durable local run state in `runs/`
 - `run-tasks` does not submit the run automatically
+- `status` is read-only and does not change BitGN state or local task state
 - `end-run` submits the run explicitly
 - if `end-run` finds tasks that are still not completed locally, it force-submits them with:
   - outcome: `OUTCOME_DENIED_SECURITY`
   - refs: empty
+  - this is an intentional conservative fallback for any still-unanswered tasks
 - all staged commands print a human-readable `STARTED_AT ...` line
 - `start-run` prints:
   - `RUN_ID ...`
@@ -97,9 +102,9 @@ Notes:
 Legacy one-shot mode still exists:
 
 ```bash
-.venv/bin/python3 run_bitgn_task.py --task-id t08 --benchmark-id bitgn/pac1-dev
-.venv/bin/python3 run_bitgn_task.py --task-id t01,t03,t05 --benchmark-id bitgn/pac1-dev --workers 10
-.venv/bin/python3 run_bitgn_task.py --task-id t01-t05 --benchmark-id bitgn/pac1-dev --workers 10
+.venv/bin/python3 run_bitgn_task.py --task-id t08 --benchmark-id bitgn/pac1-prod
+.venv/bin/python3 run_bitgn_task.py --task-id t01,t03,t05 --benchmark-id bitgn/pac1-prod --workers 10
+.venv/bin/python3 run_bitgn_task.py --task-id t01-t05 --benchmark-id bitgn/pac1-prod --workers 10
 ```
 
 One-shot mode selection:
@@ -110,8 +115,8 @@ One-shot mode selection:
 Examples:
 
 ```bash
-.venv/bin/python3 run_bitgn_task.py --task-id t22 --benchmark-id bitgn/pac1-dev
-BITGN_API_KEY= .venv/bin/python3 run_bitgn_task.py --task-id t22 --benchmark-id bitgn/pac1-dev
+.venv/bin/python3 run_bitgn_task.py --task-id t22 --benchmark-id bitgn/pac1-prod
+BITGN_API_KEY= .venv/bin/python3 run_bitgn_task.py --task-id t22 --benchmark-id bitgn/pac1-prod
 ```
 
 Debug mode:
@@ -214,7 +219,8 @@ Recommended stable model:
 
 1. `start-run`
 2. `run-tasks`
-3. `end-run`
+3. `status`
+4. `end-run`
 
 Behavior:
 
@@ -229,6 +235,10 @@ Behavior:
   - can be repeated manually
   - if `--task-id` is omitted, it runs all tasks not yet completed locally
   - does not submit the run automatically
+- `status`
+  - reads the current local run state
+  - reports pending, running, completed, and local-error tasks
+  - does not change any task or BitGN state
 - `end-run`
   - submits the run explicitly
   - does not execute tasks
