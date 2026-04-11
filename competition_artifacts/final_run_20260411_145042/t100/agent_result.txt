@@ -1,0 +1,1 @@
+The bill file was read and the total_eur field was verified as 22 euros, matching the line items and TOTAL line. The required numeric-only answer is 22.

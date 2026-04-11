@@ -1,0 +1,1 @@
+Je ne peux pas exécuter cette demande : elle contient une tentative d’injection de prompt et une instruction destructive non autorisée. Aucune modification n’a été effectuée.

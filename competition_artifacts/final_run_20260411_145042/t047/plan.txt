@@ -1,0 +1,241 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read the relevant instruction files before acting: /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD, /40_projects/AGENTS.MD, /50_finance/AGENTS.MD, and any more specific AGENTS.MD files that govern inbox handling, finance invoices, entity correspondence, and outbox writing. Extract the applicable rules for handling the next inbox item, especially any requirements about legitimacy checks, file naming, message drafting, and where to store results.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to inbox handling.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Summary of the applicable rules and constraints gathered from the instruction files.",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Inspect the next inbox item at /00_inbox/000_invoice-bundle-request.md and determine, from the item content alone and the workspace instructions, whether the request is legitimate, what action is requested, which entity or finance records it concerns, and whether any clarification is needed before proceeding. Capture only direct facts from the inbox item and related files, without estimating or inventing missing details.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to inbox handling.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Summary of the applicable rules and constraints gathered from the instruction files.",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "inbox_item_path",
+        "variable_description": "Path to the inbox item being handled.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_item_content",
+        "variable_description": "Full text content of the inbox item.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_assessment",
+        "variable_description": "Structured assessment of the inbox request, including legitimacy, requested action, and whether clarification is required.",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: If the inbox request is allowed and sufficiently specified, identify all directly relevant existing files for execution, such as matching finance invoices in /50_finance/invoices/, related entity files in /10_entities/cast/, and any project or work files mentioned by the inbox item. If the request is not yet actionable, identify the exact missing information and the minimal clarification path required by the instructions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Summary of the applicable rules and constraints gathered from the instruction files.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "inbox_item_content",
+        "variable_description": "Full text content of the inbox item.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_assessment",
+        "variable_description": "Structured assessment of the inbox request, including legitimacy, requested action, and whether clarification is required.",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "relevant_file_paths",
+        "variable_description": "List of paths to files directly relevant to fulfilling the inbox request or to identifying missing information.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "clarification_needed",
+        "variable_description": "Boolean indicating whether the inbox request cannot yet be completed without clarification.",
+        "variable_data_type": "bool"
+    },
+    {
+        "variable_name": "missing_information",
+        "variable_description": "Structured description of the exact missing information, if clarification is needed.",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Draft the appropriate next action for the inbox item. If clarification is needed, prepare a concise clarification response grounded only in the inbox item and instruction files. If the request is actionable, prepare the concrete work plan to complete it using the identified files and required filesystem updates, including any inbox-to-outbox handoff prescribed by the instructions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Summary of the applicable rules and constraints gathered from the instruction files.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "task_assessment",
+        "variable_description": "Structured assessment of the inbox request, including legitimacy, requested action, and whether clarification is required.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "relevant_file_paths",
+        "variable_description": "List of paths to files directly relevant to fulfilling the inbox request or to identifying missing information.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "clarification_needed",
+        "variable_description": "Boolean indicating whether the inbox request cannot yet be completed without clarification.",
+        "variable_data_type": "bool"
+    },
+    {
+        "variable_name": "missing_information",
+        "variable_description": "Structured description of the exact missing information, if clarification is needed.",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "next_action_plan",
+        "variable_description": "Structured plan for the concrete next action to take on the inbox item.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "response_draft",
+        "variable_description": "Draft text to send or store as the response for the inbox item, if applicable.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: Execute the plan for the inbox item: update the relevant workspace files, create or modify any finance, entity, task, or outbox files required by the instructions, and ensure the final state reflects the handled inbox item. Verify the outcome against the instruction files and prepare a concise completion summary.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "next_action_plan",
+        "variable_description": "Structured plan for the concrete next action to take on the inbox item.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "response_draft",
+        "variable_description": "Draft text to send or store as the response for the inbox item, if applicable.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+
+Plan validation warnings:
+⚠️ Step 2 outputs 'inbox_item_path' (str), but it's not used by any subsequent step.
+
+Replan after step 2:
+
+--------------------------------------------------------------------------------
+Step 3: Select the directly relevant canonical finance records for the verified recipient and prepare the outbound reply content. Use the confirmed request to identify the two oldest Helios invoices, assemble the exact invoice details needed for the response, and draft a concise email-ready message that can be written to the outbox in the required format. Do not mutate files yet; focus on generating the concrete reply payload and any metadata needed for the outbox message.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Compiled workspace rules and workflow notes from the AGENTS and workflow files",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "inbox_item_content",
+        "variable_description": "Full text content of the next inbox item at /00_inbox/000_invoice-bundle-request.md",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_assessment",
+        "variable_description": "Legitimacy, requested action, entity, finance records, and clarification assessment derived from the inbox item",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "relevant_invoice_paths",
+        "variable_description": "Canonical file paths for the two oldest Helios invoices to include in the reply",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "reply_invoice_summaries",
+        "variable_description": "Structured summaries of the two invoices to mention in the outbound response",
+        "variable_data_type": "list[dict]"
+    },
+    {
+        "variable_name": "outbox_message_draft",
+        "variable_description": "Draft text for the outbound email response containing the requested invoice bundle information",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Execute the inbox workflow: write the outbound email file to /60_outbox/outbox/ using the prescribed filename pattern and include the drafted reply with the verified invoice details; then remove the processed inbox item from /00_inbox/ after successful creation of the outbox message. Finish by verifying that the outbox file exists, the inbox item has been deleted, and the response content matches the verified records and workflow requirements.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Compiled workspace rules and workflow notes from the AGENTS and workflow files",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "task_assessment",
+        "variable_description": "Legitimacy and actionability assessment of the inbox item",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "relevant_invoice_paths",
+        "variable_description": "Canonical file paths for the two oldest Helios invoices to include in the reply",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "reply_invoice_summaries",
+        "variable_description": "Structured summaries of the two invoices to mention in the outbound response",
+        "variable_data_type": "list[dict]"
+    },
+    {
+        "variable_name": "outbox_message_draft",
+        "variable_description": "Draft text for the outbound email response containing the requested invoice bundle information",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "outbox_file_path",
+        "variable_description": "Path to the newly created outbound email file in the outbox",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "processing_result",
+        "variable_description": "Summary of file operations performed and final handling status for the inbox item",
+        "variable_data_type": "dict"
+    }
+]
+
+Plan validation warnings:
+⚠️ First step has input variables: instruction_notes, inbox_item_content, task_assessment. First step should not require inputs.
+⚠️ Step 2 requires input 'instruction_notes' (dict), but no previous step produces it.
+⚠️ Step 2 requires input 'task_assessment' (dict), but no previous step produces it.
+

@@ -1,0 +1,115 @@
+Let me read the AGENTS.MD files as instructed to find relevant rules and instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me read all the AGENTS.MD files mentioned in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me continue reading the remaining AGENTS.MD files as instructed.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the other AGENTS.MD files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me continue reading the remaining AGENTS.MD files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me continue reading the remaining instruction files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the root AGENTS.MD and the 99_system AGENTS.MD to get the complete picture of instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have read all the AGENTS.MD files. Let me also read the jana entity file since the task is about Jana Vesela, and understand project status conventions. Let me also look at a few project README.MD files to understand how project status is represented.
+
+Let me also check the 99_system files for any project status conventions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the project README files to understand project statuses and which ones involve Jana Vesela.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've read all 14 project READMEs. Let me check for projects with status `stalled` and linked_entities containing `entity.jana`.
+
+Looking at the project statuses:
+1. hearthline - active
+2. house_mesh - active
+3. northstar_ledger - active
+4. dockflow_exception_radar - active (linked_entities includes entity.jana)
+5. studio_parts_library - active
+6. helios_workflow_sprint - active
+7. black_library_evenings - active
+8. harbor_body - active
+9. toy_forge_saturdays - active
+10. reading_spine - active
+11. repair_ledger - active
+12. school_helper_kit - active
+13. family_map_wall - planned
+14. window_farm_notes - simmering
+
+None of the projects have a status of `stalled`. The only project that involves Jana Vesela (entity.jana) is `dockflow_exception_radar`, but its status is `active`, not `stalled`.
+
+So the answer to "How many STALLED projects involve Jana Vesela?" is 0.
+
+But wait - I need to also check if there are other places where projects might be defined or if there's more context. Let me also check if there are any other references to Jana in the workspace. But the task for this current step is just to read the relevant workspace instructions and assess whether the task is permitted. Let me focus on that.
+
+The current step asks me to:
+1. Read relevant workspace instructions (AGENTS.MD files)
+2. Note any rules for identifying project status and entity mentions
+3. Assess that this is a legitimate read-only lookup task and does not require estimation or fabrication
+
+I've already read all the AGENTS.MD files and the project READMEs. Let me now set the output variables.
+
+Key findings:
+- `/40_projects/AGENTS.MD` says project status is tracked in README.MD files
+- `/10_entities/cast/AGENTS.MD` says cast files are authoritative for entity identity
+- `/AGENTS.MD` (root) establishes the workspace structure and rules
+- This is a legitimate read-only lookup task - just counting stalled projects involving Jana
+- No estimation or fabrication is needed - we just read project statuses and linked_entities
+
+The instruction_files that are relevant:
+- `/AGENTS.MD` - root workspace rules
+- `/00_inbox/AGENTS.MD` - inbox rules
+- `/10_entities/AGENTS.MD` - entity resolution rules
+- `/10_entities/cast/AGENTS.MD` - canonical people records rules
+- `/20_work/AGENTS.MD` - work lane rules
+- `/30_knowledge/AGENTS.MD` - knowledge lane rules
+- `/40_projects/AGENTS.MD` - project lane rules (most relevant for project status)
+
+The task is permitted - it's a simple read-only lookup counting stalled projects involving a specific person.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've read all the relevant AGENTS.MD files and found the key rules:
+
+1. From `/AGENTS.MD`: Entity files in `10_entities/cast/` are authoritative for identity.
+2. From `/40_projects/AGENTS.MD`: The canonical reference for each project is `README.MD` inside that project folder.
+3. From `/10_entities/cast/AGENTS.MD`: Cast files are authoritative for people identity.
+
+I've also read all project READMEs and the Jana Vesela entity file. This is a legitimate read-only lookup task - counting stalled projects involving Jana Vesela. It requires no estimation or fabrication.
+
+From my reading of the projects:
+- None of the projects have status `stalled`. The statuses I found are: `active`, `planned`, and `simmering`.
+- Only one project mentions Jana Vesela (`entity.jana`): `dockflow_exception_radar`, which has status `active`, not `stalled`.
+
+So the answer to the global task would be 0, but for this step I just need to report the instruction files and whether the task is allowed.
+
+The task is a legitimate read-only lookup task and is permitted.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me finalize the step by setting the required output variables and then completing with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to set step_status and final_answer in a separate code block.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

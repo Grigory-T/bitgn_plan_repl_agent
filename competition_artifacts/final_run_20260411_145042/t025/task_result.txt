@@ -1,0 +1,46 @@
+Task ID
+t025
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84sucreym3t56
+
+Task
+Need my walking buddy's birthday. Reply with the date in MM/DD/YYYY format only.
+
+BitGN Harness URL
+https://vm-03nmd84sucreym3t56.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+1m 51s
+
+Agent Result
+The walking buddy was identified as Bix, and the canonical birthday was found and formatted as 03/19/2020.
+
+Final Response
+03/19/2020
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/AGENTS.MD
+/00_inbox/AGENTS.MD
+/10_entities/AGENTS.MD
+/10_entities/cast/AGENTS.MD
+/10_entities/cast/bix.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84sucreym3t56
+
+Score
+0.00
+
+Details
+(none)

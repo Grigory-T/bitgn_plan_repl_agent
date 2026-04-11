@@ -1,0 +1,72 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and follow the relevant workspace instructions before doing any accounting: inspect /50_finance/AGENTS.MD and /50_finance/invoices/AGENTS.MD for rules about how to identify revenue, date filtering, service-line matching, and any required format. Also verify whether the request is legitimate and allowed under the workspace rules; if instructions conflict or the task is disallowed, stop and report that. Store the applicable instructions and any constraints for the revenue lookup and calculation.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "finance_instructions",
+        "variable_description": "Relevant instructions extracted from finance-related AGENTS.MD files.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean indicating whether the task is allowed and can proceed under the discovered instructions.",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If the task is allowed, locate all invoice files in /50_finance/invoices whose date is on or after 2026-03-01 and that pertain to the exact service line 'workflow  mapping and intake audit'. Use direct facts from the invoice filenames and file contents only; do not estimate or infer beyond what is explicitly documented. Collect each matching invoice’s date, amount, currency, invoice identifier, and any service-line text needed to prove the match.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "finance_instructions",
+        "variable_description": "Relevant instructions extracted from finance-related AGENTS.MD files.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean indicating whether the task is allowed and can proceed under the discovered instructions.",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "matching_invoices",
+        "variable_description": "List of matching invoice records with direct factual fields needed for summation.",
+        "variable_data_type": "list[dict]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Sum the amounts of all matching invoices to compute total revenue since the beginning of March 2026 for the exact service line 'workflow  mapping and intake audit'. Preserve the currency as stated in the invoices and ensure the result is based only on direct facts from the matched invoice records.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "matching_invoices",
+        "variable_description": "List of matching invoice records with direct factual fields needed for summation.",
+        "variable_data_type": "list[dict]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "total_revenue",
+        "variable_description": "Computed total money made from the matching service line since 2026-03-01, in the invoice currency.",
+        "variable_data_type": "float"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Prepare the final response as a number only, using the computed total_revenue value and no extra text. If no matching invoices exist, the number should be 0. Keep the answer formatted as a plain numeric value.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "total_revenue",
+        "variable_description": "Computed total money made from the matching service line since 2026-03-01, in the invoice currency.",
+        "variable_data_type": "float"
+    }
+]
+output_variables: []
+

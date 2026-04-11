@@ -1,0 +1,56 @@
+Task ID
+t010
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84rxe8pia06ab
+
+Task
+Bearbeite die alteste Nachricht im Posteingang.
+
+BitGN Harness URL
+https://vm-03nmd84rxe8pia06ab.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+7m 49s
+
+Agent Result
+The oldest inbox message was identified, processed according to the governing instructions, the bill was verified and recorded as paid by bank transfer, the confirmation was posted, and the inbox item was deleted as required.
+
+Final Response
+Die älteste Nachricht im Posteingang wurde bearbeitet: die Rechnung wurde geprüft, per Banküberweisung als bezahlt erfasst, die Bestätigung wurde gepostet und die Inbox-Nachricht gelöscht.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/00_inbox/AGENTS.MD
+/00_inbox/358_next-task.md
+/20_work/AGENTS.MD
+/20_work/tasks/AGENTS.MD
+/99_system/workflows/process-next-inbox-item.md
+/99_system/workflows/processing-inbox-email.md
+/99_system/workflows/inbox-processing-v2-update.md
+/60_outbox/AGENTS.MD
+/50_finance/AGENTS.MD
+/50_finance/purchases/AGENTS.MD
+/50_finance/purchases/2026_04_05__eur_000020__bill__studio_parts_magnet_and_felt.md
+/99_system/schemas/finance-record-frontmatter.md
+/99_system/workflows/migrate-records-to-frontmatter.md
+/60_outbox/channels/household_signal.md
+/40_projects/2026_04_21_studio_parts_library/README.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84rxe8pia06ab
+
+Score
+0.00
+
+Details
+(none)

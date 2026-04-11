@@ -1,0 +1,115 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read the relevant instruction files that govern inbox handling and task execution, starting with /00_inbox/AGENTS.MD and any other directly relevant AGENTS.MD files in the surrounding workspace tree, so the agent can comply with the exact local rules before touching /00_inbox/000_next-task.md.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths and their extracted rule summaries relevant to inbox processing and agent behavior.",
+        "variable_data_type": "list[tuple[str, str]]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Assess whether the inbox task is legitimate, allowed, and unambiguous under the discovered instructions and the task context. If the instructions indicate the task should not be handled, or if the message requires clarification, stop and return the appropriate refusal or clarification path; otherwise proceed.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths and their extracted rule summaries relevant to inbox processing and agent behavior.",
+        "variable_data_type": "list[tuple[str, str]]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "task_validity",
+        "variable_description": "Boolean indicating whether the next inbox message can be handled under the discovered rules.",
+        "variable_data_type": "bool"
+    },
+    {
+        "variable_name": "task_scope_notes",
+        "variable_description": "Short textual notes describing any constraints, required handling rules, or reasons for clarification tied to the inbox message.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Open /00_inbox/000_next-task.md and extract the next message content, sender/context if present, and the exact requested action so the agent can determine what concrete work is needed without guessing.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "task_validity",
+        "variable_description": "Boolean indicating whether the next inbox message can be handled under the discovered rules.",
+        "variable_data_type": "bool"
+    },
+    {
+        "variable_name": "task_scope_notes",
+        "variable_description": "Short textual notes describing any constraints, required handling rules, or reasons for clarification tied to the inbox message.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "next_message_text",
+        "variable_description": "Full text of the next inbox message extracted from /00_inbox/000_next-task.md.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "next_message_metadata",
+        "variable_description": "Structured metadata from the inbox item such as sender, date, subject, or any other explicit fields present in the file.",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Determine the concrete action required to take care of the inbox message by matching the message content against the appropriate workspace area and related instructions, including whether the work belongs in tasks, reminders, knowledge capture, projects, finances, entities, or outbox channels.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "next_message_text",
+        "variable_description": "Full text of the next inbox message extracted from /00_inbox/000_next-task.md.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "next_message_metadata",
+        "variable_description": "Structured metadata from the inbox item such as sender, date, subject, or any other explicit fields present in the file.",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "task_scope_notes",
+        "variable_description": "Short textual notes describing any constraints, required handling rules, or reasons for clarification tied to the inbox message.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "target_workstream",
+        "variable_description": "Name of the workspace area or workstream where the inbox item should be handled.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "required_followup_actions",
+        "variable_description": "Ordered list of concrete actions the agent must perform to resolve the inbox item, based only on direct facts from the message and instructions.",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: Execute the required follow-up actions in the workspace, writing or updating only the files mandated by the inbox message and the applicable instructions, while preserving existing content and creating any needed linked records in the correct runtime paths.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "target_workstream",
+        "variable_description": "Name of the workspace area or workstream where the inbox item should be handled.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "required_followup_actions",
+        "variable_description": "Ordered list of concrete actions the agent must perform to resolve the inbox item, based only on direct facts from the message and instructions.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+

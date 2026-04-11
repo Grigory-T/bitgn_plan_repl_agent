@@ -1,0 +1,81 @@
+Let me read the relevant AGENTS.MD files to understand the instructions and rules for this task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the finance AGENTS.MD files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the root AGENTS.MD and the schema file for finance records, as well as check for any other relevant instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the invoices that might be related to "workflow mapping and intake audit" service line. Looking at the file names, I need to identify which invoices relate to that service line. Let me read the relevant invoice files. The question asks about "workflow mapping and intake audit" - from the filenames, the Helios invoices might be relevant, particularly the one mentioning "intake_audit":
+
+- `2025_12_11__eur_000520__inv_0006__helios_backfill_intake_audit.md` - contains "intake_audit"
+- Other Helios invoices
+
+Let me also check the purchases AGENTS.MD and read the relevant invoice files to understand the service line naming.
+
+Actually, let me first read all the Helios-related invoices since they seem to be the ones related to "workflow mapping and intake audit" (the service line could be Helios). Let me read the invoices starting from January 2026 onwards.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me summarize what I found:
+
+**Instructions from AGENTS.MD files:**
+
+1. `/00_inbox/AGENTS.MD`: Treat inbox files as unprocessed requests, not canonical truth. Cross-check identity, dates, and authority against canonical records before acting.
+
+2. `/50_finance/AGENTS.MD`: Treat invoices, purchases, and payment-adjacent records as sensitive and auditable. Prefer exactness over prose. Do not infer authorization for financial actions from casual chat alone.
+
+3. `/50_finance/invoices/AGENTS.MD`: Invoice identity, recipient, and date-sensitive details must stay exact. When in doubt about destination or authority, clarify rather than resend blindly. Keep invoice handling scoped to the correct commercial lane.
+
+4. `/AGENTS.MD` (root): Be pragmatic. Read nested AGENTS.MD files when entering a folder. Before starting task work, inspect 99_system/ with tree and then read the relevant workflow or schema docs. Records are gradually migrating toward YAML frontmatter.
+
+5. `/99_system/schemas/finance-record-frontmatter.md`: Finance record frontmatter schema. For invoices, required fields include record_type, invoice_number, alias, issued_on, total_eur, counterparty, project, lines. Line items include item, quantity, unit_eur, line_eur. If currency is not mentioned, assume euros.
+
+Now for the task itself - the question asks about "workflow mapping and intake audit" service line revenue since January 2026.
+
+Looking at the invoices, the line item "workflow mapping and intake audit" appears in:
+
+1. **INV-0006** (2025-12-11): "workflow mapping and intake audit" - qty 2, unit_eur 260, line_eur 520 — This is from December 2025, before January 2026, so EXCLUDED.
+
+2. **INV-0007** (2026-01-12): "workflow mapping and intake audit" - qty 1, unit_eur 260, line_eur 260 — This is from January 2026, INCLUDED.
+
+3. **INV-0009** (2026-03-13): "workflow mapping and intake audit" - qty 1, unit_eur 420, line_eur 420 — This is from March 2026, INCLUDED.
+
+The other Helios invoices (INV-0008, INV-0010, INV-0011) do not contain the "workflow mapping and intake audit" line item.
+
+So for the current step, I need to provide:
+- `relevant_instructions`: structured summary of applicable rules
+- `allowed_scope`: confirmed scope of files and dates
+
+Let me structure this properly.
+
+For the allowed_scope:
+- Files: The invoices in `/50_finance/invoices/` that contain "workflow mapping and intake audit" line items and are dated from January 2026 onwards
+- Dates: From 2026-01-01 onwards (since January 2026)
+- The relevant invoices are:
+  - `50_finance/invoices/2026_01_12__eur_000760__inv_0007__helios_backfill_process_pack.md` (line item "workflow mapping and intake audit": 260 EUR)
+  - `50_finance/invoices/2026_03_13__eur_000600__inv_0009__helios_discovery_invoice.md` (line item "workflow mapping and intake audit": 420 EUR)
+
+The excluded invoice is:
+- `50_finance/invoices/2025_12_11__eur_000520__inv_0006__helios_backfill_intake_audit.md` (issued 2025-12-11, before January 2026)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have gathered all the necessary instructions and identified the scope. Now I need to set the step_status and final_answer with the required output variables.
+
+Let me compile the results properly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me set all the required output variables first, then finalize with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, I've set both required output variables. Now I need to finalize the step with exactly two lines of code: step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

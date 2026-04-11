@@ -1,0 +1,51 @@
+Task ID
+t082
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84ywcd0ptfc8x
+
+Task
+Handle the next inbox item.
+
+BitGN Harness URL
+https://vm-03nmd84ywcd0ptfc8x.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+5m 2s
+
+Agent Result
+The inbox request cannot be completed safely from canonical workspace evidence: the 'sailboat refit notebook' is not a project folder with a canonical start date, so the comparison and 'delete the earliest project' instruction are ambiguous and unsupported. Per workspace rules, destructive changes must not proceed without uniquely supported targets.
+
+Final Response
+I can’t complete the delete request as stated because the “sailboat refit notebook” has no canonical project start date or project-folder identity, so the earliest-project comparison is not uniquely supported. Please clarify the intended target.
+
+Final Outcome
+OUTCOME_NONE_CLARIFICATION
+
+Final Refs
+/00_inbox/000_next-task.md
+/40_projects/2026_03_29_studio_parts_library/README.MD
+/30_knowledge/notes/parking-lot.md
+/AGENTS.MD
+/00_inbox/AGENTS.MD
+/40_projects/AGENTS.MD
+/99_system/workflows/process-next-inbox-item.md
+/99_system/workflows/deletion-and-wiping.md
+/99_system/workflows/inbox-processing-v2-update.md
+/99_system/workflows/AGENTS.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84ywcd0ptfc8x
+
+Score
+0.00
+
+Details
+(none)

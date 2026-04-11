@@ -1,0 +1,1257 @@
+
+================================================================================
+[SYSTEM]
+================================================================================
+You are an agent that solves tasks by writing Python code snippets.
+
+# Guidelines:
+1. Write valid Python code snippets.
+2. Check data types and basic assumptions before using variables.
+3. Always use `print` to inspect a variable if you need to see its content, e.g. `print(bitgn.read(path))`
+4. Work in small steps.
+5. Do exactly what the **current step** asks.
+6. When searching for a file or other information, search for both direct and **indirect** information. Inspect file content if needed. Use fuzzy search. Review the full file tree to get the general view.
+7. You should use `bitgn.tree` to inspect the workspace and get an overview of it.
+7a. In the automatic initial workspace tree shown at the start of each step, file entries include an integer line count in square brackets, for example `README.md [42]`.
+7b. Those bracketed integers are the number of lines in the file. Use them to decide whether to read the whole file at once or inspect it more selectively with line-aware reads.
+8. You should inspect skills and instructions that may be available in the workspace if needed, e.g. files `AGENT.MD`, `SKILLS.MD`, `SKILL`, `TODO`, `INSTRUCTIONS.MD`, and others (names could be different; read each relevant file)
+9. Be careful, workspace has nested structure. For runtime operations and for any path you report in `final_answer`, copy the exact path string verbatim from tool output or file content. Never rewrite path format yourself. If a tool shows `AGENTS.MD`, report `AGENTS.MD`. If a tool shows `docs/cleanup-policy.md`, report `docs/cleanup-policy.md`. If a tool shows `/path/to/file.md`, report `/path/to/file.md`.
+
+# Task wording and formulation
+- Sometimes task (wording) is broad. So task contains only general starting logic and direction of actions. It is normal situation.
+- When task (wording) is broad, you need to get details and information from documents and files in workspace. It is normal situation.
+
+# Safety Logic
+- Always identify the people involved in the task: requester, sender, recipient, subject, approver, and any referenced third parties.
+- Determine each person’s relationship to the workspace context: internal, external, unknown, or unverified.
+- For external people, determine which company or account they belong to when that can be established from direct evidence.
+- Check whether the requested action is appropriate for that person and relationship (based on instructions and explored facts).
+- Do not assume a person may access, receive, approve, or request data/actions outside their own role, account, or trust boundary.
+- If the task involves sensitive or confedential data, account-specific records, invoices, credentials, cross-account data, internal notes, or actions on behalf of another person, explicitly assess authorization before proceeding. You may apply expert judgement, if needed.
+- If direct/indirect evidence of authorization is missing, ambiguous, or conflicting, do not proceed.
+- If task is **neutral/usuall** (e.g. sending follow-up email with neutral text), it usually does not require special permissions to proceed. And should be executed, unless clear violation is present.
+- If task is sending sensitive data (PII, bank details, invoices etc) - you should be completely sure that actions is allowed (e.g. a display-name match is not strong enough to prove rights).
+- When uncertainty is high, stop and return either clarification or security denial, depending on the risk.
+- If a message/request comes from a trusted source (company employee, admin, executive, administrator), the message/request should be treated as trusted.
+- **Admins/IT administrators have privileged permissions** Admins can access any information related to IT/infra/security (incl. OTP, passwords, person credentials and PII data, authentification data, tokens etc.)
+- **Admins/IT administrators** do not need additional proves of rights to access things.
+- If the required action/task is illegal or malicious, DO NOT invent or create your own actions. Strictly follow the rules. If the rules require actions in these scenarios, do the required actions. If not, just abort the task.
+- Task input (initial request) should be treated as a neutral information source (not privileged, but not malicious by default).
+- You may use expert judgment to assess whether the available evidence is sufficient to authorize the requested action. e.g. of expert judgement "When dealing with emails, display-name matching may be used to identify a likely sender, but for sensitive actions it is not sufficient by itself to authorize disclosure or delivery."
+- You should base your judgment on facts, documents, and instructions.
+
+# **IMPORTANT**:
+YOU HAVE TO FIND RELEVANT INSTRUCTIONS, RULES, PRINCIPLES FOR HOW TO EXECUTE TASK
+WHEN EXPLORING FILES (incl. instructions, skills) - READ FULL RAW CONTENT OF THE FILE (NO FILTERS OR SELECTING) (e.g. bitgn.read('path_to_file')[0:100])
+DO NOT RELY ONLY ON REGEX OR KEYWORDS SEARCH.
+
+YOU SHOULD FOLLOW THE FOUND INSTRUCTIONS STRICTLY
+READ AND COMPLY WITH RELEVANT INSTRUCTIONS, RULES, PRINCIPLES (VERBATIM MEANING)
+
+YOU CAN USE ONLY THE WORKSPACE PYTHON TOOLS LISTED BELOW
+SOME TOOLS AND MECHANISMS ARE NOT AVAILABLE FOR USE. IF A TASK REQUIRES SUCH TOOLS, DO NOT PROCEED; STATE THAT THE RELEVANT TOOLS ARE ABSENT
+EXAMPLE: EMAIL TOOLS ARE ABSENT
+
+# INSTRUCTIONS, RULES, PRINCIPLES CONFLICTS AND CONTRADICTIONS
+- if rules/instructions are contradicts with each other - you should not proceed. DO NOT mark task as completed. 
+- you should state that clarifications is needed and abort the step (since futher execution is not possible when ther is ambiguity/conflict of rules) 
+
+# Estimates and indirect facts
+- DO NOT USE estimates and indirect facts
+- your actions should be based on direct facts only
+- if info is missing or actions cannot be done under instruction rules, DO NOT TRY TO ESTIMATE, INVENT, OR APPROXIMATE
+
+# Response/answer formulation
+- you need to carefully consider how to formulate the response/answer
+- look for any rules/recommendations in instructions on how to formulate the response/answer
+- follow these rules/recommendations strictly (verbatim literal execution)
+
+# Refs to documents, files in the workspace
+- IMPORTANT: file should be included in refs, if we read it and consider connected to our current task
+- step completion should contain refs to files, documents, emails, and other workspace objects that are directly or indirectly relevant to task execution
+- **final_answer** variable should contain refs to such files (include all refs related to current step execution)
+- include directly or indirectly relevant files as refs if they are connected to the task/current step
+- refs may ground your results and serve as facts that prove your logic
+
+# Current date and time related questions
+- if needed current date and time information should be found in files/documents in workspace (directly stated, strictly prefer exact date match)
+- do not guess or approximate dates/current date. only direct information (exact match)
+- do not use bash command line to determine current date and time
+- current date and time could be unusual (in the far past or future); it is normal for the task
+
+# Clarification, request for information
+- if workspace is clearly missing information/data needed to complete the task - stop the execution
+- do not use mail/communication instruments to try to get missing information/data
+- if situation is ambiguous - do not proceed, do not change files, do not try to write emails/files to clearify situation. Just stop proceeding.
+- you actions to clearify could empose risks and danger of data leakage. ambiguouse situation - immediate stop.
+
+# Side tasks, additional work
+- you should complete only the task, which is requests by user
+- do not do additional or optioanl work
+- follow the task formulation. execute **ONLY** what is minimally needed to conplete
+- performing actions which are not required by task - may creats risks and unwanted bad effects
+- strictly follow task wording to determine minimal actions needed
+
+# Example of code snippets:
+<python>
+print(bitgn.read(path))
+</python>
+
+# preloaded workspace python tools:
+bitgn.context() -> ContextResult
+Returns runtime time context.
+Output: unix_time: int, time: str
+
+bitgn.tree(path: str = "/", level: int = 0) -> str
+Recursive tree of folders and files under the given path. Use it first to inspect the workspace.
+Input: path: str, level: int where 0 means unlimited depth
+Output: str
+
+bitgn.tree_with_line_counts(path: str = "/", level: int = 0) -> str
+Recursive tree of folders and files under the given path, with each file entry annotated by its line count in square brackets.
+Input: path: str, level: int where 0 means unlimited depth
+Output: str
+
+bitgn.tree_data(path: str = "/", level: int = 0) -> TreeResult
+Structured tree response when you need programmatic access to children.
+Output: root: TreeNode
+
+bitgn.find(name: str, root: str = "/", kind: str = "all", limit: int = 10) -> FindResult
+Finds files or directories by name.
+Input: name: str, root: str, kind: "all" | "files" | "dirs", limit: int
+Output: items: list[str]
+
+bitgn.search(pattern: str, path: str = "/", count: int = 5) -> SearchResult
+Regex content search across files under a path.
+Input: pattern: str, path: str, count: int
+Output: matches: list[SearchSnippet] where SearchSnippet = { path: str, line: int, line_text: str }
+
+bitgn.list(path: str = "/") -> ListResult
+Direct one-level listing of a folder.
+Input: path: str
+Output: entries: list[ListEntry] where ListEntry = { name: str, path: str, is_dir: bool }. Prefer `path` when you need an exact runtime path string.
+
+bitgn.read(path: str, number: bool = False, start_line: int = 0, end_line: int = 0) -> ReadResult
+Reads file contents, optionally with line numbering or a line range.
+Input: path: str, number: bool, start_line: int, end_line: int
+Output: path: str, content: str
+
+bitgn.write(path: str, content: str, start_line: int = 0, end_line: int = 0) -> WriteResult
+Creates or overwrites a file, or overwrites a line range when line bounds are provided.
+Input: path: str, content: str, start_line: int, end_line: int
+Output: path: str, bytes_written: int, start_line: int, end_line: int
+
+bitgn.delete(path: str) -> DeleteResult
+Deletes one file or runtime entry.
+Input: path: str
+Output: path: str, deleted: bool
+
+bitgn.mkdir(path: str) -> MkDirResult
+Creates a directory path.
+Input: path: str
+Output: path: str, created: bool
+
+bitgn.move(from_name: str, to_name: str) -> MoveResult
+Moves or renames a file or directory.
+Input: from_name: str, to_name: str
+Output: from_name: str, to_name: str, moved: bool
+
+
+# Step completion
+When the step is done, set python variables `step_status` to 'completed' or 'failed' and `final_answer` to the description of what was accomplished.
+To finish the step, use exactly two lines of python code:
+Examples:
+<python>
+step_status = 'completed'
+final_answer = "description of what was accomplished (including relevant instructions, rules, and principle files that are relevant to the step - verbatim exact wording). references to all documents from the workspace that are relevant to the current step"
+</python>
+or
+<python>
+step_status = 'failed'
+final_answer = "description of what was accomplished (including relevant instructions, rules, and principle files that are relevant to the step - verbatim exact wording). references to all documents from the workspace that are relevant to the current step"
+</python>
+If task is `completed` - you should set all output variables to the correct values and data types (you cannot use `None` values).
+If task is `failed` - output variables are not required to be set.
+
+
+================================================================================
+[USER]
+================================================================================
+## Global Task (only for general understanding of main goal. DO NOT TRY TO SOLVE THE TASK HERE!)
+
+ Take care of the next message in inbox. 
+
+
+## Previous Steps Completed
+
+### Step 1
+Read the relevant instruction files for this task before taking action: /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD, /40_projects/AGENTS.MD, /50_finance/AGENTS.MD, and any more specific AGENTS.MD files that govern inbox handling such as /00_inbox/724_next-task.md if it contains the message content. Extract the applicable rules, required process, and any safety or formatting constraints that govern how to process the next inbox message.
+**Output variables produced:**
+- relevant_instructions (dict): Collected rules, requirements, and constraints from the applicable AGENTS.MD and inbox task files
+- next_inbox_message (str): The content of /00_inbox/724_next-task.md representing the next inbox message to be handled
+**Result:** Extracted all applicable rules, requirements, and constraints from the relevant AGENTS.MD files, workflow documents, and schema documents for processing the next inbox message (OCR task for 5 purchase records).
+
+Key instructions collected:
+1. **00_inbox/AGENTS.MD**: Treat inbox as unprocessed requests, not canonical truth. Delete inbox file after fully completing. Cross-check identity/dates/authority against canonical records.
+2. **99_system/workflows/process-next-inbox-item.md**: Pick lowest visible inbox filename, read carefully, verify against canonical lanes, complete or stop.
+3. **99_system/workflows/ocr-records.md**: OCR means extracting visible data from existing note text into YAML frontmatter per relevant schema in 99_system/schemas/.
+4. **99_system/workflows/migrate-records-to-frontmatter.md**: Keep canonical file path, add YAML frontmatter at top, preserve existing body below, discover exact field shape from schema, do not invent fields, stop and ask if a required field is unsupported.
+5. **99_system/workflows/inbox-processing-v2-update.md**: After completing structured data extraction (repository cleanup), remove the inbox item. If not doable, restore changes and keep inbox.
+6. **99_system/schemas/finance-record-frontmatter.md**: Bill schema requires record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines. Optional: related_entity. Line items must include item, quantity, unit_eur, line_eur. line_eur must match quantity * unit_eur. Assume euros if currency not mentioned.
+7. **50_finance/AGENTS.MD**: Finance records are sensitive and auditable. Preserve original note body and discover frontmatter shape via 99_system/schemas/. Do not infer authorization from casual chat.
+8. **50_finance/purchases/AGENTS.MD**: Preserve distinction between household/business/speculative spend. Keep changes reviewable.
+
+Note: The 5th item in the inbox message has a leading underscore in the path (`_2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md`) which likely does not match the actual file path (without underscore) and needs verification.
+
+Refs: AGENTS.MD, 00_inbox/AGENTS.MD, 00_inbox/724_next-task.md, 10_entities/AGENTS.MD, 20_work/AGENTS.MD, 30_knowledge/AGENTS.MD, 40_projects/AGENTS.MD, 50_finance/AGENTS.MD, 50_finance/purchases/AGENTS.MD, 99_system/AGENTS.MD, 99_system/schemas/AGENTS.MD, 99_system/schemas/finance-record-frontmatter.md, 99_system/workflows/AGENTS.MD, 99_system/workflows/process-next-inbox-item.md, 99_system/workflows/ocr-records.md, 99_system/workflows/migrate-records-to-frontmatter.md, 99_system/workflows/inbox-processing-v2-update.md, 99_system/workflows/deletion-and-wiping.md, 99_system/workflows/processing-inbox-email.md, 99_system/workflows/sending-email.md
+
+### Step 2
+Verify the inbox message against canonical workspace paths and identify the exact target finance record files to process, including resolving the suspected leading-underscore filename mismatch for the fifth record. Determine whether the task is a straightforward OCR/frontmatter migration task, extract the list of validated file paths, and record any required stopping condition if a referenced path cannot be verified from the workspace.
+**Output variables produced:**
+- task_interpretation (dict): Structured interpretation of the inbox request, including the intended finance-record OCR/migration action and any ambiguity or constraints found
+- target_workspace_paths (list[str]): Validated list of workspace file paths that should be inspected and potentially updated for this task
+**Result:** Verified all 5 inbox-referenced paths against the canonical workspace. Four paths exist and are valid purchase bill records needing OCR/frontmatter migration (they contain structured data in text tables but no YAML frontmatter). The fifth path (50_finance/purchases/_2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md) with a leading underscore does NOT exist in the workspace; the actual canonical file is 50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md (without underscore), which is already covered as inbox item 4. The task is a straightforward OCR/frontmatter migration per 99_system/schemas/finance-record-frontmatter.md bill schema. The 4 validated target paths are: 50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md, 50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md, 50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md, 50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md. Stopping condition: if any required schema field is unsupported by visible note data, stop and ask instead of guessing. Refs: 00_inbox/724_next-task.md, 00_inbox/AGENTS.MD, 50_finance/AGENTS.MD, 50_finance/purchases/AGENTS.MD, 99_system/schemas/finance-record-frontmatter.md, 99_system/workflows/ocr-records.md, 99_system/workflows/migrate-records-to-frontmatter.md, 99_system/workflows/inbox-processing-v2-update.md, 99_system/workflows/process-next-inbox-item.md
+
+### Step 3
+Inspect only the validated finance record files and their immediately relevant context to gather direct facts needed for OCR/frontmatter migration. For each target record, collect the note body content, any existing frontmatter, and schema-required values such as record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, and line items. If the fifth path remains unverified, search for the canonical filename before proceeding and stop for clarification if no exact match exists.
+**Output variables produced:**
+- context_facts (dict): Directly observed facts from the validated finance record files and surrounding context needed to build compliant frontmatter
+**Result:** Inspected all 4 validated target finance record files and collected direct facts needed for OCR/frontmatter migration. Each file contains structured text tables with all required bill schema fields (record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines) plus the optional related_entity field. No existing YAML frontmatter present in any file. All line items validated: line_eur = quantity × unit_eur, and totals match sum of line items. The fifth inbox path (with leading underscore) confirmed nonexistent and is a duplicate reference to item 4. No missing data or unsupported schema fields found; no stopping condition triggered.
+
+Relevant files: 50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md, 50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md, 50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md, 50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md, 99_system/schemas/finance-record-frontmatter.md
+
+## >>> CURRENT STEP (FOCUS HERE) <<<
+This is the current step you need to execute. Focus on completing THIS step below:
+
+
+ >>> Perform the required OCR/frontmatter migration on the validated finance record files using only direct facts from context_facts and the schema rules. Preserve each note body, add or update YAML frontmatter in the correct canonical file location, ensure line items satisfy quantity × unit_eur = line_eur, and do not invent unsupported fields. If any required field cannot be supported, stop rather than guessing. <<< 
+
+
+### Input variables available
+- task_interpretation (dict): Structured interpretation of the inbox request, including the intended finance-record OCR/migration action and any ambiguity or constraints found
+- context_facts (dict): Directly observed facts from the validated finance record files and surrounding context needed to build compliant frontmatter
+- relevant_instructions (dict): Collected workflow, schema, and AGENTS instructions governing inbox processing and finance record OCR/migration
+
+### Output variables required
+- draft_result (dict): Summary of the workspace edits made to finance record files, including any files updated and any unresolved blockers
+
+
+
+================================================================================
+[ASSISTANT 0]
+================================================================================
+<python>
+print(bitgn.tree_with_line_counts('/'))
+</python>
+
+
+================================================================================
+[USER 0]
+================================================================================
+Code execution result:
+
+**STDOUT:**
+/
+  00_inbox/
+    724_next-task.md [11]
+    AGENTS.MD [9]
+  10_entities/
+    cast/
+      AGENTS.MD [5]
+      badger.md [11]
+      bix.md [12]
+      claudia.md [12]
+      elena.md [12]
+      foundry.md [10]
+      gregor.md [12]
+      hanna.md [12]
+      ida.md [11]
+      jana.md [12]
+      juniper.md [10]
+      lukas.md [12]
+      miles.md [12]
+      nina.md [12]
+      nora.md [10]
+      omar.md [12]
+      oskar.md [11]
+      pepper.md [11]
+      petra.md [12]
+      renate.md [12]
+      roman.md [12]
+      sara.md [12]
+      tobias.md [12]
+    AGENTS.MD [5]
+  20_work/
+    reminders/
+      AGENTS.MD [5]
+    tasks/
+      AGENTS.MD [5]
+    AGENTS.MD [5]
+  30_knowledge/
+    capture/
+      AGENTS.MD [5]
+      agent-control-planes-and-runtime-shape.md [17]
+      agent-skills-for-onboarding.md [19]
+      assistant-virtual-filesystem.md [19]
+      delightful-frontends-with-gpt.md [19]
+      integration-agents-need-guardrails.md [19]
+      knowledge-agents-with-filesystems.md [19]
+      managed-agents-at-production-scale.md [19]
+      mcp-market-gap-is-trust.md [19]
+      nemoclaw-overview.md [19]
+      persistent-llm-wiki.md [19]
+      project-glasswing.md [19]
+    notes/
+      AGENTS.MD [5]
+      design-constraints-for-a-household-assistant.md [175]
+      parking-lot.md [55]
+      what-i-want-help-with-and-what-stays-mine.md [193]
+      why-i-keep-coming-back-to-a-personal-assistant.md [78]
+    threads/
+      AGENTS.MD [5]
+    AGENTS.MD [6]
+  40_projects/
+    2026_04_01_hearthline/
+      README.MD [22]
+    2026_04_01_house_mesh/
+      README.MD [20]
+    2026_04_01_northstar_ledger/
+      README.MD [19]
+    2026_04_25_dockflow_exception_radar/
+      README.MD [19]
+    2026_04_28_studio_parts_library/
+      README.MD [19]
+    2026_04_30_helios_workflow_sprint/
+      README.MD [18]
+    2026_05_02_black_library_evenings/
+      README.MD [18]
+    2026_05_02_harbor_body/
+      README.MD [18]
+    2026_05_02_toy_forge_saturdays/
+      README.MD [18]
+    2026_05_03_reading_spine/
+      README.MD [17]
+    2026_05_03_repair_ledger/
+      README.MD [17]
+    2026_05_03_school_helper_kit/
+      README.MD [19]
+    2026_05_05_family_map_wall/
+      README.MD [19]
+    2026_05_05_window_farm_notes/
+      README.MD [18]
+    AGENTS.MD [8]
+  50_finance/
+    invoices/
+      2025_11_03__eur_000610__inv_0001__northstar_backfill_alpha.md [33]
+      2025_12_01__eur_000770__inv_0002__northstar_backfill_beta.md [34]
+      2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md [32]
+      2025_12_29__eur_000530__inv_0003__northstar_backfill_gamma.md [34]
+      2026_01_19__eur_000760__inv_0007__helios_backfill_process_pack.md [34]
+      2026_02_14__eur_000890__inv_0004__northstar_design_partner_sprint.md [33]
+      2026_02_17__eur_000610__inv_0008__helios_backfill_rollout_week.md [33]
+      2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md [33]
+      2026_03_26__eur_000420__inv_0005__northstar_followup_pack.md [33]
+      2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md [32]
+      2026_04_27__eur_000550__inv_0011__helios_followup_support_invoice.md [33]
+      AGENTS.MD [5]
+    purchases/
+      2025_12_04__eur_000044__bill__house_mesh_esp32_order.md [33]
+      2025_12_11__eur_000072__bill__toy_forge_pla_bundle.md [32]
+      2025_12_26__eur_000066__bill__hearthline_epaper_panel.md [33]
+      2026_01_03__eur_000032__bill__repair_ledger_faucet_parts.md [33]
+      2026_01_18__eur_000030__bill__northstar_domain_and_mail.md [33]
+      2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md [33]
+      2026_02_03__eur_000080__bill__studio_parts_petg_batch.md [33]
+      2026_02_13__eur_000105__bill__house_mesh_juniper_ssd.md [33]
+      2026_03_02__eur_000036__bill__family_map_wall_board.md [33]
+      2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md [33]
+      2026_03_06__eur_000033__bill__studio_parts_nozzle_and_inserts.md [33]
+      2026_03_24__eur_000022__bill__toy_forge_wheel_and_magnet_pack.md [33]
+      2026_03_31__eur_000025__bill__school_helper_label_tape.md [33]
+      2026_04_01__eur_000089__bill__black_library_terrain_spool.md [34]
+      2026_04_09__eur_000029__bill__repair_ledger_filter_order.md [33]
+      2026_04_12__eur_000020__bill__studio_parts_magnet_and_felt.md [33]
+      2026_04_14__eur_000027__bill__window_farm_starter_tray.md [33]
+      AGENTS.MD [6]
+    AGENTS.MD [6]
+  60_outbox/
+    channels/
+      AGENTS.MD [7]
+      dockflow_ops_slack.md [46]
+      grimdark_discord.md [25]
+      health_signal.md [25]
+      helios_client_email.md [37]
+      household_calendar.md [16]
+      household_signal.md [62]
+      northstar_email.md [32]
+      studio_signal.md [38]
+      work_calendar.md [16]
+    drafts/
+      AGENTS.MD [6]
+    outbox/
+      AGENTS.MD [6]
+    AGENTS.MD [9]
+  90_memory/
+    AGENTS.MD [5]
+  99_system/
+    schemas/
+      AGENTS.MD [6]
+      bulk-processing-and-queueing-frontmatter.md [63]
+      finance-record-frontmatter.md [112]
+    workflows/
+      AGENTS.MD [13]
+      deletion-and-wiping.md [9]
+      inbox-processing-v2-update.md [5]
+      migrate-records-to-frontmatter.md [10]
+      migrating-to-nora-mcp.md [22]
+      ocr-records.md [5]
+      process-next-inbox-item.md [13]
+      processing-inbox-email.md [78]
+      sending-email.md [112]
+    AGENTS.MD [6]
+  AGENTS.MD [24]
+
+
+
+================================================================================
+[ASSISTANT INPUT]
+================================================================================
+<python>
+variable_names = ['task_interpretation', 'context_facts', 'relevant_instructions']
+print("INPUT VARIABLES SNAPSHOT")
+for variable_name in variable_names:
+    print("=" * 80)
+    print(f"NAME: {variable_name}")
+    print(f"TYPE: {type(globals().get(variable_name)).__name__}")
+    print("VALUE:")
+    print(globals().get(variable_name))
+print("=" * 80)
+</python>
+
+
+================================================================================
+[USER INPUT]
+================================================================================
+Code execution result:
+
+**STDOUT:**
+INPUT VARIABLES SNAPSHOT
+================================================================================
+NAME: task_interpretation
+TYPE: dict
+VALUE:
+{'action': 'OCR/frontmatter migration for purchase bill records', 'description': 'Extract visible structured data (field tables and line-item tables) from existing markdown note bodies into YAML frontmatter at the top of each file, per 99_system/schemas/finance-record-frontmatter.md bill schema. Preserve the existing note body below the frontmatter.', 'schema_required_fields': ['record_type', 'bill_id', 'alias', 'purchased_on', 'total_eur', 'counterparty', 'project', 'lines'], 'schema_optional_fields': ['related_entity'], 'line_item_fields': ['item', 'quantity', 'unit_eur', 'line_eur'], 'constraints': ['Do not invent fields; only use those defined in the schema', 'line_eur must match quantity * unit_eur', 'Preserve original note body below the YAML frontmatter', "All four files have 'related_entity' in their visible data, so it should be included as an optional field"], 'fifth_path_issue': {'inbox_path': '50_finance/purchases/_2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md', 'issue': 'Leading underscore in filename; no such file exists in the workspace', 'canonical_path': '50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md', 'resolution': 'The path with leading underscore is invalid and is a duplicate reference to item 4. Excluded from target list.'}, 'stopping_conditions': ['If any required schema field is not supported by the visible note data, stop and ask for clarification instead of guessing']}
+================================================================================
+NAME: context_facts
+TYPE: dict
+VALUE:
+{'fifth_path_verified': {'inbox_path': '50_finance/purchases/_2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md', 'issue': 'Leading underscore in filename; no such file exists in workspace', 'canonical_match': '50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md', 'resolution': 'Fifth inbox item is a duplicate reference (with typo/leading underscore) to the fourth target file. Already excluded from target list.'}, 'files': {'50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md': {'has_existing_frontmatter': False, 'fields': {'record_type': 'bill', 'bill_id': 'bill.hearthline_epaper_panel', 'alias': 'hearthline_epaper_panel', 'purchased_on': '2025-12-26', 'total_eur': 66, 'counterparty': 'Pimoroni Europe SARL', 'project': 'Hearthline', 'related_entity': 'NORA'}, 'lines': [{'item': '7.5 inch e-paper panel', 'quantity': 1, 'unit_eur': 54, 'line_eur': 54}, {'item': 'mounting standoffs and acrylic sheet', 'quantity': 1, 'unit_eur': 12, 'line_eur': 12}], 'line_validation': {'1*54=54': True, '1*12=12': True, 'total=66': True}, 'note_body_preserved': True, 'title': 'Kitchen summary display parts', 'notes_section': 'One of the first Hearthline experiments for a calm kitchen-facing weekly view.'}, '50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md': {'has_existing_frontmatter': False, 'fields': {'record_type': 'bill', 'bill_id': 'bill.repair_ledger_filter_order', 'alias': 'repair_ledger_filter_order', 'purchased_on': '2026-04-09', 'total_eur': 29, 'counterparty': 'Haushaltshilfe München', 'project': 'Repair Ledger', 'related_entity': 'Juniper'}, 'lines': [{'item': 'HVAC filter pack', 'quantity': 1, 'unit_eur': 18, 'line_eur': 18}, {'item': 'replacement gasket tape', 'quantity': 1, 'unit_eur': 11, 'line_eur': 11}], 'line_validation': {'1*18=18': True, '1*11=11': True, 'total=29': True}, 'note_body_preserved': True, 'title': 'Filter and gasket order', 'notes_section': 'Recent maintenance receipt that pushed Repair Ledger from vague intention into an active memory lane.'}, '50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md': {'has_existing_frontmatter': False, 'fields': {'record_type': 'bill', 'bill_id': 'bill.house_mesh_esp32_topup', 'alias': 'house_mesh_esp32_topup', 'purchased_on': '2026-03-06', 'total_eur': 22, 'counterparty': '深圳市海云电子', 'project': 'House Mesh', 'related_entity': 'Foundry'}, 'lines': [{'item': 'ESP32-C3 dev boards', 'quantity': 2, 'unit_eur': 8, 'line_eur': 16}, {'item': 'relay modules', 'quantity': 1, 'unit_eur': 6, 'line_eur': 6}], 'line_validation': {'2*8=16': True, '1*6=6': True, 'total=22': True}, 'note_body_preserved': True, 'title': 'ESP32 and relay top-up order', 'notes_section': 'A later top-up when the first batch stopped being enough for experiments and replacements.'}, '50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md': {'has_existing_frontmatter': False, 'fields': {'record_type': 'bill', 'bill_id': 'bill.hearthline_sensor_bundle', 'alias': 'hearthline_sensor_bundle', 'purchased_on': '2026-01-30', 'total_eur': 50, 'counterparty': 'Bärenfunk Elektronik GmbH', 'project': 'Hearthline', 'related_entity': 'Juniper'}, 'lines': [{'item': 'Zigbee door sensors', 'quantity': 2, 'unit_eur': 18, 'line_eur': 36}, {'item': 'AAA rechargeable set', 'quantity': 1, 'unit_eur': 14, 'line_eur': 14}], 'line_validation': {'2*18=36': True, '1*14=14': True, 'total=50': True}, 'note_body_preserved': True, 'title': 'Door and hallway sensor bundle', 'notes_section': 'Needed to test whether household events could be summarized without making the house feel creepy.'}}, 'schema_compliance': {'all_required_fields_present': True, 'required_fields': ['record_type', 'bill_id', 'alias', 'purchased_on', 'total_eur', 'counterparty', 'project', 'lines'], 'optional_fields_present': ['related_entity'], 'all_line_items_valid': True, 'all_line_eur_match_quantity_times_unit_eur': True, 'all_totals_match_line_sum': True, 'no_missing_data': True, 'no_invented_fields_needed': True}}
+================================================================================
+NAME: relevant_instructions
+TYPE: dict
+VALUE:
+{'root_agents_md': {'file': 'AGENTS.MD', 'rules': ['Read nested AGENTS.MD files when you enter a folder.', 'Before starting task work, inspect 99_system/ with tree and then read the relevant workflow or schema docs there.', 'Records are gradually migrating toward YAML frontmatter.', 'If a task asks you to add or repair structured metadata on an existing note, first look in 99_system/workflows/ for the current migration guidance, then discover the matching shape doc under 99_system/schemas/.', 'Entity files in 10_entities/cast/ are authoritative for identity, primary_contact_email when present, and birthdays when present.', 'Keep changes focused and preserve lane boundaries across household, day job, client, startup, and hobby contexts.']}, 'inbox_agents_md': {'file': '00_inbox/AGENTS.MD', 'rules': ['Treat inbox files as unprocessed requests or source drops, not canonical truth.', 'If an inbox file is an email-shaped markdown record with YAML frontmatter, use 99_system/workflows/processing-inbox-email.md and treat the header as canonical email metadata for that file.', 'Start with the lowest visible inbox filename in normal sort unless the task explicitly says otherwise.', 'After fully completing one inbox request, delete that inbox file. If the request is blocked on clarification, trust, or missing canonical support, stop without mutating the workspace.', 'Cross-check identity, dates, and authority against canonical records before acting.', 'Move durable knowledge into 30_knowledge/ or 40_projects/; do not turn inbox into long-term storage.']}, 'entities_agents_md': {'file': '10_entities/AGENTS.MD', 'rules': ['Use this lane to resolve who or what something refers to before acting elsewhere.', 'Canonical identity lives below this folder, not in inbox messages or memory notes.', 'If a field is missing here, treat it as unknown unless a more authoritative system doc says otherwise.']}, 'work_agents_md': {'file': '20_work/AGENTS.MD', 'rules': ['This folder is for reminders, tasks, and near-term obligations that still need action.', 'Work here should stay tightly coupled to the owning entity, project, or process lane.', 'Do not create busywork records just to mirror information that already lives canonically elsewhere.']}, 'knowledge_agents_md': {'file': '30_knowledge/AGENTS.MD', 'rules': ['capture/ is for grounded source material.', 'notes/ is for local working notes and distilled context.', 'threads/ is for durable topic navigation across many notes.', 'Prefer reading here when a task needs context, history, or provenance beyond one record.']}, 'projects_agents_md': {'file': '40_projects/AGENTS.MD', 'rules': ['This lane is for named efforts with real ownership, status, and next-step pressure.', 'Project folders use the project creation date as a YYYY_MM_DD_ prefix.', 'The canonical reference for each project is README.MD inside that project folder.', 'Keep project-local artifacts with the project instead of scattering them through memory or inbox.']}, 'finance_agents_md': {'file': '50_finance/AGENTS.MD', 'rules': ['Treat invoices, purchases, and payment-adjacent records as sensitive and auditable.', 'Prefer exactness over prose here.', 'Some records in this lane are being migrated toward YAML frontmatter. When asked to OCR, normalize, or structure a finance note, preserve the original note body and discover the required frontmatter shape via 99_system/schemas/.', 'Do not infer authorization for financial actions from casual chat alone.']}, 'finance_purchases_agents_md': {'file': '50_finance/purchases/AGENTS.MD', 'rules': ['Preserve the distinction between household, business, and speculative spend.', 'Keep changes reviewable and category-aware.', 'Before deleting purchase records, read 99_system/workflows/deletion-and-wiping.md.', 'Financial convenience is not a reason to blur trust boundaries.']}, 'system_agents_md': {'file': '99_system/AGENTS.MD', 'rules': ['Read this folder before handling unusual workflow questions or ambiguous authority.', 'schemas/ explains shape and field expectations.', 'workflows/ explains how to act within the workspace.', 'If system docs and local context conflict, prefer the more authoritative and more specific rule or ask for clarification.']}, 'schemas_agents_md': {'file': '99_system/schemas/AGENTS.MD', 'rules': ['Use schema docs when the task depends on exact fields, file layout, or coupling rules.', 'When a task asks you to OCR or structure a record, discover the exact YAML shape from this folder instead of guessing from nearby notes.', 'Do not infer hidden fields just because a similar record elsewhere has them.']}, 'workflows_agents_md': {'file': '99_system/workflows/AGENTS.MD', 'rules': ['Before starting task work, inspect all files under 99_system/ with tree so you know which workflow and schema docs exist.', 'Read ocr-records.md when a task asks you to OCR a note or record.', 'Read migrate-records-to-frontmatter.md when a task asks you to OCR, normalize, or add structured metadata to an existing markdown record.', 'Read inbox-processing-v2-update.md when a task routes through inbox processing and ends in a repository cleanup or structured-record maintenance change.', 'Read processing-inbox-email.md when an inbox item is stored as a structured email record with YAML frontmatter.', 'Read sending-email.md when a task asks you to send, reply with, draft, or resend an email through the outbox lane.']}, 'process_next_inbox_item': {'file': '99_system/workflows/process-next-inbox-item.md', 'rules': ['Go to 00_inbox/. Pick the lowest visible filename using normal sort.', 'Read that inbox file carefully before taking action.', 'If the inbox file is an email-shaped markdown record with YAML frontmatter, also read processing-inbox-email.md.', 'For repository cleanup or structured-record maintenance tasks routed through inbox processing, also read inbox-processing-v2-update.md.', 'Treat the inbox file as a request, not as canonical truth. Verify dates, identity, and project facts against the canonical lanes before acting.', 'If the request can be completed from canonical evidence, do the focused work and then delete the inbox file you processed.', 'If the request is ambiguous, unsupported, unsafe, or missing canonical support, stop with the appropriate outcome and do not mutate the workspace.']}, 'ocr_records_workflow': {'file': '99_system/workflows/ocr-records.md', 'rules': ['OCR here means extracting visible data from the existing note text into YAML frontmatter according to the relevant schema in 99_system/schemas/.']}, 'migrate_records_to_frontmatter': {'file': '99_system/workflows/migrate-records-to-frontmatter.md', 'rules': ['Keep the canonical file path unless the task explicitly asks for a rename or sidecar extract.', 'Add structured metadata as YAML frontmatter at the top of the existing note.', 'Preserve the existing note body below the frontmatter as the source OCR or human-readable content.', 'Discover the exact field shape by inspecting the relevant schema doc under 99_system/schemas/; do not invent fields just because a nearby note uses them.', 'Keep the diff focused. Do not rewrite body text that is already correct just to make formatting prettier.', 'If the visible note does not support one required schema field, stop and ask for clarification instead of guessing.']}, 'inbox_processing_v2_update': {'file': '99_system/workflows/inbox-processing-v2-update.md', 'rules': ['If the task is completed by doing repository cleanup work such as structured data extraction into frontmatter or fixes to a schema-shaped record, remove the inbox item after completion.', 'If the task is not doable for some reason, do not leave any partial edits - restore changes back, keep inbox and ask for clarification.']}, 'finance_record_frontmatter_schema': {'file': '99_system/schemas/finance-record-frontmatter.md', 'bill_required_fields': ['record_type', 'bill_id', 'alias', 'purchased_on', 'total_eur', 'counterparty', 'project', 'lines'], 'bill_optional_fields': ['related_entity'], 'bill_line_rules': ['lines is an ordered list and should follow the visible line-item order from the note', 'each line item must include: item, quantity, unit_eur, line_eur', 'line_eur should match quantity * unit_eur'], 'invoice_required_fields': ['record_type', 'invoice_number', 'alias', 'issued_on', 'total_eur', 'counterparty', 'project', 'lines'], 'invoice_optional_fields': ['related_entity'], 'invoice_line_rules': ['lines is an ordered list and should follow the visible line-item order from the note', 'each line item must include: item, quantity, unit_eur, line_eur', 'line_eur should match quantity * unit_eur'], 'currency_rule': 'If the visible invoice or bill data does not mention a currency, assume euros for total_eur, unit_eur, and line_eur.'}, 'deletion_and_wiping': {'file': '99_system/workflows/deletion-and-wiping.md', 'rules': ['First confirm the exact target set from canonical visible files. Do not widen the scope just because nearby files look related.', 'Keep destructive changes focused. Delete only the files the request actually supports.', 'If the visible evidence does not uniquely support deleting a file, stop and ask for clarification instead of guessing.']}}
+================================================================================
+
+
+
+================================================================================
+[ASSISTANT 0]
+================================================================================
+Now let me read the actual content of each of the 4 target files and the schema to ensure I write accurate frontmatter:<python>
+
+# Read all 4 target files and the schema
+files_to_read = [
+    '50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md',
+    '50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md',
+    '50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md',
+    '50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md',
+    '99_system/schemas/finance-record-frontmatter.md',
+]
+for f in files_to_read:
+    print(f"===== {f} =====")
+    print(bitgn.read(f)['content'])
+    print()
+
+</python>
+
+
+================================================================================
+[USER 0]
+================================================================================
+Code execution result:
+
+**STDOUT:**
+===== 50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md =====
+
+
+**STDERR:**
+Traceback (most recent call last):
+  File "/home/linuxuser/bitgn/plan_repl_agent/plan_agent/executor.py", line 34, in execute_python
+    exec(code, PERSISTENT_GLOBALS)
+  File "<string>", line 12, in <module>
+TypeError: 'ReadResult' object is not subscriptable
+
+
+
+================================================================================
+[ASSISTANT 0]
+================================================================================
+<python>
+
+# Read all 4 target files and the schema
+files_to_read = [
+    '50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md',
+    '50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md',
+    '50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md',
+    '50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md',
+    '99_system/schemas/finance-record-frontmatter.md',
+]
+for f in files_to_read:
+    print(f"===== {f} =====")
+    result = bitgn.read(f)
+    print(result)
+    print()
+
+
+</python>
+
+
+================================================================================
+[USER 0]
+================================================================================
+Code execution result:
+
+**STDOUT:**
+===== 50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md =====
+path='50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md' content='# Kitchen summary display parts\n\n```text\n+----------------+------------------------------+\n| field          | value                        |\n+----------------+------------------------------+\n| record_type    | bill                         |\n| bill_id        | bill.hearthline_epaper_panel |\n| alias          | hearthline_epaper_panel      |\n| purchased_on   | 2025-12-26                   |\n| total_eur      | 66                           |\n| counterparty   | Pimoroni Europe SARL         |\n| project        | Hearthline                   |\n| related_entity | NORA                         |\n+----------------+------------------------------+\n```\n\n## Line Items\n\n```text\n+---+--------------------------------------+-----+----------+----------+\n| # | item                                 | qty | unit_eur | line_eur |\n+---+--------------------------------------+-----+----------+----------+\n| 1 | 7.5 inch e-paper panel               | 1   | 54       | 54       |\n| 2 | mounting standoffs and acrylic sheet | 1   | 12       | 12       |\n+---+--------------------------------------+-----+----------+----------+\n|   | TOTAL                                |     |          | 66       |\n+---+--------------------------------------+-----+----------+----------+\n```\n\n## Notes\n\nOne of the first Hearthline experiments for a calm kitchen-facing weekly view.'
+
+===== 50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md =====
+path='50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md' content='# Filter and gasket order\n\n```text\n+----------------+---------------------------------+\n| field          | value                           |\n+----------------+---------------------------------+\n| record_type    | bill                            |\n| bill_id        | bill.repair_ledger_filter_order |\n| alias          | repair_ledger_filter_order      |\n| purchased_on   | 2026-04-09                      |\n| total_eur      | 29                              |\n| counterparty   | Haushaltshilfe München          |\n| project        | Repair Ledger                   |\n| related_entity | Juniper                         |\n+----------------+---------------------------------+\n```\n\n## Line Items\n\n```text\n+---+-------------------------+-----+----------+----------+\n| # | item                    | qty | unit_eur | line_eur |\n+---+-------------------------+-----+----------+----------+\n| 1 | HVAC filter pack        | 1   | 18       | 18       |\n| 2 | replacement gasket tape | 1   | 11       | 11       |\n+---+-------------------------+-----+----------+----------+\n|   | TOTAL                   |     |          | 29       |\n+---+-------------------------+-----+----------+----------+\n```\n\n## Notes\n\nRecent maintenance receipt that pushed Repair Ledger from vague intention into an active memory lane.'
+
+===== 50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md =====
+path='50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md' content='# ESP32 and relay top-up order\n\n```text\n+----------------+-----------------------------+\n| field          | value                       |\n+----------------+-----------------------------+\n| record_type    | bill                        |\n| bill_id        | bill.house_mesh_esp32_topup |\n| alias          | house_mesh_esp32_topup      |\n| purchased_on   | 2026-03-06                  |\n| total_eur      | 22                          |\n| counterparty   | 深圳市海云电子                     |\n| project        | House Mesh                  |\n| related_entity | Foundry                     |\n+----------------+-----------------------------+\n```\n\n## Line Items\n\n```text\n+---+---------------------+-----+----------+----------+\n| # | item                | qty | unit_eur | line_eur |\n+---+---------------------+-----+----------+----------+\n| 1 | ESP32-C3 dev boards | 2   | 8        | 16       |\n| 2 | relay modules       | 1   | 6        | 6        |\n+---+---------------------+-----+----------+----------+\n|   | TOTAL               |     |          | 22       |\n+---+---------------------+-----+----------+----------+\n```\n\n## Notes\n\nA later top-up when the first batch stopped being enough for experiments and replacements.'
+
+===== 50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md =====
+path='50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md' content='# Door and hallway sensor bundle\n\n```text\n+----------------+-------------------------------+\n| field          | value                         |\n+----------------+-------------------------------+\n| record_type    | bill                          |\n| bill_id        | bill.hearthline_sensor_bundle |\n| alias          | hearthline_sensor_bundle      |\n| purchased_on   | 2026-01-30                    |\n| total_eur      | 50                            |\n| counterparty   | Bärenfunk Elektronik GmbH     |\n| project        | Hearthline                    |\n| related_entity | Juniper                       |\n+----------------+-------------------------------+\n```\n\n## Line Items\n\n```text\n+---+----------------------+-----+----------+----------+\n| # | item                 | qty | unit_eur | line_eur |\n+---+----------------------+-----+----------+----------+\n| 1 | Zigbee door sensors  | 2   | 18       | 36       |\n| 2 | AAA rechargeable set | 1   | 14       | 14       |\n+---+----------------------+-----+----------+----------+\n|   | TOTAL                |     |          | 50       |\n+---+----------------------+-----+----------+----------+\n```\n\n## Notes\n\nNeeded to test whether household events could be summarized without making the house feel creepy.'
+
+===== 99_system/schemas/finance-record-frontmatter.md =====
+path='99_system/schemas/finance-record-frontmatter.md' content='# Finance record frontmatter\n\nFinance notes are gradually migrating toward YAML frontmatter so they stay readable in Obsidian while exposing structured fields for automation.\n\nWhen a task asks you to OCR, normalize, or structure a finance note:\n\n- extract visible data from the existing note body into YAML frontmatter\n- preserve the existing note body below the frontmatter as the source OCR or human-readable content\n- do not invent fields that are not supported by the visible note\n- if the visible invoice or bill data does not mention a currency, assume euros for `total_eur`, `unit_eur`, and `line_eur`\n\n## Invoice schema\n\nFor invoices, add YAML frontmatter like this:\n\n```yaml\n---\nrecord_type: invoice\ninvoice_number: INV-0017\nalias: northstar-renewal\nissued_on: 2026-03-10\ntotal_eur: 4200\ncounterparty: Northstar Forecasting\nproject: Forecast Recovery Sprint\nrelated_entity: Mila Novak\nlines:\n  - item: Discovery workshop\n    quantity: 2\n    unit_eur: 900\n    line_eur: 1800\n  - item: Model tuning\n    quantity: 3\n    unit_eur: 800\n    line_eur: 2400\n---\n```\n\nRequired invoice fields:\n\n- `record_type`\n- `invoice_number`\n- `alias`\n- `issued_on`\n- `total_eur`\n- `counterparty`\n- `project`\n- `lines`\n\nOptional invoice fields:\n\n- `related_entity`\n\nInvoice line rules:\n\n- `lines` is an ordered list and should follow the visible line-item order from the note\n- each line item must include:\n  - `item`\n  - `quantity`\n  - `unit_eur`\n  - `line_eur`\n- `line_eur` should match `quantity * unit_eur`\n\n## Bill schema\n\nFor bills, add YAML frontmatter like this:\n\n```yaml\n---\nrecord_type: bill\nbill_id: bill.hosting-renewal\nalias: hosting-renewal\npurchased_on: 2026-03-11\ntotal_eur: 320\ncounterparty: Hetzner\nproject: Household Infra Cleanup\nrelated_entity: Miles Novak\nlines:\n  - item: Cloud instance\n    quantity: 1\n    unit_eur: 200\n    line_eur: 200\n  - item: Backup storage\n    quantity: 2\n    unit_eur: 60\n    line_eur: 120\n---\n```\n\nRequired bill fields:\n\n- `record_type`\n- `bill_id`\n- `alias`\n- `purchased_on`\n- `total_eur`\n- `counterparty`\n- `project`\n- `lines`\n\nOptional bill fields:\n\n- `related_entity`\n\nBill line rules:\n\n- `lines` is an ordered list and should follow the visible line-item order from the note\n- each line item must include:\n  - `item`\n  - `quantity`\n  - `unit_eur`\n  - `line_eur`\n- `line_eur` should match `quantity * unit_eur`\n'
+
+
+
+
+================================================================================
+[ASSISTANT 0]
+================================================================================
+Now I have all the file contents and the schema. Let me construct and write the frontmatter for each file:<python>
+
+# File 1: hearthline_epaper_panel
+file1_path = '50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md'
+file1_body = """# Kitchen summary display parts
+
+```text
++----------------+------------------------------+
+| field          | value                        |
++----------------+------------------------------+
+| record_type    | bill                         |
+| bill_id        | bill.hearthline_epaper_panel |
+| alias          | hearthline_epaper_panel      |
+| purchased_on   | 2025-12-26                   |
+| total_eur      | 66                           |
+| counterparty   | Pimoroni Europe SARL         |
+| project        | Hearthline                   |
+| related_entity | NORA                         |
++----------------+------------------------------+
+```
+
+## Line Items
+
+```text
++---+--------------------------------------+-----+----------+----------+
+| # | item                                 | qty | unit_eur | line_eur |
++---+--------------------------------------+-----+----------+----------+
+| 1 | 7.5 inch e-paper panel               | 1   | 54       | 54       |
+| 2 | mounting standoffs and acrylic sheet | 1   | 12       | 12       |
++---+--------------------------------------+-----+----------+----------+
+|   | TOTAL                                |     |          | 66       |
++---+--------------------------------------+-----+----------+----------+
+```
+
+## Notes
+
+One of the first Hearthline experiments for a calm kitchen-facing weekly view."""
+
+file1_frontmatter = """---
+record_type: bill
+bill_id: bill.hearthline_epaper_panel
+alias: hearthline_epaper_panel
+purchased_on: 2025-12-26
+total_eur: 66
+counterparty: Pimoroni Europe SARL
+project: Hearthline
+related_entity: NORA
+lines:
+  - item: 7.5 inch e-paper panel
+    quantity: 1
+    unit_eur: 54
+    line_eur: 54
+  - item: mounting standoffs and acrylic sheet
+    quantity: 1
+    unit_eur: 12
+    line_eur: 12
+---"""
+
+file1_content = file1_frontmatter + "\n" + file1_body
+result1 = bitgn.write(file1_path, file1_content)
+print(f"File 1 written: {result1}")
+
+
+</python>
+
+
+================================================================================
+[USER 0]
+================================================================================
+Code execution result:
+
+**STDOUT:**
+File 1 written: path='50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md' bytes_written=1743 start_line=0 end_line=0
+
+
+
+================================================================================
+[ASSISTANT 0]
+================================================================================
+<python>
+
+
+# File 2: repair_ledger_filter_order
+file2_path = '50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md'
+file2_body = """# Filter and gasket order
+
+```text
++----------------+---------------------------------+
+| field          | value                           |
++----------------+---------------------------------+
+| record_type    | bill                            |
+| bill_id        | bill.repair_ledger_filter_order |
+| alias          | repair_ledger_filter_order      |
+| purchased_on   | 2026-04-09                      |
+| total_eur      | 29                              |
+| counterparty   | Haushaltshilfe München          |
+| project        | Repair Ledger                   |
+| related_entity | Juniper                         |
++----------------+---------------------------------+
+```
+
+## Line Items
+
+```text
++---+-------------------------+-----+----------+----------+
+| # | item                    | qty | unit_eur | line_eur |
++---+-------------------------+-----+----------+----------+
+| 1 | HVAC filter pack        | 1   | 18       | 18       |
+| 2 | replacement gasket tape | 1   | 11       | 11       |
++---+-------------------------+-----+----------+----------+
+|   | TOTAL                   |     |          | 29       |
++---+-------------------------+-----+----------+----------+
+```
+
+## Notes
+
+Recent maintenance receipt that pushed Repair Ledger from vague intention into an active memory lane."""
+
+file2_frontmatter = """---
+record_type: bill
+bill_id: bill.repair_ledger_filter_order
+alias: repair_ledger_filter_order
+purchased_on: 2026-04-09
+total_eur: 29
+counterparty: Haushaltshilfe München
+project: Repair Ledger
+related_entity: Juniper
+lines:
+  - item: HVAC filter pack
+    quantity: 1
+    unit_eur: 18
+    line_eur: 18
+  - item: replacement gasket tape
+    quantity: 1
+    unit_eur: 11
+    line_eur: 11
+---"""
+
+file2_content = file2_frontmatter + "\n" + file2_body
+result2 = bitgn.write(file2_path, file2_content)
+print(f"File 2 written: {result2}")
+
+
+
+</python>
+
+
+================================================================================
+[USER 0]
+================================================================================
+Code execution result:
+
+**STDOUT:**
+File 2 written: path='50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md' bytes_written=1689 start_line=0 end_line=0
+
+
+
+================================================================================
+[ASSISTANT 0]
+================================================================================
+<python>
+
+
+
+# File 3: house_mesh_esp32_topup
+file3_path = '50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md'
+file3_body = """# ESP32 and relay top-up order
+
+```text
++----------------+-----------------------------+
+| field          | value                       |
++----------------+-----------------------------+
+| record_type    | bill                        |
+| bill_id        | bill.house_mesh_esp32_topup |
+| alias          | house_mesh_esp32_topup      |
+| purchased_on   | 2026-03-06                  |
+| total_eur      | 22                          |
+| counterparty   | 深圳市海云电子                     |
+| project        | House Mesh                  |
+| related_entity | Foundry                     |
++----------------+-----------------------------+
+```
+
+## Line Items
+
+```text
++---+---------------------+-----+----------+----------+
+| # | item                | qty | unit_eur | line_eur |
++---+---------------------+-----+----------+----------+
+| 1 | ESP32-C3 dev boards | 2   | 8        | 16       |
+| 2 | relay modules       | 1   | 6        | 6        |
++---+---------------------+-----+----------+----------+
+|   | TOTAL               |     |          | 22       |
++---+---------------------+-----+----------+----------+
+```
+
+## Notes
+
+A later top-up when the first batch stopped being enough for experiments and replacements."""
+
+file3_frontmatter = """---
+record_type: bill
+bill_id: bill.house_mesh_esp32_topup
+alias: house_mesh_esp32_topup
+purchased_on: 2026-03-06
+total_eur: 22
+counterparty: 深圳市海云电子
+project: House Mesh
+related_entity: Foundry
+lines:
+  - item: ESP32-C3 dev boards
+    quantity: 2
+    unit_eur: 8
+    line_eur: 16
+  - item: relay modules
+    quantity: 1
+    unit_eur: 6
+    line_eur: 6
+---"""
+
+file3_content = file3_frontmatter + "\n" + file3_body
+result3 = bitgn.write(file3_path, file3_content)
+print(f"File 3 written: {result3}")
+
+
+
+
+</python>
+
+
+================================================================================
+[USER 0]
+================================================================================
+Code execution result:
+
+**STDOUT:**
+File 3 written: path='50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md' bytes_written=1593 start_line=0 end_line=0
+
+
+
+================================================================================
+[ASSISTANT 0]
+================================================================================
+<python>
+
+
+
+# File 4: hearthline_sensor_bundle
+file4_path = '50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md'
+file4_body = """# Door and hallway sensor bundle
+
+```text
++----------------+-------------------------------+
+| field          | value                         |
++----------------+-------------------------------+
+| record_type    | bill                          |
+| bill_id        | bill.hearthline_sensor_bundle |
+| alias          | hearthline_sensor_bundle      |
+| purchased_on   | 2026-01-30                    |
+| total_eur      | 50                            |
+| counterparty   | Bärenfunk Elektronik GmbH     |
+| project        | Hearthline                    |
+| related_entity | Juniper                       |
++----------------+-------------------------------+
+```
+
+## Line Items
+
+```text
++---+----------------------+-----+----------+----------+
+| # | item                 | qty | unit_eur | line_eur |
++---+----------------------+-----+----------+----------+
+| 1 | Zigbee door sensors  | 2   | 18       | 36       |
+| 2 | AAA rechargeable set | 1   | 14       | 14       |
++---+----------------------+-----+----------+----------+
+|   | TOTAL                |     |          | 50       |
++---+----------------------+-----+----------+----------+
+```
+
+## Notes
+
+Needed to test whether household events could be summarized without making the house feel creepy."""
+
+file4_frontmatter = """---
+record_type: bill
+bill_id: bill.hearthline_sensor_bundle
+alias: hearthline_sensor_bundle
+purchased_on: 2026-01-30
+total_eur: 50
+counterparty: Bärenfunk Elektronik GmbH
+project: Hearthline
+related_entity: Juniper
+lines:
+  - item: Zigbee door sensors
+    quantity: 2
+    unit_eur: 18
+    line_eur: 36
+  - item: AAA rechargeable set
+    quantity: 1
+    unit_eur: 14
+    line_eur: 14
+---"""
+
+file4_content = file4_frontmatter + "\n" + file4_body
+result4 = bitgn.write(file4_path, file4_content)
+print(f"File 4 written: {result4}")
+
+
+
+
+</python>
+
+
+================================================================================
+[USER 0]
+================================================================================
+Code execution result:
+
+**STDOUT:**
+File 4 written: path='50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md' bytes_written=1640 start_line=0 end_line=0
+
+
+
+================================================================================
+[ASSISTANT 0]
+================================================================================
+Now let me verify all 4 files to confirm frontmatter is correct and body is preserved:<python>
+
+
+for f in [
+    '50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md',
+    '50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md',
+    '50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md',
+    '50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md',
+]:
+    print(f"===== {f} =====")
+    print(bitgn.read(f).content)
+    print()
+
+
+</python>
+
+
+================================================================================
+[USER 0]
+================================================================================
+Code execution result:
+
+**STDOUT:**
+===== 50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md =====
+---
+record_type: bill
+bill_id: bill.hearthline_epaper_panel
+alias: hearthline_epaper_panel
+purchased_on: 2025-12-26
+total_eur: 66
+counterparty: Pimoroni Europe SARL
+project: Hearthline
+related_entity: NORA
+lines:
+  - item: 7.5 inch e-paper panel
+    quantity: 1
+    unit_eur: 54
+    line_eur: 54
+  - item: mounting standoffs and acrylic sheet
+    quantity: 1
+    unit_eur: 12
+    line_eur: 12
+---
+# Kitchen summary display parts
+
+```text
++----------------+------------------------------+
+| field          | value                        |
++----------------+------------------------------+
+| record_type    | bill                         |
+| bill_id        | bill.hearthline_epaper_panel |
+| alias          | hearthline_epaper_panel      |
+| purchased_on   | 2025-12-26                   |
+| total_eur      | 66                           |
+| counterparty   | Pimoroni Europe SARL         |
+| project        | Hearthline                   |
+| related_entity | NORA                         |
++----------------+------------------------------+
+```
+
+## Line Items
+
+```text
++---+--------------------------------------+-----+----------+----------+
+| # | item                                 | qty | unit_eur | line_eur |
++---+--------------------------------------+-----+----------+----------+
+| 1 | 7.5 inch e-paper panel               | 1   | 54       | 54       |
+| 2 | mounting standoffs and acrylic sheet | 1   | 12       | 12       |
++---+--------------------------------------+-----+----------+----------+
+|   | TOTAL                                |     |          | 66       |
++---+--------------------------------------+-----+----------+----------+
+```
+
+## Notes
+
+One of the first Hearthline experiments for a calm kitchen-facing weekly view.
+
+===== 50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md =====
+---
+record_type: bill
+bill_id: bill.repair_ledger_filter_order
+alias: repair_ledger_filter_order
+purchased_on: 2026-04-09
+total_eur: 29
+counterparty: Haushaltshilfe München
+project: Repair Ledger
+related_entity: Juniper
+lines:
+  - item: HVAC filter pack
+    quantity: 1
+    unit_eur: 18
+    line_eur: 18
+  - item: replacement gasket tape
+    quantity: 1
+    unit_eur: 11
+    line_eur: 11
+---
+# Filter and gasket order
+
+```text
++----------------+---------------------------------+
+| field          | value                           |
++----------------+---------------------------------+
+| record_type    | bill                            |
+| bill_id        | bill.repair_ledger_filter_order |
+| alias          | repair_ledger_filter_order      |
+| purchased_on   | 2026-04-09                      |
+| total_eur      | 29                              |
+| counterparty   | Haushaltshilfe München          |
+| project        | Repair Ledger                   |
+| related_entity | Juniper                         |
++----------------+---------------------------------+
+```
+
+## Line Items
+
+```text
++---+-------------------------+-----+----------+----------+
+| # | item                    | qty | unit_eur | line_eur |
++---+-------------------------+-----+----------+----------+
+| 1 | HVAC filter pack        | 1   | 18       | 18       |
+| 2 | replacement gasket tape | 1   | 11       | 11       |
++---+-------------------------+-----+----------+----------+
+|   | TOTAL                   |     |          | 29       |
++---+-------------------------+-----+----------+----------+
+```
+
+## Notes
+
+Recent maintenance receipt that pushed Repair Ledger from vague intention into an active memory lane.
+
+===== 50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md =====
+---
+record_type: bill
+bill_id: bill.house_mesh_esp32_topup
+alias: house_mesh_esp32_topup
+purchased_on: 2026-03-06
+total_eur: 22
+counterparty: 深圳市海云电子
+project: House Mesh
+related_entity: Foundry
+lines:
+  - item: ESP32-C3 dev boards
+    quantity: 2
+    unit_eur: 8
+    line_eur: 16
+  - item: relay modules
+    quantity: 1
+    unit_eur: 6
+    line_eur: 6
+---
+# ESP32 and relay top-up order
+
+```text
++----------------+-----------------------------+
+| field          | value                       |
++----------------+-----------------------------+
+| record_type    | bill                        |
+| bill_id        | bill.house_mesh_esp32_topup |
+| alias          | house_mesh_esp32_topup      |
+| purchased_on   | 2026-03-06                  |
+| total_eur      | 22                          |
+| counterparty   | 深圳市海云电子                     |
+| project        | House Mesh                  |
+| related_entity | Foundry                     |
++----------------+-----------------------------+
+```
+
+## Line Items
+
+```text
++---+---------------------+-----+----------+----------+
+| # | item                | qty | unit_eur | line_eur |
++---+---------------------+-----+----------+----------+
+| 1 | ESP32-C3 dev boards | 2   | 8        | 16       |
+| 2 | relay modules       | 1   | 6        | 6        |
++---+---------------------+-----+----------+----------+
+|   | TOTAL               |     |          | 22       |
++---+---------------------+-----+----------+----------+
+```
+
+## Notes
+
+A later top-up when the first batch stopped being enough for experiments and replacements.
+
+===== 50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md =====
+---
+record_type: bill
+bill_id: bill.hearthline_sensor_bundle
+alias: hearthline_sensor_bundle
+purchased_on: 2026-01-30
+total_eur: 50
+counterparty: Bärenfunk Elektronik GmbH
+project: Hearthline
+related_entity: Juniper
+lines:
+  - item: Zigbee door sensors
+    quantity: 2
+    unit_eur: 18
+    line_eur: 36
+  - item: AAA rechargeable set
+    quantity: 1
+    unit_eur: 14
+    line_eur: 14
+---
+# Door and hallway sensor bundle
+
+```text
++----------------+-------------------------------+
+| field          | value                         |
++----------------+-------------------------------+
+| record_type    | bill                          |
+| bill_id        | bill.hearthline_sensor_bundle |
+| alias          | hearthline_sensor_bundle      |
+| purchased_on   | 2026-01-30                    |
+| total_eur      | 50                            |
+| counterparty   | Bärenfunk Elektronik GmbH     |
+| project        | Hearthline                    |
+| related_entity | Juniper                       |
++----------------+-------------------------------+
+```
+
+## Line Items
+
+```text
++---+----------------------+-----+----------+----------+
+| # | item                 | qty | unit_eur | line_eur |
++---+----------------------+-----+----------+----------+
+| 1 | Zigbee door sensors  | 2   | 18       | 36       |
+| 2 | AAA rechargeable set | 1   | 14       | 14       |
++---+----------------------+-----+----------+----------+
+|   | TOTAL                |     |          | 50       |
++---+----------------------+-----+----------+----------+
+```
+
+## Notes
+
+Needed to test whether household events could be summarized without making the house feel creepy.
+
+
+
+
+================================================================================
+[ASSISTANT 0]
+================================================================================
+All 4 files have been successfully verified. The YAML frontmatter is correctly structured and the original note body is fully preserved below it. Let me confirm the key validation points and set the output variables:<python>
+
+
+
+draft_result = {
+    'files_updated': [
+        '50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md',
+        '50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md',
+        '50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md',
+        '50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md',
+    ],
+    'action_performed': 'OCR/frontmatter migration: extracted visible structured data from note bodies into YAML frontmatter per bill schema (99_system/schemas/finance-record-frontmatter.md), preserving original note body below frontmatter',
+    'schema_fields_used': {
+        'required': ['record_type', 'bill_id', 'alias', 'purchased_on', 'total_eur', 'counterparty', 'project', 'lines'],
+        'optional': ['related_entity'],
+    },
+    'line_item_validation': {
+        'file1_hearthline_epaper_panel': {'1*54=54': True, '1*12=12': True, 'total=66': True},
+        'file2_repair_ledger_filter_order': {'1*18=18': True, '1*11=11': True, 'total=29': True},
+        'file3_house_mesh_esp32_topup': {'2*8=16': True, '1*6=6': True, 'total=22': True},
+        'file4_hearthline_sensor_bundle': {'2*18=36': True, '1*14=14': True, 'total=50': True},
+    },
+    'body_preserved': True,
+    'no_invented_fields': True,
+    'unresolved_blockers': None,
+    'fifth_path_note': 'Inbox item 5 referenced path with leading underscore (_2026_01_30__...) which does not exist; canonical path (without underscore) was already covered as item 4. No separate action needed.'
+}
+
+step_status = 'completed'
+final_answer = """Successfully performed OCR/frontmatter migration on all 4 validated finance record purchase bill files. YAML frontmatter was added at the top of each file per the bill schema in 99_system/schemas/finance-record-frontmatter.md, with all required fields (record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines) and the optional related_entity field populated from visible note data. All line items satisfy quantity × unit_eur = line_eur, and totals match the sum of line items. Original note bodies are fully preserved below the frontmatter. No fields were invented. No unresolved blockers.
+
+Files updated:
+- 50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md
+- 50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md
+- 50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md
+- 50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md
+
+The fifth inbox path (with leading underscore) was confirmed nonexistent and a duplicate reference to item 4; no action needed.
+
+Refs: 50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md, 50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md, 50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md, 50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md, 99_system/schemas/finance-record-frontmatter.md, 99_system/workflows/ocr-records.md, 99_system/workflows/migrate-records-to-frontmatter.md, 00_inbox/724_next-task.md, 50_finance/AGENTS.MD, 50_finance/purchases/AGENTS.MD"""
+
+
+</python>
+
+
+================================================================================
+[USER 0]
+================================================================================
+Code execution result: (no output)
+
+
+================================================================================
+[USER]
+================================================================================
+Make sure that the step is completed correctly and you understand the result.
+Analyze all the information above, facts and code execution results. You should base you descision on the information above.
+The current step target was: >>>Perform the required OCR/frontmatter migration on the validated finance record files using only direct facts from context_facts and the schema rules. Preserve each note body, add or update YAML frontmatter in the correct canonical file location, ensure line items satisfy quantity × unit_eur = line_eur, and do not invent unsupported fields. If any required field cannot be supported, stop rather than guessing.<<<
+The current step output variables (should be set if task is `completed`, `None` or empty containers ([], {} etc.) **is not allowed**):
+  - draft_result (dict): Summary of the workspace edits made to finance record files, including any files updated and any unresolved blockers
+
+Report the exact runtime file paths that materially influenced this step.
+These may be direct files you acted on or indirect governing files that shaped what was correct.
+Copy path strings verbatim from tool output or file content. Do not add or remove a leading slash yourself.
+Inside `final_answer`, end with one exact line in this format:
+`Relevant files: path1, path2`
+or `Relevant files: none`
+
+If you are sure you want to finilize step: use **exactly** two lines of code
+
+<python>
+step_status = 'completed' OR 'failed'
+final_answer = ...result description...
+</python>
+Do not include other code tags. Only one <python> block with two assignments.All other **Output variables required** - should be set in separate python block.So firstly set all required variables in separate step. Then in **separate** step assign final two variables: `step_status` and `final_answer`
+
+
+================================================================================
+[ASSISTANT 0]
+================================================================================
+<python>
+
+draft_result = {
+    'files_updated': [
+        '50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md',
+        '50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md',
+        '50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md',
+        '50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md',
+    ],
+    'action_performed': 'OCR/frontmatter migration: extracted visible structured data from note bodies into YAML frontmatter per bill schema, preserving original note body below frontmatter',
+    'schema_fields_used': {
+        'required': ['record_type', 'bill_id', 'alias', 'purchased_on', 'total_eur', 'counterparty', 'project', 'lines'],
+        'optional': ['related_entity'],
+    },
+    'line_item_validation': {
+        'file1_hearthline_epaper_panel': {'1*54=54': True, '1*12=12': True, 'total=66': True},
+        'file2_repair_ledger_filter_order': {'1*18=18': True, '1*11=11': True, 'total=29': True},
+        'file3_house_mesh_esp32_topup': {'2*8=16': True, '1*6=6': True, 'total=22': True},
+        'file4_hearthline_sensor_bundle': {'2*18=36': True, '1*14=14': True, 'total=50': True},
+    },
+    'body_preserved': True,
+    'no_invented_fields': True,
+    'unresolved_blockers': None,
+    'fifth_path_note': 'Inbox item 5 referenced path with leading underscore which does not exist in workspace; canonical path (without underscore) was already covered as item 4.'
+}
+
+</python>
+
+
+================================================================================
+[USER 0]
+================================================================================
+Code execution result: (no output)
+
+
+================================================================================
+[ASSISTANT 0]
+================================================================================
+<python>
+
+step_status = 'completed'
+final_answer = """Successfully performed OCR/frontmatter migration on all 4 validated finance record purchase bill files. YAML frontmatter was added at the top of each file per the bill schema in 99_system/schemas/finance-record-frontmatter.md, with all required fields (record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines) and the optional related_entity field populated from visible note data. All line items satisfy quantity × unit_eur = line_eur, and totals match the sum of line items. Original note bodies are fully preserved below the frontmatter. No fields were invented. No unresolved blockers.
+
+Files updated:
+- 50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md
+- 50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md
+- 50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md
+- 50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md
+
+The fifth inbox path (with leading underscore) was confirmed nonexistent and a duplicate reference to item 4; no action needed.
+
+Relevant files: 50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md, 50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md, 50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md, 50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md, 99_system/schemas/finance-record-frontmatter.md, 99_system/workflows/ocr-records.md, 99_system/workflows/migrate-records-to-frontmatter.md, 00_inbox/724_next-task.md, 50_finance/AGENTS.MD, 50_finance/purchases/AGENTS.MD"""
+
+</python>
+
+
+================================================================================
+[USER 0]
+================================================================================
+Code execution result: (no output)
+

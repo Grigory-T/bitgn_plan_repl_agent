@@ -1,0 +1,29 @@
+Inspected all relevant AGENTS.MD files and instruction documents to determine the migration procedure and rules for queuing docs to NORA.
+
+**Migration Procedure (from /99_system/workflows/migrating-to-nora-mcp.md and /99_system/schemas/bulk-processing-and-queueing-frontmatter.md):**
+
+Required frontmatter fields for NORA MCP queueing:
+- bulk_processing_workflow: nora_mcp
+- queue_batch_timestamp: Single RFC3339 timestamp in Z form, captured ONCE for the whole batch
+- queue_order_id: Integer from 1 to N after sorting file paths alphanumerically
+- queue_state: pending
+- queue_target: vault2
+
+Key batch rules:
+- Treat requested file set as one batch; same timestamp for all files
+- Sort paths alphanumerically; assign contiguous queue_order_id 1 through N
+- Header-only migration (no body changes)
+- If file has frontmatter, merge marker in preserving unrelated fields
+- If file has no frontmatter, add as new YAML frontmatter at top
+- If file already has correct marker, leave unchanged
+- Preserve body byte-for-byte; keep diff small; don't broaden file set
+
+**Can the three docs be queued without violating workspace rules?**
+
+1. /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md — Yes, working note in knowledge/notes lane, no restrictions against migration.
+2. /30_knowledge/notes/parking-lot.md — Yes, working note in knowledge/notes lane, no restrictions against migration.
+3. /99_system/schemas/finance-record-frontmatter.md — Caveat: this is a system schema/governance document. The 99_system/schemas/AGENTS.MD states "Shape rules belong here, not in memory or inbox prose." The migration workflow does not prohibit any file type from being queued, and migration is header-only (file stays in place). However, the pending marker signals intent for eventual export to vault2, and this file serves as authoritative workspace governance. No hard rule violation, but the governance nature should be noted.
+
+No naming rules specific to migration were found — the migration is header-only and files keep their existing paths and names.
+
+Relevant files: /AGENTS.MD, /30_knowledge/AGENTS.MD, /30_knowledge/notes/AGENTS.MD, /50_finance/AGENTS.MD, /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, /10_entities/cast/nora.md, /99_system/AGENTS.MD, /99_system/schemas/AGENTS.MD, /99_system/schemas/bulk-processing-and-queueing-frontmatter.md, /99_system/schemas/finance-record-frontmatter.md, /99_system/workflows/AGENTS.MD, /99_system/workflows/migrating-to-nora-mcp.md, /99_system/workflows/migrate-records-to-frontmatter.md

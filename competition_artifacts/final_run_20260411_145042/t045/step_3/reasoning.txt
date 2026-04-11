@@ -1,0 +1,93 @@
+Now I have all the context. Let me also verify a few things by reading the key instruction files to make sure the plan is exactly compliant:
+
+1. The sending-email.md for exact frontmatter requirements
+2. The current time to determine the filename timestamp
+3. The invoice file to confirm it exists
+
+Let me also check the context for current time.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The current runtime time is 2026-03-30T10:47:00Z. This will be used for the `created_at` field and the filename of the outbound email.
+
+Now let me re-read the sending-email.md to make sure I have the exact frontmatter requirements and filename format correct.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the existing outbox folder to make sure the filename won't conflict.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good - the outbox folder currently only contains AGENTS.MD, no existing email records. So the first outbound email will be created there.
+
+Now I have all the information needed to construct the handling_plan and target_paths.
+
+Let me now set the output variables:
+
+**handling_plan:**
+- action: create outbound email record in 60_outbox/outbox/
+- artifact_type: outbound_email
+- destination: 60_outbox/outbox/
+- filename: eml_2026-03-30T10-47-00Z.md
+- frontmatter:
+  - record_type: outbound_email
+  - created_at: 2026-03-30T10:47:00Z
+  - send_state: draft
+  - to: [claudia@helios-tax.example]
+  - subject: Re: invoice copy needed
+  - attachments: [50_finance/invoices/2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md]
+  - related_entities: [entity.claudia]
+  - source_channel: 60_outbox/channels/helios_client_email.md
+- email_body: appropriate reply to Claudia's resend request, mentioning the attached invoice
+- post_processing: delete /00_inbox/000_invoice-request.md
+
+**target_paths:**
+- CREATE: 60_outbox/outbox/eml_2026-03-30T10-47-00Z.md
+- DELETE: 00_inbox/000_invoice-request.md
+
+Let me construct the handling_plan dict now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `bitgn.context()` returns a ContextResult object, not a dict. Let me check how to access it properly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The context result is a named tuple or object with attributes `unix_time` and `time`. Let me access them as attributes.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The handling plan is fully constructed and verified. Let me now set the output variables and complete the step.
+
+Key details of the plan:
+1. **Artifact type**: outbound_email record in /60_outbox/outbox/
+2. **Filename**: eml_2026-03-30T10-47-00Z.md (derived from runtime time 2026-03-30T10:47:00Z, colons replaced with hyphens in filename)
+3. **Full path**: 60_outbox/outbox/eml_2026-03-30T10-47-00Z.md
+4. **Required frontmatter fields**:
+   - record_type: outbound_email
+   - created_at: 2026-03-30T10:47:00Z (RFC3339 from runtime)
+   - send_state: draft
+   - to: ["claudia@helios-tax.example"] (canonical primary_contact_email)
+   - subject: Re: invoice copy needed
+   - attachments: ["50_finance/invoices/2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md"]
+5. **Optional frontmatter fields**:
+   - related_entities: ["entity.claudia"]
+   - source_channel: 60_outbox/channels/helios_client_email.md
+6. **Email body**: Reply to Claudia confirming the invoice resend with the attachment
+7. **Post-processing**: Delete /00_inbox/000_invoice-request.md after the outbound email record is created
+8. **Target paths**: 
+   - 60_outbox/outbox/eml_2026-03-30T10-47-00Z.md (CREATE)
+   - 00_inbox/000_invoice-request.md (DELETE)
+
+This is all consistent with the instructions. Let me complete the step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I need to set the required output variables `handling_plan` and `target_paths` first, then set `step_status` and `final_answer` in a separate block.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to finalize the step with the two required variables: step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

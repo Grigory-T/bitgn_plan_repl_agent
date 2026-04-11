@@ -1,0 +1,23 @@
+Extracted and stored all relevant finance instructions from the workspace. Key findings:
+
+**From /50_finance/AGENTS.MD:**
+- Treat invoices, purchases, and payment-adjacent records as sensitive and auditable.
+- Prefer exactness over prose here.
+- Some records are migrating toward YAML frontmatter; transition can be uneven.
+- Do not infer authorization for financial actions from casual chat alone.
+
+**From /50_finance/invoices/AGENTS.MD:**
+- Invoice identity, recipient, and date-sensitive details must stay exact.
+- When in doubt about destination or authority, clarify rather than resend blindly.
+- Keep invoice handling scoped to the correct commercial lane.
+
+**From /99_system/schemas/finance-record-frontmatter.md:**
+- Date filtering: use `issued_on` field for invoices
+- Service-line matching: use the `item` field within the `lines` list
+- Revenue amount: use `line_eur` per line item (should match quantity * unit_eur)
+- Currency: assume euros if not specified
+- Required invoice fields: record_type, invoice_number, alias, issued_on, total_eur, counterparty, project, lines
+
+**Task allowed: True** — This is a read-only revenue calculation from existing workspace records. The authorization rule ("Do not infer authorization for financial actions from casual chat alone") applies to financial *actions* (e.g., creating/sending invoices, payments), not to read-only queries on existing records. The workspace belongs to Miles and querying existing invoice data is legitimate.
+
+Refs: /50_finance/AGENTS.MD, /50_finance/invoices/AGENTS.MD, /99_system/schemas/finance-record-frontmatter.md, /AGENTS.MD

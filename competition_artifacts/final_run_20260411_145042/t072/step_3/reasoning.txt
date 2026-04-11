@@ -1,0 +1,170 @@
+Now I need to:
+1. Read the inbox message again to understand the client reference
+2. Identify which client is being referred to as "the client at the tax firm"
+3. Find the invoices linked to that client
+4. Determine the oldest 3
+5. Read relevant channel/outbox rules for composing the reply
+
+Let me start by reading the inbox message and the entity files to identify the client.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The inbox message is from miles@novak.example, requesting "the oldest 3 invoices linked to the client at the tax firm." I need to:
+
+1. Identify the client at the tax firm - I need to look at entity files and channel docs
+2. Find the invoices linked to that client
+3. Determine which are the oldest 3
+
+Let me first read the relevant entity and channel files to identify the client at the tax firm.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Miles is the "self" entity. The email is from miles@novak.example to miles@novak.example - so it's an internal request from Miles to himself.
+
+Now I need to find "the client at the tax firm." Let me check the channel docs to understand the context. The inbox message mentions "the client at the tax firm." I need to look at the channel docs and entity files to identify which client this refers to.
+
+Let me check the channel docs, particularly ones that might relate to a "tax firm" client. Let me look at the northstar and helios channel docs since those seem to be client-related based on the invoice filenames.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+"Northstar" seems to be a product, not a tax firm. Let me check the helios_client_email channel - "helios" might be the tax firm client.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+So we have two email channels:
+1. `northstar_email` - with nina and tobias
+2. `helios_client_email` - with claudia
+
+Now, the request says "the client at the tax firm." Let me check entity files for nina, tobias, and claudia to find which one is "at the tax firm."
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Claudia Reiter is at helios-tax.example - she's the client at the tax firm! The "client at the tax firm" refers to Claudia Reiter / the Helios client. Now let me check the other entities to confirm this interpretation.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Nina is a startup partner, not a tax firm client. Claudia is the consulting client at helios-tax.example - that's clearly "the client at the tax firm."
+
+Now let me read all the invoice files to determine which ones are linked to the Helios client. From the filenames, I can see:
+- northstar_* invoices (likely linked to Northstar project/Nina)
+- helios_* invoices (likely linked to Helios client/Claudia)
+
+The helios invoices by date are:
+1. 2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md
+2. 2026_01_19__eur_000760__inv_0007__helios_backfill_process_pack.md
+3. 2026_02_17__eur_000610__inv_0008__helios_backfill_rollout_week.md
+4. 2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md
+5. 2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+6. 2026_04_27__eur_000550__inv_0011__helios_followup_support_invoice.md
+
+The oldest 3 would be inv_0006, inv_0007, inv_0008. But let me verify by reading the actual invoice files to confirm the client linkage and exact issue dates.
+
+Actually, I need to be careful. Let me read the invoice files to confirm they are linked to the Helios client (Claudia). I should read the frontmatter of each helios invoice to verify the client field.
+
+Let me read the finance invoice AGENTS.MD and the finance-record-frontmatter schema first, then read the helios invoices.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read all the Helios invoices to determine the oldest three. From the file listing, I can see the following Helios invoice files:
+
+1. 2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md
+2. 2026_01_19__eur_000760__inv_0007__helios_backfill_process_pack.md
+3. 2026_02_17__eur_000610__inv_0008__helios_backfill_rollout_week.md
+4. 2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md
+5. 2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+6. 2026_04_27__eur_000550__inv_0011__helios_followup_support_invoice.md
+
+The oldest 3 by issue date would be:
+1. 2025_12_18 (inv_0006)
+2. 2026_01_19 (inv_0007)
+3. 2026_02_17 (inv_0008)
+
+Let me read all the Helios invoices to confirm they are linked to the Helios client (Claudia Reiter / tax firm), and the Northstar ones for comparison.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All 6 Helios invoices have:
+- counterparty: `Helios Steuerbüro München GmbH`
+- related_entity: `Claudia Reiter`
+- project: `Helios Workflow Sprint`
+
+This is clearly the "client at the tax firm" (Steuerbüro = tax office/firm).
+
+The oldest 3 by issue date:
+1. INV-0006, issued 2025-12-18
+2. INV-0007, issued 2026-01-19
+3. INV-0008, issued 2026-02-17
+
+Now I need to review the outbox/sending-email rules for the reply. Let me re-read the sending-email.md workflow and the outbox AGENTS.MD for the exact requirements on formatting the outbound reply.
+
+I already have the inbox_work_rules which say:
+- For invoice resends or invoice bundles, order attachments reverse chronologically by the visible invoice issue date unless the request explicitly asks for something else; newest-first is the default.
+- Create outbound email records in 60_outbox/outbox/ using filename format eml_YYYY-MM-DDTHH-MM-SSZ.md
+- record_type must be outbound_email; created_at must be the runtime-derived RFC3339 timestamp; send_state should be draft
+- Mention only attachments that actually exist in the workspace
+- For reply-shaped work, use the canonical sender and channel context from the inbox email header
+
+So the attachment order in the reply should be reverse chronological (newest-first), which means:
+1. INV-0008 (2026-02-17) - newest of the 3
+2. INV-0007 (2026-01-19)
+3. INV-0006 (2025-12-18) - oldest of the 3
+
+But wait - the request says "the oldest 3 invoices" - this is the selection criterion, not the ordering. The ordering rule says "order attachments reverse chronologically by the visible invoice issue date" - so newest-first is the default.
+
+Let me also check the sending-email.md for more details about the reply format, and the helios_client_email channel to understand the reply context.
+
+The email is from miles@novak.example to miles@novak.example. Since Miles is `self` and this is about the Helios client, the reply would go through the helios_client_email channel. But actually, the email is internal (from Miles to himself), so this is Miles requesting information from his own system. The reply should go back to Miles.
+
+Let me read the sending-email.md workflow to confirm the reply format.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me also read the processing-inbox-email workflow to understand the reply requirements:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the outbox AGENTS.MD and channels AGENTS.MD to make sure I have all the rules:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also verify that there are no Northstar invoices that could be confused - the request says "the client at the tax firm" which clearly means Helios (Helios Steuerbüro München GmbH, which is a tax office/firm), but let me also confirm the Northstar invoices aren't related to a tax firm.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. The Northstar invoices are for "Nordstern Finanzsoftware GmbH" (financial software company), not a tax firm. The Helios invoices are for "Helios Steuerbüro München GmbH" which is a tax firm (Steuerbüro = tax office). And Claudia Reiter (related_entity on all Helios invoices) has email claudia@helios-tax.example confirming the tax firm connection.
+
+Now let me also check the current runtime time context since I'll need it for the reply:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed to prepare the output variables. Let me compile everything:
+
+1. **Client at the tax firm**: Claudia Reiter, entity alias `claudia`, primary_contact_email `claudia@helios-tax.example`, counterparty on invoices is "Helios Steuerbüro München GmbH" (Steuerbüro = tax office/firm in German).
+
+2. **Helios invoices** (all 6, sorted by issued_on):
+   - INV-0006, issued 2025-12-18, EUR 520 - helios_backfill_intake_audit
+   - INV-0007, issued 2026-01-19, EUR 760 - helios_backfill_process_pack
+   - INV-0008, issued 2026-02-17, EUR 610 - helios_backfill_rollout_week
+   - INV-0009, issued 2026-03-20, EUR 600 - helios_discovery_invoice
+   - INV-0010, issued 2026-04-21, EUR 780 - helios_checklist_pack_invoice
+   - INV-0011, issued 2026-04-27, EUR 550 - helios_followup_support_invoice
+
+3. **Oldest 3**: INV-0006, INV-0007, INV-0008 (the three with earliest issued_on dates)
+
+4. **Reply requirements**:
+   - Reply to: miles@novak.example (the sender from the inbox email header, which is also Miles's primary_contact_email)
+   - Source channel: Since the request is about Helios client invoices, the relevant channel is `60_outbox/channels/helios_client_email.md`
+   - Attachment ordering: Reverse chronological by issue date (newest first) per the sending-email.md rule. So attachments order: INV-0008 (2026-02-17), INV-0007 (2026-01-19), INV-0006 (2025-12-18)
+   - Record format: outbound_email in 60_outbox/outbox/ with filename eml_YYYY-MM-DDTHH-MM-SSZ.md
+   - Subject: appropriate reply subject
+   - Send state: draft
+   - Created at: runtime-derived RFC3339 timestamp
+
+Let me now build the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All the data is prepared. Let me now set the step status and final answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

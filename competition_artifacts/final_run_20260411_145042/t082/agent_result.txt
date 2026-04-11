@@ -1,0 +1,1 @@
+The inbox request cannot be completed safely from canonical workspace evidence: the 'sailboat refit notebook' is not a project folder with a canonical start date, so the comparison and 'delete the earliest project' instruction are ambiguous and unsupported. Per workspace rules, destructive changes must not proceed without uniquely supported targets.

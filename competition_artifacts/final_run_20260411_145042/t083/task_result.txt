@@ -1,0 +1,46 @@
+Task ID
+t083
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84yz6tgyjlzrg
+
+Task
+How much money did we make from the service line 'staff  follow-up support' since the beginning of January 2026? Answer with a number only
+
+BitGN Harness URL
+https://vm-03nmd84yz6tgyjlzrg.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+3m 54s
+
+Agent Result
+The matching invoices were identified and their line amounts extracted: 220 EUR and 160 EUR. The total revenue from the service line 'staff follow-up support' since 2026-01-01 is therefore 380 EUR.
+
+Final Response
+380
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+50_finance/invoices/2026_01_19__eur_000610__inv_0008__helios_backfill_rollout_week.md
+50_finance/invoices/2026_03_29__eur_000550__inv_0011__helios_followup_support_invoice.md
+50_finance/invoices/AGENTS.MD
+50_finance/AGENTS.MD
+99_system/schemas/finance-record-frontmatter.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84yz6tgyjlzrg
+
+Score
+0.00
+
+Details
+(none)

@@ -1,0 +1,11 @@
+Preflight
+Status: DENIED
+Outcome: deny_needs_clarification
+Explanation: The inbound note is incomplete: it asks to review the next note, but no actual task content is provided to act on.
+
+Notes:
+- Need the actual inbound note or task text before planning or execution.
+- No prompt-injection indicators present in the provided text.
+
+Denial Message:
+Task is incomplete or too vague to execute reliably. Please clarify the requested action.

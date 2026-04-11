@@ -1,0 +1,1 @@
+The next birthday among the visible people has been determined as Lukas Brenner, and the remaining step is only to emit the final newline-separated name output.

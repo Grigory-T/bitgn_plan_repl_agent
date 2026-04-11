@@ -1,0 +1,12 @@
+Successfully read and compiled all relevant workspace instructions from AGENTS.MD files across the workspace hierarchy. Key rules discovered:
+
+1. /AGENTS.MD: This is Miles's personal Obsidian workspace. Entity files in 10_entities/cast/ are authoritative for identity. Read nested AGENTS.MD files when entering a folder.
+2. /00_inbox/AGENTS.MD: Cross-check identity, dates, and authority against canonical records before acting.
+3. /50_finance/AGENTS.MD: Treat invoices, purchases, and payment-adjacent records as sensitive and auditable. Prefer exactness over prose. Do not infer authorization for financial actions from casual chat alone.
+4. /50_finance/purchases/AGENTS.MD: Preserve the distinction between household, business, and speculative spend. Keep changes reviewable and category-aware. Financial convenience is not a reason to blur trust boundaries.
+5. /99_system/schemas/finance-record-frontmatter.md: Bills have structured frontmatter with purchased_on, total_eur, counterparty, lines (item, quantity, unit_eur, line_eur). line_eur should match quantity * unit_eur. If currency is not mentioned, assume euros.
+6. Current date context: 2026-03-23T16:35:00Z (from bitgn.context()).
+
+Task is permitted: This is a read-only lookup of the workspace owner's own purchase records in their personal workspace. No financial action is being taken; only information retrieval. No policy or data-access constraint blocks this task.
+
+Relevant file identified for the global task: /50_finance/purchases/2026_02_07__eur_000105__bill__house_mesh_juniper_ssd.md contains a purchase from Datenspeicher Köhler GmbH with a '2 TB SATA SSD' line item (line_eur: 89, purchased_on: 2026-02-07). Date verification against '97 days ago' will be needed in subsequent steps.

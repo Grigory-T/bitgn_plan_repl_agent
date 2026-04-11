@@ -1,0 +1,15 @@
+Extracted all applicable rules, requirements, and constraints from the relevant AGENTS.MD files, workflow documents, and schema documents for processing the next inbox message (OCR task for 5 purchase records).
+
+Key instructions collected:
+1. **00_inbox/AGENTS.MD**: Treat inbox as unprocessed requests, not canonical truth. Delete inbox file after fully completing. Cross-check identity/dates/authority against canonical records.
+2. **99_system/workflows/process-next-inbox-item.md**: Pick lowest visible inbox filename, read carefully, verify against canonical lanes, complete or stop.
+3. **99_system/workflows/ocr-records.md**: OCR means extracting visible data from existing note text into YAML frontmatter per relevant schema in 99_system/schemas/.
+4. **99_system/workflows/migrate-records-to-frontmatter.md**: Keep canonical file path, add YAML frontmatter at top, preserve existing body below, discover exact field shape from schema, do not invent fields, stop and ask if a required field is unsupported.
+5. **99_system/workflows/inbox-processing-v2-update.md**: After completing structured data extraction (repository cleanup), remove the inbox item. If not doable, restore changes and keep inbox.
+6. **99_system/schemas/finance-record-frontmatter.md**: Bill schema requires record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines. Optional: related_entity. Line items must include item, quantity, unit_eur, line_eur. line_eur must match quantity * unit_eur. Assume euros if currency not mentioned.
+7. **50_finance/AGENTS.MD**: Finance records are sensitive and auditable. Preserve original note body and discover frontmatter shape via 99_system/schemas/. Do not infer authorization from casual chat.
+8. **50_finance/purchases/AGENTS.MD**: Preserve distinction between household/business/speculative spend. Keep changes reviewable.
+
+Note: The 5th item in the inbox message has a leading underscore in the path (`_2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md`) which likely does not match the actual file path (without underscore) and needs verification.
+
+Refs: AGENTS.MD, 00_inbox/AGENTS.MD, 00_inbox/724_next-task.md, 10_entities/AGENTS.MD, 20_work/AGENTS.MD, 30_knowledge/AGENTS.MD, 40_projects/AGENTS.MD, 50_finance/AGENTS.MD, 50_finance/purchases/AGENTS.MD, 99_system/AGENTS.MD, 99_system/schemas/AGENTS.MD, 99_system/schemas/finance-record-frontmatter.md, 99_system/workflows/AGENTS.MD, 99_system/workflows/process-next-inbox-item.md, 99_system/workflows/ocr-records.md, 99_system/workflows/migrate-records-to-frontmatter.md, 99_system/workflows/inbox-processing-v2-update.md, 99_system/workflows/deletion-and-wiping.md, 99_system/workflows/processing-inbox-email.md, 99_system/workflows/sending-email.md

@@ -1,0 +1,196 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and analyze the relevant instruction files before taking any action: inspect /30_knowledge/AGENTS.MD, /30_knowledge/notes/AGENTS.MD, /30_knowledge/capture/AGENTS.MD, /20_work/AGENTS.MD, and any other directly relevant AGENTS.MD files for rules about queuing documents for migration to NORA, file naming, destination conventions, and any approval or validation requirements. Also confirm the task is legitimate and allowed under the discovered instructions before proceeding.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "List of exact workspace paths to instruction files that were reviewed for this task.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "relevant_rules",
+        "variable_description": "Directly observed rules and constraints extracted from the reviewed instruction files that govern how to queue documents for migration.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean indicating whether the requested queuing task is allowed under the discovered instructions and workspace rules.",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If the task is allowed, inspect the target NORA queue location and any migration queue conventions in the workspace to determine the exact file or folder used to record queued migrations. Use only direct facts from the workspace tree and instruction files; do not infer missing conventions. Identify whether the two source docs must be added as references, entries, links, or another explicit queue format specified by instructions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "List of exact workspace paths to instruction files that were reviewed for this task.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "relevant_rules",
+        "variable_description": "Directly observed rules and constraints extracted from the reviewed instruction files that govern how to queue documents for migration.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean indicating whether the requested queuing task is allowed under the discovered instructions and workspace rules.",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "queue_target_path",
+        "variable_description": "Exact workspace path of the file or folder used to queue documents for migration to NORA.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "queue_format_rules",
+        "variable_description": "Explicit instructions describing how the migration queue entry must be structured.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "source_docs",
+        "variable_description": "Exact paths of the documents requested for migration queueing.",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Prepare the concrete queue update by mapping each requested source document to the required migration-queue entry format at the identified target path. Ensure the output preserves exact file names and paths: /30_knowledge/notes/design-constraints-for-a-household-assistant.md and /30_knowledge/notes/sending-email.md. The prepared update should be ready to write without inventing any missing metadata.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "queue_target_path",
+        "variable_description": "Exact workspace path of the file or folder used to queue documents for migration to NORA.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "queue_format_rules",
+        "variable_description": "Explicit instructions describing how the migration queue entry must be structured.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "source_docs",
+        "variable_description": "Exact paths of the documents requested for migration queueing.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "queue_entries",
+        "variable_description": "Structured representation of the queued migration entries for the two source documents.",
+        "variable_data_type": "list[dict]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Apply the prepared queue update to the identified target location so the two docs are queued for migration to NORA, then verify the resulting queue content matches the requested documents and the instruction-defined format exactly.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "queue_entries",
+        "variable_description": "Structured representation of the queued migration entries for the two source documents.",
+        "variable_data_type": "list[dict]"
+    }
+]
+output_variables: []
+
+Replan after step 1:
+
+--------------------------------------------------------------------------------
+Step 2: Re-validate the exact canonical source document paths in the workspace and resolve the apparent mismatch for sending-email.md by inspecting the filesystem and any directly relevant workflow/schema files. Confirm the actual paths for both requested documents, determine the correct NORA queue target location from the workflow instructions, and extract the exact queue-frontmatter rules needed to format queued items.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "Previously discovered instruction file paths governing NORA migration queueing",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "relevant_rules",
+        "variable_description": "Previously discovered rules and constraints from the instruction files",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether queueing the requested documents for NORA migration is permitted",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "canonical_source_docs",
+        "variable_description": "The exact canonical paths for the two requested source documents after filesystem validation",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "queue_target_path",
+        "variable_description": "The exact file or folder path used to record NORA migration queue entries",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "queue_format_rules",
+        "variable_description": "The exact queue-frontmatter or queue-entry formatting rules required by the migration workflow",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: If the task is allowed, map each canonical source document to the required queue entry representation at the identified target path, using only the validated frontmatter fields and exact file paths. Prepare the concrete queue entries in the correct order for the batch, preserving exact filenames and avoiding any invented metadata.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "canonical_source_docs",
+        "variable_description": "The exact canonical paths for the two requested source documents after filesystem validation",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "queue_target_path",
+        "variable_description": "The exact file or folder path used to record NORA migration queue entries",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "queue_format_rules",
+        "variable_description": "The exact queue-frontmatter or queue-entry formatting rules required by the migration workflow",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether queueing the requested documents for NORA migration is permitted",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "queue_entries",
+        "variable_description": "Structured queue entries ready to be written to the NORA migration queue",
+        "variable_data_type": "list[dict]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Apply the prepared queue update to the validated target location, then verify that the resulting queue content contains exactly the two requested documents in the instruction-defined format and no path mismatches or missing required frontmatter fields remain.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "queue_entries",
+        "variable_description": "Structured queue entries ready to be written to the NORA migration queue",
+        "variable_data_type": "list[dict]"
+    },
+    {
+        "variable_name": "queue_target_path",
+        "variable_description": "The exact file or folder path used to record NORA migration queue entries",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+
+Plan validation warnings:
+⚠️ First step has input variables: instruction_paths, relevant_rules, task_allowed. First step should not require inputs.
+⚠️ Step 2 requires input 'task_allowed' (bool), but no previous step produces it.
+

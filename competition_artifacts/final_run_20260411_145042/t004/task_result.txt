@@ -1,0 +1,46 @@
+Task ID
+t004
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84rjnj1h3yr34
+
+Task
+How many STALLED projects involve Sara Demir? Answer with a number only
+
+BitGN Harness URL
+https://vm-03nmd84rjnj1h3yr34.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+3m 23s
+
+Agent Result
+The completed search found no projects with status exactly STALLED, and Sara Demir is explicitly linked only to active projects. Therefore the count of STALLED projects involving Sara Demir is 0.
+
+Final Response
+0
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/10_entities/cast/sara.md
+/40_projects/2026_04_25_harbor_body/README.MD
+/40_projects/2026_04_27_reading_spine/README.MD
+/40_projects/AGENTS.MD
+/10_entities/cast/AGENTS.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84rjnj1h3yr34
+
+Score
+0.00
+
+Details
+(none)

@@ -1,0 +1,10 @@
+Read all relevant AGENTS.MD instruction files and assessed task legitimacy.
+
+Key rules discovered:
+- `/40_projects/AGENTS.MD`: "The canonical reference for each project is README.MD inside that project folder." - Project status is determined by the README.MD inside each project folder.
+- `/10_entities/cast/AGENTS.MD`: "Each file is authoritative for relationship, birthday when present, and the basic identity of that entity." - Entity mentions are resolved via canonical cast files.
+- `/AGENTS.MD`: "Entity files in 10_entities/cast/ are authoritative for identity, primary_contact_email when present, and birthdays when present."
+
+This is a legitimate read-only lookup task: counting stalled projects involving Jana Vesela based on canonical project READMEs and entity records. No estimation or fabrication required.
+
+Relevant files: /AGENTS.MD, /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD, /40_projects/AGENTS.MD

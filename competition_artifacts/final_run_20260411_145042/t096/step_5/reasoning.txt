@@ -1,0 +1,83 @@
+Now I need to:
+1. Read the sending-email workflow to confirm the exact format for the outbound email record
+2. Read the outbox AGENTS.MD for any specific rules
+3. Create the outbound email record
+4. Delete the inbox file
+
+Let me re-read the key workflow files to make sure I get the format right.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the current time and the inbox message to make sure I get the timestamp right.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The current time is 2026-03-02T18:21:00Z, which matches the resolution plan timestamp. Let me now read the inbox file and the outbox AGENTS.MD to make sure I follow all rules, then create the outbound email.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. Now let me also re-read the processing-inbox-email workflow and the inbox item to make sure I get the subject line right.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me create the outbound email record.
+
+The filename should be: `eml_2026-03-02T18-21-00Z.md` (using the runtime-derived current time)
+
+The frontmatter and body should follow the sending-email.md schema exactly.
+
+Let me compose the file content:
+
+```yaml
+---
+record_type: outbound_email
+created_at: 2026-03-02T18:21:00Z
+send_state: draft
+to:
+  - claudia@helios-tax.example
+subject: "Re: Could you resend the invoice?"
+attachments:
+  - 50_finance/invoices/2026_03_23__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+related_entities:
+  - entity.claudia
+related_projects:
+  - project.helios_workflow_sprint
+source_channel: 60_outbox/channels/helios_client_email.md
+---
+
+Hi Claudia,
+
+As requested, here is the invoice INV-0010 (issued 2026-03-23, EUR 780, checklist rewrite and rollout pack) for Helios Steuerbüro München GmbH. Please find it attached.
+
+Best,
+Miles
+```
+
+Let me create this file now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, the outbound email record has been created. Now I need to verify it was written correctly by reading it back.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The outbound email record has been created correctly. Now I need to delete the inbox file per the post-action in the resolution plan and the inbox processing workflow rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The inbox file has been deleted. Let me verify the inbox is now empty.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. The inbox is now cleared of the processed message. The outbound email record has been created correctly. Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me set the final_action_status variable first, then finalize the step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The step is completed. I need to finalize with the two required lines.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

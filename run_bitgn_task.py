@@ -18,10 +18,10 @@ sys.dont_write_bytecode = True
 load_dotenv()
 
 
-LEADERBOARD_RUN_NAME = "key_concept:plan_repl_agent"
+LEADERBOARD_RUN_NAME = "key_concept - plan_repl_agent"
 DEFAULT_WORKERS = 10
 RUNS_DIR = Path(__file__).resolve().parent / "runs"
-RUN_PREPARE_TIMEOUT_SECONDS = 60
+RUN_PREPARE_TIMEOUT_SECONDS = 600
 RUN_PREPARE_POLL_SECONDS = 0.5
 
 
@@ -98,7 +98,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--benchmark-id",
-        default="bitgn/pac1-dev",
+        default="bitgn/pac1-prod",
         help="BitGN benchmark id",
     )
     parser.add_argument(
@@ -146,7 +146,7 @@ def build_lifecycle_parser() -> argparse.ArgumentParser:
     )
     start_parser.add_argument(
         "--benchmark-id",
-        default="bitgn/pac1-dev",
+        default="bitgn/pac1-prod",
         help="BitGN benchmark id",
     )
     start_parser.add_argument(
@@ -183,16 +183,17 @@ def build_lifecycle_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _task_num(raw: str) -> int:
+def _task_num(raw: str) -> tuple[int, int]:
     value = raw.strip().lower()
     match = re.fullmatch(r"t?(\d+)", value)
     if not match:
         raise ValueError(f"Invalid task id: {raw}")
-    return int(match.group(1))
+    digits = match.group(1)
+    return int(digits), len(digits)
 
 
-def _task_id(num: int) -> str:
-    return f"t{num:02d}"
+def _task_id(num: int, width: int = 2) -> str:
+    return f"t{num:0{width}d}"
 
 
 def parse_task_spec(task_spec: str) -> list[str]:
@@ -202,16 +203,17 @@ def parse_task_spec(task_spec: str) -> list[str]:
     for part in [item.strip() for item in task_spec.split(",") if item.strip()]:
         if "-" in part:
             left, right = [item.strip() for item in part.split("-", 1)]
-            start = _task_num(left)
-            end = _task_num(right)
+            start, start_width = _task_num(left)
+            end, end_width = _task_num(right)
+            width = max(start_width, end_width, 2)
             if start > end:
                 raise ValueError(f"Invalid task range: {part}")
-            nums = range(start, end + 1)
+            items = [(_task_id(num, width), num) for num in range(start, end + 1)]
         else:
-            nums = [_task_num(part)]
+            num, width = _task_num(part)
+            items = [(_task_id(num, max(width, 2)), num)]
 
-        for num in nums:
-            task_id = _task_id(num)
+        for task_id, _ in items:
             if task_id not in seen:
                 seen.add(task_id)
                 task_ids.append(task_id)
@@ -837,6 +839,41 @@ def _task_trial_map_for_run(benchmark_host: str, benchmark_id: str, task_ids: li
     raise RuntimeError(f"Timed out waiting for prepared trials for tasks: {', '.join(missing)}")
 
 
+def _normalize_task_ids_for_benchmark(benchmark_host: str, benchmark_id: str, task_ids: list[str]) -> list[str]:
+    from bitgn_sdk.harness_connect import HarnessServiceClientSync
+    from bitgn_sdk.harness_pb2 import GetBenchmarkRequest
+
+    client = HarnessServiceClientSync(benchmark_host)
+    benchmark = client.get_benchmark(GetBenchmarkRequest(benchmark_id=benchmark_id))
+    available_ids = {_proto_text(task.task_id) for task in _proto_list(getattr(benchmark, "tasks", []))}
+    numeric_map: dict[int, list[str]] = {}
+    for task_id in available_ids:
+        match = re.fullmatch(r"t(\d+)", task_id)
+        if not match:
+            continue
+        numeric_map.setdefault(int(match.group(1)), []).append(task_id)
+
+    normalized: list[str] = []
+    missing: list[str] = []
+    for task_id in task_ids:
+        if task_id in available_ids:
+            normalized.append(task_id)
+            continue
+        match = re.fullmatch(r"t(\d+)", task_id)
+        if not match:
+            missing.append(task_id)
+            continue
+        candidates = sorted(numeric_map.get(int(match.group(1)), []), key=len)
+        if len(candidates) == 1:
+            normalized.append(candidates[0])
+            continue
+        missing.append(task_id)
+
+    if missing:
+        raise ValueError(f"Tasks not present in benchmark {benchmark_id}: {', '.join(missing)}")
+    return normalized
+
+
 def _submit_run(benchmark_host: str, run_id: str) -> None:
     from bitgn_sdk.harness_connect import HarnessServiceClientSync
     from bitgn_sdk.harness_pb2 import SubmitRunRequest
@@ -1109,6 +1146,7 @@ def _run_worker_pool(
 
 def _parent_main(args: argparse.Namespace) -> int:
     task_ids = parse_task_spec(args.task_id)
+    task_ids = _normalize_task_ids_for_benchmark(args.benchmark_host, args.benchmark_id, task_ids)
     batch_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     script_path = Path(__file__).resolve()
     run_id = None
@@ -1143,6 +1181,7 @@ def _parent_main(args: argparse.Namespace) -> int:
 def _start_run_command(args: argparse.Namespace) -> int:
     _print_command_started()
     task_ids = parse_task_spec(args.task_id)
+    task_ids = _normalize_task_ids_for_benchmark(args.benchmark_host, args.benchmark_id, task_ids)
     api_key = _bitgn_api_key()
     if not api_key:
         raise RuntimeError("BITGN_API_KEY is required for start-run.")
@@ -1201,9 +1240,32 @@ def _start_run_command(args: argparse.Namespace) -> int:
 def _tasks_to_run_from_state(state: dict, task_spec: str | None) -> tuple[list[str], list[str]]:
     if task_spec:
         requested = parse_task_spec(task_spec)
-        missing = [task_id for task_id in requested if task_id not in state["tasks"]]
+        available_ids = set(state["tasks"].keys())
+        numeric_map: dict[int, list[str]] = {}
+        for task_id in available_ids:
+            match = re.fullmatch(r"t(\d+)", task_id)
+            if not match:
+                continue
+            numeric_map.setdefault(int(match.group(1)), []).append(task_id)
+
+        normalized_requested: list[str] = []
+        missing: list[str] = []
+        for task_id in requested:
+            if task_id in available_ids:
+                normalized_requested.append(task_id)
+                continue
+            match = re.fullmatch(r"t(\d+)", task_id)
+            if not match:
+                missing.append(task_id)
+                continue
+            candidates = sorted(numeric_map.get(int(match.group(1)), []), key=len)
+            if len(candidates) == 1:
+                normalized_requested.append(candidates[0])
+            else:
+                missing.append(task_id)
         if missing:
             raise ValueError(f"Tasks not present in run {state['run_id']}: {', '.join(missing)}")
+        requested = normalized_requested
         runnable = [task_id for task_id in requested if state["tasks"][task_id]["status"] != "completed"]
         skipped = [task_id for task_id in requested if state["tasks"][task_id]["status"] == "completed"]
         return runnable, skipped
@@ -1234,6 +1296,7 @@ def _run_tasks_command(args: argparse.Namespace) -> int:
     trial_map = {task_id: state["tasks"][task_id]["trial_id"] for task_id in task_ids}
     print(f"RUN_ID {state['run_id']}")
     print(f"BATCH_ID {batch_id}")
+    print(f"BATCH_LOG_DIR {_batch_log_dir(batch_id)}")
     print(f"TASKS {','.join(task_ids)}")
     if skipped_task_ids:
         print(f"SKIPPED_COMPLETED_TASKS {','.join(skipped_task_ids)}")
@@ -1274,6 +1337,7 @@ def _end_run_command(args: argparse.Namespace) -> int:
 def _status_command(args: argparse.Namespace) -> int:
     _print_command_started()
     state = _load_run_state(args.run_id)
+    run_state_path = _run_state_path(state["run_id"])
 
     pending = [task_id for task_id in state["task_ids"] if state["tasks"][task_id]["status"] == "pending"]
     running = [task_id for task_id in state["task_ids"] if state["tasks"][task_id]["status"] == "running"]
@@ -1281,6 +1345,7 @@ def _status_command(args: argparse.Namespace) -> int:
     local_error = [task_id for task_id in state["task_ids"] if state["tasks"][task_id]["status"] == "local_error"]
 
     print(f"RUN_ID {state['run_id']}")
+    print(f"RUN_STATE {run_state_path}")
     print(f"BENCHMARK_ID {state['benchmark_id']}")
     print(f"RUN_STATUS {state.get('status', '(unknown)')}")
     print(f"SUBMITTED_AT {state.get('submitted_at') or '(not submitted)'}")

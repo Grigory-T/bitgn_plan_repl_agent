@@ -1,0 +1,72 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Check the relevant instruction files before searching the workspace: read /50_finance/AGENTS.MD and /50_finance/purchases/AGENTS.MD, and also /00_inbox/AGENTS.MD if it contains workspace-wide guidance. Confirm the task is legitimate and allowed under the instructions, and identify any rules for locating the purchase record and extracting only the purchased date. Store the discovered instructions and any scope constraints for later use.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "finance_instructions",
+        "variable_description": "Relevant instructions read from /50_finance/AGENTS.MD and /50_finance/purchases/AGENTS.MD",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "inbox_instructions",
+        "variable_description": "Relevant instructions read from /00_inbox/AGENTS.MD",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether the task is permitted under the discovered instructions",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If the task is allowed, search /50_finance/purchases for the bill issued around Jan 10, 2026-Jan 13 that is from Domänenbüro Köln GmbH. Use only direct file facts from the purchase documents and relevant metadata/date fields, not estimates. Identify the single matching purchase file and read its contents to locate the purchased date field. Store the candidate file path and the extracted raw date value.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "finance_instructions",
+        "variable_description": "Relevant instructions read from /50_finance/AGENTS.MD and /50_finance/purchases/AGENTS.MD",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether the task is permitted under the discovered instructions",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "purchase_file_path",
+        "variable_description": "Path to the matching purchase markdown file under /50_finance/purchases",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "raw_purchased_date",
+        "variable_description": "Purchased date value exactly as found in the purchase record",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Validate that the extracted date belongs to the correct bill from Domänenbüro Köln GmbH and format it strictly as DD-MM-YYYY. If the record already uses that format, preserve it exactly; otherwise convert only from explicit date components present in the file. Output only the final date string and ensure no extra text is included in the final response.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "purchase_file_path",
+        "variable_description": "Path to the matching purchase markdown file under /50_finance/purchases",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "raw_purchased_date",
+        "variable_description": "Purchased date value exactly as found in the purchase record",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+
+Plan validation warnings:
+⚠️ Step 1 outputs 'inbox_instructions' (dict), but it's not used by any subsequent step.
+

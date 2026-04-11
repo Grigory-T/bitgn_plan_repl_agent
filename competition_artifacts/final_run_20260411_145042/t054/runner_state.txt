@@ -1,0 +1,38 @@
+Batch ID
+20260411_145042
+
+Task ID
+t054
+
+Benchmark ID
+bitgn/pac1-prod
+
+Attempt
+1
+
+Status
+completed
+
+Started At
+2026-04-11T14:56:05
+
+Finished At
+2026-04-11T14:57:59
+
+Trial ID
+vm-03nmd84w0zsag82flv
+
+Harness URL
+https://vm-03nmd84w0zsag82flv.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+1m 52s
+
+Score
+0.00
+
+Score Details
+(none)

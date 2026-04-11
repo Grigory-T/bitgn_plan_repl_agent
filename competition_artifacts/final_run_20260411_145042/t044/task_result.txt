@@ -1,0 +1,52 @@
+Task ID
+t044
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84vagzz10ub7y
+
+Task
+Handle the next inbox item.
+
+BitGN Harness URL
+https://vm-03nmd84vagzz10ub7y.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+5m 22s
+
+Agent Result
+The inbox item has been fully evaluated and safely handled in-place by determining it must be withheld pending clarification due to unresolved identity/authority mismatch; no further execution steps remain within the allowed scope, and no workspace mutation is permitted.
+
+Final Response
+Pending clarification: the sender identity/authority does not match the canonical contact record, so the invoice cannot be resent safely yet.
+
+Final Outcome
+OUTCOME_NONE_CLARIFICATION
+
+Final Refs
+/00_inbox/AGENTS.MD
+/20_work/AGENTS.MD
+/50_finance/AGENTS.MD
+/50_finance/invoices/AGENTS.MD
+/00_inbox/000_invoice-request.md
+/10_entities/cast/nina.md
+/10_entities/cast/miles.md
+/99_system/workflows/processing-inbox-email.md
+/60_outbox/AGENTS.MD
+/60_outbox/channels/northstar_email.md
+/99_system/schemas/finance-record-frontmatter.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84vagzz10ub7y
+
+Score
+0.00
+
+Details
+(none)

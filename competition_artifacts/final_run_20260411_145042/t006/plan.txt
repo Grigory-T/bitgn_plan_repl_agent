@@ -1,0 +1,54 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and comply with the relevant workspace instructions before making any filesystem changes: inspect the applicable AGENTS.MD files for the finance purchases area and any higher-level parent instructions that govern file deletion and receipt handling. Also assess whether the request is legitimate and allowed under the discovered instructions, since the task is to delete receipt files containing the exact text "ESP32-C3 dev boards". Do not modify anything yet; only collect the governing rules and confirm the scope for the purchases directory under 50_finance/purchases.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "List of instruction file paths that were found and need to be consulted for the task.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_texts",
+        "variable_description": "Mapping of instruction file paths to their textual contents.",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Search the workspace for receipt files under the finance purchases area whose contents contain the exact string "ESP32-C3 dev boards". Record the exact runtime paths of every matching receipt file, using direct file content inspection rather than inference, and ensure only files within the relevant receipt/purchase scope are considered.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "List of instruction file paths that were found and need to be consulted for the task.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_texts",
+        "variable_description": "Mapping of instruction file paths to their textual contents.",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "matching_receipt_paths",
+        "variable_description": "Exact paths of receipt files whose contents contain the target string.",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Delete each receipt file whose path appears in matching_receipt_paths. Preserve the exact paths of the deleted files for reporting, and sort those paths alphabetically before final output. Do not include any extra text in the final answer; return only the deleted paths, one per line.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "matching_receipt_paths",
+        "variable_description": "Exact paths of receipt files whose contents contain the target string.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+

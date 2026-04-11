@@ -1,0 +1,11 @@
+Re-validated the exact canonical source document paths and resolved the mismatch for sending-email.md. Key findings:
+
+1. **canonical_source_docs**: Both documents exist at unique, confirmed paths with no duplicates anywhere in the workspace:
+   - `/30_knowledge/notes/design-constraints-for-a-household-assistant.md` — the household assistant design constraints note
+   - `/99_system/workflows/sending-email.md` — the sending-email workflow doc (under workflows, not notes; the task's shorthand 'NORA:design-constraints-for-a-household-assistant.md, sending-email.md' maps to these two files)
+
+2. **queue_target_path**: `vault2` — per the migrating-to-nora-mcp.md workflow, NORA migration queue entries target vault2. Queuing is done by adding YAML frontmatter to the source documents themselves (not by writing to a separate queue file).
+
+3. **queue_format_rules**: 20 exact formatting rules extracted from /99_system/workflows/migrating-to-nora-mcp.md and /99_system/schemas/bulk-processing-and-queueing-frontmatter.md, covering: bulk_processing_workflow=nora_mcp, queue_target=vault2, batch timestamp (single UTC RFC3339 Z-form per batch), queue_order_id (alphanumeric sort of paths, contiguous 1..N), queue_state=pending on initial queueing, frontmatter merge vs new-add logic, body preservation, exact touched-file set, and no-extra-fields rule.
+
+Refs: /99_system/workflows/migrating-to-nora-mcp.md, /99_system/schemas/bulk-processing-and-queueing-frontmatter.md, /30_knowledge/notes/design-constraints-for-a-household-assistant.md, /99_system/workflows/sending-email.md, /AGENTS.MD, /10_entities/cast/nora.md

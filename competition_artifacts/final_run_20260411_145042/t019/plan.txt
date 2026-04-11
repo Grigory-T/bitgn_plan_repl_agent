@@ -1,0 +1,112 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and apply the workspace instructions relevant to inbox handling by opening /00_inbox/AGENTS.MD and any higher-level AGENTS.MD files that govern inbox, work, finance, entities, and outbox operations. Also inspect /00_inbox/000_invoice-request.md to understand the exact inbox item to handle, and verify whether the request is legitimate and allowed before taking any action.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "inbox_item_path",
+        "variable_description": "Exact runtime path of the next inbox item to be handled",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "List of exact runtime paths to instruction files that govern the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "inbox_item_text",
+        "variable_description": "Full text content of the inbox item file",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "applicability_assessment",
+        "variable_description": "Assessment of whether the inbox request is legitimate and allowed under the discovered instructions",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If the request is allowed, determine the concrete handling actions required by the inbox item using only direct facts from the inbox text and relevant workspace files. Identify any target files to create, update, or reference, and extract all required invoice or task details without estimating or inventing missing information.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "inbox_item_path",
+        "variable_description": "Exact runtime path of the next inbox item to be handled",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_item_text",
+        "variable_description": "Full text content of the inbox item file",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "List of exact runtime paths to instruction files that govern the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "applicability_assessment",
+        "variable_description": "Assessment of whether the inbox request is legitimate and allowed under the discovered instructions",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "handling_actions",
+        "variable_description": "Ordered list of concrete actions needed to handle the inbox item",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "target_file_paths",
+        "variable_description": "List of exact runtime paths for files that may need to be created or updated",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "required_facts",
+        "variable_description": "Dictionary of directly observed facts needed to execute the handling actions",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Carry out the handling actions in the correct order, using the target files and required facts. If the inbox item is an invoice-related request, prepare or update the corresponding finance record under /50_finance/invoices/ according to the workspace conventions, and if other related entities or work items are needed, update the appropriate files under /10_entities/, /20_work/, or /60_outbox/ as required by the instructions. Do not approximate missing values; only write what is supported by the files and instructions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "handling_actions",
+        "variable_description": "Ordered list of concrete actions needed to handle the inbox item",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "target_file_paths",
+        "variable_description": "List of exact runtime paths for files that may need to be created or updated",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "required_facts",
+        "variable_description": "Dictionary of directly observed facts needed to execute the handling actions",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "execution_results",
+        "variable_description": "Summary of files changed and key outcomes from executing the handling actions",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Validate the results against the relevant instructions and the inbox request, then finalize by ensuring the inbox item has been handled consistently and any required follow-up references are in place. If the request could not be completed under the rules, record that limitation using only direct facts and instructions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "execution_results",
+        "variable_description": "Summary of files changed and key outcomes from executing the handling actions",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+output_variables: []
+

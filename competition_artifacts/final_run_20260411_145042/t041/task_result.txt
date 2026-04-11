@@ -1,0 +1,58 @@
+Task ID
+t041
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84v6w3n57d5rj
+
+Task
+Handle the next inbox item.
+
+BitGN Harness URL
+https://vm-03nmd84v6w3n57d5rj.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+9m 40s
+
+Agent Result
+The requested inbox item was fully handled: both Petra Novak-related bill files were OCR'd by adding the required YAML frontmatter while preserving the note bodies, and the inbox item was deleted after successful completion. The work matches the discovered finance and inbox-processing instructions and no blockers remain.
+
+Final Response
+Completed: OCR'd both Petra Novak-related bills by adding YAML frontmatter and deleted the inbox item.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/00_inbox/AGENTS.MD
+/00_inbox/000_next-task.md
+/99_system/workflows/process-next-inbox-item.md
+/99_system/workflows/inbox-processing-v2-update.md
+/99_system/workflows/ocr-records.md
+/99_system/workflows/migrate-records-to-frontmatter.md
+/99_system/schemas/finance-record-frontmatter.md
+/50_finance/AGENTS.MD
+/50_finance/purchases/AGENTS.MD
+/10_entities/cast/AGENTS.MD
+/10_entities/cast/petra.md
+/50_finance/purchases/2026_01_03__eur_000032__bill__repair_ledger_faucet_parts.md
+/50_finance/purchases/2026_04_12__eur_000020__bill__studio_parts_magnet_and_felt.md
+/AGENTS.MD
+/99_system/AGENTS.MD
+/99_system/workflows/AGENTS.MD
+/99_system/schemas/AGENTS.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84v6w3n57d5rj
+
+Score
+0.00
+
+Details
+(none)

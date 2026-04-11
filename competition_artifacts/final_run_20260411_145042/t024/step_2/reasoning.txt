@@ -1,0 +1,23 @@
+The task is allowed. Now I need to search `/50_finance/purchases` for the bill from Domänenbüro Köln GmbH issued around Jan 10-13, 2026.
+
+Looking at the file listing, the most likely candidate is:
+`2026_01_12__eur_000030__bill__northstar_domain_and_mail.md`
+
+The filename suggests "domain_and_mail" which could relate to "Domänenbüro Köln GmbH" (Domänen = domains in German). The date 2026_01_12 falls within Jan 10-13, 2026.
+
+Let me read this file to confirm.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I found the matching bill. The counterparty is "Domänenbüro Köln GmbH", the purchased_on date is "2026-01-12", which falls within the Jan 10-13, 2026 range. This is the single matching purchase file.
+
+Now I need to store the output variables:
+- purchase_file_path: the path to the matching purchase markdown file
+- raw_purchased_date: the purchased date value exactly as found in the purchase record
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have successfully found the matching purchase file and extracted the raw purchased date. Let me set the step completion variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

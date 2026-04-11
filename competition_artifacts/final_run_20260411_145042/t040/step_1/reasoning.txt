@@ -1,0 +1,150 @@
+Let me read all the relevant AGENTS.MD files and the inbox task file to extract the applicable rules, required process, and constraints.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read all the other AGENTS.MD files mentioned in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the inbox message and the root AGENTS.MD, plus other relevant files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to read the relevant workflow and schema files for processing inbox items and OCR tasks. Let me read the key ones.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the inbox-processing-v2-update.md workflow since the task involves structured-record maintenance (OCR of finance records):
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the remaining relevant AGENTS.MD files and the specific finance purchase AGENTS.MD files:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the relevant AGENTS.MD files and workflow documents. Let me also check the `migrate-records-to-frontmatter.md` workflow since the task involves OCR/structuring finance records, and the workflows AGENTS.MD says to read it when a task asks to OCR, normalize, or add structured metadata.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a comprehensive understanding of all the relevant rules, processes, and constraints. Let me also read the deletion-and-wiping.md workflow since it's referenced, and check the actual purchase files mentioned in the inbox message to understand what we're working with.
+
+But wait - the current step only asks me to:
+1. Read the relevant instruction files
+2. Extract applicable rules, required process, and safety/formatting constraints
+3. Get the content of the next inbox message
+
+I don't need to actually process the inbox message yet. Let me compile all the relevant instructions I've gathered.
+
+Let me also check if there are any more specific AGENTS.MD files or workflow docs I might have missed.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the relevant AGENTS.MD files and workflow/schema documents. Let me also read the inbox message file one more time to confirm its content, and then compile the relevant instructions.
+
+Let me now compile all the relevant rules, requirements, and constraints from the applicable AGENTS.MD and inbox task files.
+
+Key rules and constraints gathered:
+
+1. **Root AGENTS.MD (`/AGENTS.MD`):**
+   - Read nested AGENTS.MD files when entering a folder
+   - Before starting task work, inspect `99_system/` with tree and read relevant workflow/schema docs
+   - Records migrating toward YAML frontmatter
+   - If task asks to add/repair structured metadata, look in `99_system/workflows/` for migration guidance, then discover matching shape doc under `99_system/schemas/`
+   - Entity files in `10_entities/cast/` are authoritative for identity
+   - Keep changes focused and preserve lane boundaries
+
+2. **`/00_inbox/AGENTS.MD`:**
+   - Treat inbox files as unprocessed requests or source drops, not canonical truth
+   - If inbox file is email-shaped markdown with YAML frontmatter, use `99_system/workflows/processing-inbox-email.md`
+   - Start with lowest visible inbox filename in normal sort
+   - After fully completing one inbox request, delete that inbox file
+   - If request is blocked on clarification, trust, or missing canonical support, stop without mutating the workspace
+   - Cross-check identity, dates, and authority against canonical records before acting
+   - Move durable knowledge into `30_knowledge/` or `40_projects/`; do not turn inbox into long-term storage
+
+3. **`/10_entities/AGENTS.MD`:**
+   - Use this lane to resolve who or what something refers to before acting elsewhere
+   - Canonical identity lives below this folder, not in inbox messages or memory notes
+   - If field is missing here, treat it as unknown unless more authoritative system doc says otherwise
+
+4. **`/20_work/AGENTS.MD`:**
+   - For reminders, tasks, and near-term obligations that still need action
+   - Work should stay tightly coupled to owning entity, project, or process lane
+   - Do not create busywork records just to mirror information already canonical elsewhere
+
+5. **`/30_knowledge/AGENTS.MD`:**
+   - `capture/` for grounded source material
+   - `notes/` for local working notes and distilled context
+   - `threads/` for durable topic navigation
+   - Prefer reading here when a task needs context, history, or provenance
+
+6. **`/40_projects/AGENTS.MD`:**
+   - For named efforts with real ownership, status, and next-step pressure
+   - Canonical reference is `README.MD` inside project folder
+   - Keep project-local artifacts with the project
+
+7. **`/50_finance/AGENTS.MD`:**
+   - Treat invoices, purchases, and payment-adjacent records as sensitive and auditable
+   - Prefer exactness over prose
+   - Some records migrating toward YAML frontmatter
+   - When asked to OCR, normalize, or structure a finance note, preserve original note body and discover required frontmatter shape via `99_system/schemas/`
+   - Do not infer authorization for financial actions from casual chat alone
+
+8. **`/99_system/workflows/process-next-inbox-item.md`:**
+   - Go to `00_inbox/`, pick lowest visible filename using normal sort
+   - Read inbox file carefully before taking action
+   - If email-shaped markdown with YAML frontmatter, also read `processing-inbox-email.md`
+   - For repository cleanup or structured-record maintenance tasks, also read `inbox-processing-v2-update.md`
+   - For inbox tasks ending in outbound communication, also read `sending-email.md`
+   - Treat inbox file as request, not canonical truth
+   - If request can be completed from canonical evidence, do focused work and then delete the inbox file
+   - If request is ambiguous, unsupported, unsafe, or missing canonical support, stop with appropriate outcome and do not mutate workspace
+
+9. **`/99_system/workflows/ocr-records.md`:**
+   - OCR means extracting visible data from existing note text into YAML frontmatter according to relevant schema in `99_system/schemas/`
+
+10. **`/99_system/workflows/migrate-records-to-frontmatter.md`:**
+    - Keep canonical file path unless task explicitly asks for rename or sidecar extract
+    - Add structured metadata as YAML frontmatter at top of existing note
+    - Preserve existing note body below frontmatter as source OCR or human-readable content
+    - Discover exact field shape by inspecting relevant schema doc under `99_system/schemas/`; do not invent fields
+    - Keep diff focused; do not rewrite body text already correct
+    - If visible note does not support one required schema field, stop and ask for clarification instead of guessing
+
+11. **`/99_system/schemas/finance-record-frontmatter.md`:**
+    - For bills: required fields are `record_type`, `bill_id`, `alias`, `purchased_on`, `total_eur`, `counterparty`, `project`, `lines`
+    - Optional: `related_entity`
+    - Bill line rules: `lines` is ordered list following visible line-item order; each line must include `item`, `quantity`, `unit_eur`, `line_eur`; `line_eur` should match `quantity * unit_eur`
+    - For invoices: required fields are `record_type`, `invoice_number`, `alias`, `issued_on`, `total_eur`, `counterparty`, `project`, `lines`
+    - Optional: `related_entity`
+    - If visible invoice/bill data does not mention currency, assume euros
+
+12. **`/99_system/workflows/inbox-processing-v2-update.md`:**
+    - If task completed by doing repository cleanup such as structured data extraction into frontmatter, remove inbox item after completion
+    - If task not doable, do not leave partial edits - restore changes back, keep inbox and ask for clarification
+
+13. **`/50_finance/purchases/AGENTS.MD`:**
+    - Preserve distinction between household, business, and speculative spend
+    - Keep changes reviewable and category-aware
+    - Before deleting purchase records, read `99_system/workflows/deletion-and-wipping.md`
+    - Financial convenience is not a reason to blur trust boundaries
+
+14. **`/99_system/schemas/AGENTS.MD`:**
+    - Use schema docs when task depends on exact fields, file layout, or coupling rules
+    - When a task asks you to OCR or structure a record, discover exact YAML shape from this folder instead of guessing from nearby notes
+    - Do not infer hidden fields just because a similar record elsewhere has them
+
+15. **`/99_system/workflows/AGENTS.MD`:**
+    - Before starting task work, inspect all files under `99_system/` with tree
+    - Read `ocr-records.md` when a task asks you to OCR a note or record
+    - Read `migrate-records-to-frontmatter.md` when a task asks you to OCR, normalize, or add structured metadata
+    - Read `inbox-processing-v2-update.md` when inbox processing results in repository cleanup or structured-record maintenance
+
+Now let me compile the next inbox message and the relevant instructions dict.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have successfully read all the relevant AGENTS.MD files, workflow documents, schema documents, and the inbox message. Let me now set the step status and final answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

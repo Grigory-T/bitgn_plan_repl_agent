@@ -1,0 +1,46 @@
+Task ID
+t080
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84yvn8pus6a47
+
+Task
+How much did Bärenfunk Elektronik GmbH charge me in total for the line item AAA rechargeable set 111 days ago? Answer with a number only
+
+BitGN Harness URL
+https://vm-03nmd84yvn8pus6a47.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+8m 18s
+
+Agent Result
+The matching purchase record has already been identified and verified as the only Bärenfunk Elektronik GmbH bill with the AAA rechargeable set line item, dated 111 days before the workspace reference date. The exact amount charged for that line item is 14 EUR, so the final response should be 14.
+
+Final Response
+14
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+50_finance/purchases/2026_01_02__eur_000050__bill__hearthline_sensor_bundle.md
+50_finance/AGENTS.MD
+50_finance/purchases/AGENTS.MD
+99_system/schemas/finance-record-frontmatter.md
+40_projects/2026_04_04_school_helper_kit/README.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84yvn8pus6a47
+
+Score
+0.00
+
+Details
+(none)

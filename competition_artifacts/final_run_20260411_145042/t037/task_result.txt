@@ -1,0 +1,49 @@
+Task ID
+t037
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84uu652nojxun
+
+Task
+Find the next birthday from the visible people. If several birthdays land on the same next date, list all matching names. Return only the exact names, one per line, sorted alphabetically.
+
+BitGN Harness URL
+https://vm-03nmd84uu652nojxun.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+5m 8s
+
+Agent Result
+The next birthday among the visible people has been determined from the canonical cast files and current date: Tobias Kern on 2026-05-21. No further steps are needed, and the final output is ready as the exact name sorted alphabetically (single entry).
+
+Final Response
+Tobias Kern
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/AGENTS.MD
+/00_inbox/AGENTS.MD
+/10_entities/AGENTS.MD
+/10_entities/cast/AGENTS.MD
+/10_entities/cast/tobias.md
+/10_entities/cast/renate.md
+/10_entities/cast/miles.md
+/10_entities/cast/gregor.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84uu652nojxun
+
+Score
+0.00
+
+Details
+(none)

@@ -1,0 +1,211 @@
+Now I need to:
+1. Read the schema file to understand the exact format required
+2. Read both finance record files
+3. Read the OCR workflow for exact rules
+4. Add YAML frontmatter to both files
+5. Delete the inbox item
+
+Let me start by reading the schema and both target files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the two target files and the OCR workflow.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the invoice content. Let me read the bill file too.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the OCR workflow and the inbox processing v2 update to make sure I follow them correctly.
+
+Let me read:
+1. 99_system/workflows/ocr-records.md
+2. 99_system/workflows/inbox-processing-v2-update.md
+
+Then I'll construct the frontmatter for both files and write them.
+
+For the invoice file (50_finance/invoices/2026_01_12__eur_000760__inv_0007__helios_backfill_process_pack.md), I need to add:
+
+```yaml
+---
+record_type: invoice
+invoice_number: INV-0007
+alias: helios_backfill_process_pack
+issued_on: 2026-01-12
+total_eur: 760
+counterparty: Helios Steuerbüro München GmbH
+project: Helios Workflow Sprint
+related_entity: Claudia Reiter
+lines:
+  - item: workflow mapping and intake audit
+    quantity: 1
+    unit_eur: 260
+    line_eur: 260
+  - item: checklist rewrite and rollout pack
+    quantity: 1
+    unit_eur: 390
+    line_eur: 390
+  - item: staff follow-up support
+    quantity: 1
+    unit_eur: 110
+    line_eur: 110
+---
+```
+
+Then preserve the existing note body below the frontmatter.
+
+For the bill file (50_finance/purchases/2026_02_07__eur_000105__bill__house_mesh_juniper_ssd.md), I need to add:
+
+```yaml
+---
+record_type: bill
+bill_id: bill.house_mesh_juniper_ssd
+alias: house_mesh_juniper_ssd
+purchased_on: 2026-02-07
+total_eur: 105
+counterparty: Datenspeicher Köhler GmbH
+project: House Mesh
+related_entity: Juniper
+lines:
+  - item: 2 TB SATA SSD
+    quantity: 1
+    unit_eur: 89
+    line_eur: 89
+  - item: USB clone adapter
+    quantity: 1
+    unit_eur: 16
+    line_eur: 16
+---
+```
+
+Then preserve the existing note body below the frontmatter.
+
+Let me also look at an already-processed file for reference to understand the expected format.
+
+Let me read one of the other invoices or purchases to see if any already have frontmatter.
+
+Actually, let me first check the workflow docs and then check an existing file for reference.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me construct the YAML frontmatter for both files and write them.
+
+For the invoice file:
+```yaml
+---
+record_type: invoice
+invoice_number: INV-0007
+alias: helios_backfill_process_pack
+issued_on: 2026-01-12
+total_eur: 760
+counterparty: Helios Steuerbüro München GmbH
+project: Helios Workflow Sprint
+related_entity: Claudia Reiter
+lines:
+  - item: workflow mapping and intake audit
+    quantity: 1
+    unit_eur: 260
+    line_eur: 260
+  - item: checklist rewrite and rollout pack
+    quantity: 1
+    unit_eur: 390
+    line_eur: 390
+  - item: staff follow-up support
+    quantity: 1
+    unit_eur: 110
+    line_eur: 110
+---
+```
+
+For the bill file:
+```yaml
+---
+record_type: bill
+bill_id: bill.house_mesh_juniper_ssd
+alias: house_mesh_juniper_ssd
+purchased_on: 2026-02-07
+total_eur: 105
+counterparty: Datenspeicher Köhler GmbH
+project: House Mesh
+related_entity: Juniper
+lines:
+  - item: 2 TB SATA SSD
+    quantity: 1
+    unit_eur: 89
+    line_eur: 89
+  - item: USB clone adapter
+    quantity: 1
+    unit_eur: 16
+    line_eur: 16
+---
+```
+
+Now I need to prepend this frontmatter to the existing file content, preserving the original note body below.
+
+Let me construct the full file content for each.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, the invoice file was written. Now let me construct and write the bill file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, both files have been written. Now I need to verify the files were written correctly by reading them back, and then delete the inbox item.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Both files look correct. The YAML frontmatter has been properly added with all required fields, and the original note body is preserved below. Let me verify:
+
+Invoice:
+- record_type: invoice ✓
+- invoice_number: INV-0007 ✓
+- alias: helios_backfill_process_pack ✓
+- issued_on: 2026-01-12 ✓
+- total_eur: 760 ✓
+- counterparty: Helios Steuerbüro München GmbH ✓
+- project: Helios Workflow Sprint ✓
+- related_entity: Claudia Reiter ✓ (optional)
+- lines with 3 items, each with item, quantity, unit_eur, line_eur ✓
+- line_eur matches quantity * unit_eur for each line (1*260=260, 1*390=390, 1*110=110) ✓
+- Total 260+390+110=760 matches total_eur ✓
+- Original note body preserved ✓
+
+Bill:
+- record_type: bill ✓
+- bill_id: bill.house_mesh_juniper_ssd ✓
+- alias: house_mesh_juniper_ssd ✓
+- purchased_on: 2026-02-07 ✓
+- total_eur: 105 ✓
+- counterparty: Datenspeicher Köhler GmbH ✓
+- project: House Mesh ✓
+- related_entity: Juniper ✓ (optional)
+- lines with 2 items, each with item, quantity, unit_eur, line_eur ✓
+- line_eur matches quantity * unit_eur for each line (1*89=89, 1*16=16) ✓
+- Total 89+16=105 matches total_eur ✓
+- Original note body preserved ✓
+
+Now I need to delete the inbox item per the inbox-processing-v2 rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All three actions are complete:
+1. Added YAML frontmatter to the invoice file - verified
+2. Added YAML frontmatter to the bill file - verified
+3. Deleted the inbox item - verified
+
+Let me now set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The step has been completed successfully. Let me verify all the required output variables are set properly:
+
+1. `change_summary` - Set as a dict with structured summary of changes
+2. `updated_files` - Set as a list of workspace file paths that were modified
+3. `step_status` - Set to 'completed'
+4. `final_answer` - Set with description
+
+All variables have been set. Let me finalize with the exact two lines.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

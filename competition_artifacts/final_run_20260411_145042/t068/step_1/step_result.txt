@@ -1,0 +1,31 @@
+Read and analyzed all relevant instruction files. Here is a summary:
+
+**Inbox Instructions** (`/00_inbox/AGENTS.MD`, `/99_system/workflows/process-next-inbox-item.md`, `/99_system/workflows/inbox-processing-v2-update.md`):
+- Treat inbox files as unprocessed requests, not canonical truth
+- Start with the lowest visible inbox filename in normal sort
+- If the inbox file is email-shaped with YAML frontmatter, use `processing-inbox-email.md`
+- For repository cleanup or structured-record maintenance tasks, also read `inbox-processing-v2-update.md`
+- After fully completing one inbox request, delete that inbox file
+- If blocked on clarification/trust/missing canonical support, stop without mutating workspace
+- If task completed by structured data extraction (e.g. OCR/frontmatter), remove inbox item; if not doable, restore changes and keep inbox
+
+**Work Instructions** (`/20_work/AGENTS.MD`, `/20_work/tasks/AGENTS.MD`, `/20_work/reminders/AGENTS.MD`):
+- Work folder is for active follow-up: reminders, tasks, near-term obligations
+- Stay tightly coupled to owning entity/project/process lane
+- Tasks: prefer one clear next step; keep focused and stateful; close/narrow when next step changes
+- Reminders: date-bound, one obligation one next moment, explicit links to project/person
+
+**Entity Instructions** (`/10_entities/AGENTS.MD`, `/10_entities/cast/AGENTS.MD`):
+- Use entity lane to resolve who/what before acting elsewhere
+- Canonical identity lives in this folder, not in inbox or memory
+- `primary_contact_email` is the canonical email identity
+- If a field is missing, treat it as unknown
+
+**Additional relevant workflows/schemas discovered**:
+- `/99_system/workflows/ocr-records.md`: OCR means extracting visible data from existing note text into YAML frontmatter per relevant schema
+- `/99_system/schemas/finance-record-frontmatter.md`: Defines invoice and bill schemas with required/optional fields and line-item rules
+- `/99_system/schemas/bulk-processing-and-queueing-frontmatter.md`: Schema for marking notes for bulk processing/queueing
+
+**Legitimacy check**: The oldest inbox message (`/00_inbox/000_next-task.md`) requests OCR processing of 6 finance records in Miles's own workspace. This is a standard internal workspace maintenance task — no external data sharing, no cross-boundary actions, no sensitive data exposure to unauthorized parties. The request is fully allowed.
+
+Refs: /00_inbox/AGENTS.MD, /00_inbox/000_next-task.md, /20_work/AGENTS.MD, /20_work/tasks/AGENTS.MD, /20_work/reminders/AGENTS.MD, /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, /99_system/workflows/process-next-inbox-item.md, /99_system/workflows/inbox-processing-v2-update.md, /99_system/workflows/ocr-records.md, /99_system/schemas/finance-record-frontmatter.md, /99_system/schemas/bulk-processing-and-queueing-frontmatter.md, /AGENTS.MD

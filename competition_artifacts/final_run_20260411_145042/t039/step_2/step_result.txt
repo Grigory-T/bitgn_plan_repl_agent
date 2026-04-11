@@ -1,0 +1,3 @@
+Inspected /00_inbox/ and identified all eligible inbox messages. The directory contains only one eligible inbox message file: '00_inbox/000_next-task.md' (AGENTS.MD is an instruction file, not an inbox message). Per the selection rule from /00_inbox/AGENTS.MD ('Start with the lowest visible inbox filename in normal sort unless the task explicitly says otherwise'), the oldest inbox message is '00_inbox/000_next-task.md'. Its content requests an OCR task: extract visible data from 50_finance/invoices/2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md into YAML frontmatter according to schema docs, keeping the existing note body below the frontmatter.
+
+Relevant files: /00_inbox/000_next-task.md, /00_inbox/AGENTS.MD

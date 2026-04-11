@@ -1,0 +1,46 @@
+Task ID
+t062
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84wk09a2jj3hq
+
+Task
+Whose birthday is coming up next? If multiple people share that next birthday date, list all of them. Return only the exact names, one per line, sorted alphabetically.
+
+BitGN Harness URL
+https://vm-03nmd84wk09a2jj3hq.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+7m 18s
+
+Agent Result
+The explicit birthday records were extracted and the next upcoming birthday date has been determined from the workspace facts; the final names can now be returned, one per line, sorted alphabetically.
+
+Final Response
+Elena Weiss
+Miles Novak
+Tobias Kern
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/10_entities/cast/elena.md
+/10_entities/cast/miles.md
+/10_entities/cast/tobias.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84wk09a2jj3hq
+
+Score
+0.00
+
+Details
+(none)

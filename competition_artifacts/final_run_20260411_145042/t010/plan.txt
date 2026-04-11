@@ -1,0 +1,144 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and analyze the relevant instruction files before acting: inspect '/00_inbox/AGENTS.MD' for inbox handling rules, '/20_work/AGENTS.MD' and '/20_work/tasks/AGENTS.MD' for task-processing conventions, and any additional AGENTS.MD files that govern the inbox or message storage locations. Also assess whether the request 'Bearbeite die alteste Nachricht im Posteingang.' is legitimate and allowed under those instructions. If any instruction conflicts with processing the oldest inbox message, stop and follow the instruction hierarchy exactly.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "relevant_instruction_paths",
+        "variable_description": "List of instruction file paths that were identified as relevant for the inbox task.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_summary",
+        "variable_description": "Direct-fact summary of the applicable inbox and task-processing rules extracted from the instruction files.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean indicating whether the requested inbox action is permitted by the discovered instructions.",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If the task is allowed, locate the oldest message in the inbox by directly inspecting the inbox message files referenced by the workspace structure and inbox instructions. Determine the exact file path of the oldest unread or pending inbox message, using only direct evidence from file metadata or content ordering rules stated in the instructions. Store the selected message path and the evidence used to identify it.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "relevant_instruction_paths",
+        "variable_description": "List of instruction file paths that were identified as relevant for the inbox task.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_summary",
+        "variable_description": "Direct-fact summary of the applicable inbox and task-processing rules extracted from the instruction files.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean indicating whether the requested inbox action is permitted by the discovered instructions.",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "oldest_message_path",
+        "variable_description": "Exact runtime path of the oldest inbox message file to process.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "oldest_message_evidence",
+        "variable_description": "Direct-fact evidence explaining why this message is the oldest according to the relevant instructions or file ordering.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Process the identified oldest inbox message according to the applicable instructions and the message content. Complete whatever action the inbox workflow requires for that message, such as reading it, updating related task/reminder/project files, and marking the message as handled if instructed. Preserve all changes in the workspace and record the outcome of the processing.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "oldest_message_path",
+        "variable_description": "Exact runtime path of the oldest inbox message file to process.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "oldest_message_evidence",
+        "variable_description": "Direct-fact evidence explaining why this message is the oldest according to the relevant instructions or file ordering.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "message_processing_result",
+        "variable_description": "Text summary of the performed action and the resulting state after handling the oldest inbox message.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Verify that the inbox task was completed correctly by checking the modified files and confirming that the oldest message has been handled according to the instructions. If required by the workflow, ensure the inbox state reflects completion and that any follow-up artifacts were created in the appropriate workspace location.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "message_processing_result",
+        "variable_description": "Text summary of the performed action and the resulting state after handling the oldest inbox message.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+
+Replan after step 2:
+
+--------------------------------------------------------------------------------
+Step 3: Process the inbox message at the identified path according to the inbox and task instructions. Inspect the message content, verify any referenced bill/payment details against canonical workspace records as required, perform the allowed action if sufficient evidence exists, update any related workspace files or records in the appropriate canonical location, and record a concise result describing what was done or why the task was blocked. If the workflow requires mutating the inbox state after successful handling, remove or mark the message as handled only after the action is completed.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "oldest_message_path",
+        "variable_description": "Path to the oldest inbox message file identified in the completed steps",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "oldest_message_evidence",
+        "variable_description": "Evidence used to determine that this file is the oldest pending inbox message",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "message_processing_result",
+        "variable_description": "Summary of the processing outcome, including any files updated, verification performed, payment-related action taken, or reason the task could not be completed",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Verify that the inbox item was handled correctly by confirming the expected workspace changes, ensuring any required follow-up artifacts were created in the appropriate canonical location, and confirming the inbox state reflects completion. If the message was successfully processed, ensure the inbox file has been removed or otherwise marked handled in line with the workflow; if it was blocked, ensure no unauthorized mutations were made.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "message_processing_result",
+        "variable_description": "Summary of the processing outcome from the prior step",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "oldest_message_path",
+        "variable_description": "Path to the processed inbox message file",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "task_completion_verification",
+        "variable_description": "Verification summary stating whether the inbox task is complete and what evidence supports that conclusion",
+        "variable_data_type": "str"
+    }
+]
+
+Plan validation warnings:
+⚠️ First step has input variables: oldest_message_path, oldest_message_evidence. First step should not require inputs.
+⚠️ Step 2 requires input 'oldest_message_path' (str), but no previous step produces it.
+

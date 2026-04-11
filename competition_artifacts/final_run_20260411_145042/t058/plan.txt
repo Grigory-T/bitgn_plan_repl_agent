@@ -1,0 +1,64 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and apply the relevant workspace instructions before doing any calculation. Specifically inspect /50_finance/AGENTS.MD and any higher-level instruction files that govern finance invoice handling, then determine whether the task is legitimate and allowed. Also identify the exact service line text 'follow-up  timeline prototype review' as a direct-match search target and confirm that the answer must be based only on direct facts from invoice files, not estimates.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "finance_instructions",
+        "variable_description": "Relevant rules and procedures extracted from finance instruction files that govern how to read invoices and compute totals.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean flag indicating whether the requested computation is allowed under the discovered instructions.",
+        "variable_data_type": "bool"
+    },
+    {
+        "variable_name": "service_line_query",
+        "variable_description": "The exact service line text to search for in invoice files.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If the task is allowed, search /50_finance/invoices/ for invoice files dated on or after 2026-03-01, and inspect their contents for direct matches to the service line query. Collect only invoices whose dated file names place them since the beginning of March 2026, and extract the invoice amounts associated with exact matches to the service line 'follow-up  timeline prototype review'. Do not infer from similar wording or partial matches.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "finance_instructions",
+        "variable_description": "Relevant rules and procedures extracted from finance instruction files that govern how to read invoices and compute totals.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean flag indicating whether the requested computation is allowed under the discovered instructions.",
+        "variable_data_type": "bool"
+    },
+    {
+        "variable_name": "service_line_query",
+        "variable_description": "The exact service line text to search for in invoice files.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "matching_invoice_records",
+        "variable_description": "List of matching invoice records, each containing invoice file path, invoice date, and invoice amount for exact service-line matches since 2026-03-01.",
+        "variable_data_type": "list[dict]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Sum the invoice amounts from the collected matching invoice records to produce the total money made from the service line since 2026-03-01. Preserve the result as a numeric value only, and ensure the final answer will be formatted as a number only with no extra text.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "matching_invoice_records",
+        "variable_description": "List of matching invoice records, each containing invoice file path, invoice date, and invoice amount for exact service-line matches since 2026-03-01.",
+        "variable_data_type": "list[dict]"
+    }
+]
+output_variables: []
+

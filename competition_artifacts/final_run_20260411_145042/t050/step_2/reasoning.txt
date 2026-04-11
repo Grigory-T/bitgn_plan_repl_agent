@@ -1,0 +1,60 @@
+Good, I have the instruction context. Now I need to read the Foundry entity file at `/10_entities/cast/foundry.md`.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've read the Foundry entity file. Now I need to extract the birthday. Looking at the file content:
+
+```
+# Foundry
+
+- alias: `foundry`
+- kind: `system`
+- relationship: `lab_server`
+- created_on: `2026-03-31`
+- important_dates:
+  - `commissioned_on`: `2025-10-27` - Experimental host became a stable part of the house lab.
+
+Loud lab box where risky experiments happen before they touch family may touch family life.
+```
+
+There is no explicit "birthday" field in this file. Foundry is a system (kind: system, relationship: lab_server). It has a `created_on` date and a `commissioned_on` date, but no "birthday" field.
+
+According to the instructions:
+- "Entity files in `10_entities/cast/` are authoritative for identity, `primary_contact_email` when present, and birthdays when present."
+- "If the relevant canonical file does not show the needed fact, ask for clarification instead of guessing."
+- "If a field is missing here, treat it as unknown unless a more authoritative system doc says otherwise."
+
+The file does not have a "birthday" field. It does have "created_on" and "commissioned_on" dates, but those are not "birthday". The instructions say to treat missing fields as unknown and ask for clarification instead of guessing.
+
+However, the task asks me to extract the birthday from explicit facts only, without estimating or inferring from other files. Since there is no explicit "birthday" field, I should note that no birthday is explicitly stated.
+
+Wait, but for a system entity, the "created_on" could arguably be considered the birthday equivalent. But the instructions are clear: "without estimating or inferring". The field is called "created_on", not "birthday". The important_dates section has "commissioned_on" but not "birthday".
+
+I need to set `foundry_birthday_raw` - but there's no explicit birthday in the file. I should note this fact. The output variable is required, so I need to set it to something. Given the instructions say "treat it as unknown" when a field is missing, I should set `foundry_birthday_raw` to indicate that no birthday is found in the file.
+
+Let me set the output variables accordingly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Foundry entity file has been read and there is no explicit "birthday" field. The file has `created_on` and `commissioned_on` dates, but per the instructions, I must not estimate or infer from other files. The instructions clearly state:
+
+- "If the relevant canonical file does not show the needed fact, ask for clarification instead of guessing."
+- "If a field is missing here, treat it as unknown unless a more authoritative system doc says otherwise."
+
+I should set `foundry_birthday_raw` to indicate it's not found, as there is no birthday field in the file.
+
+The step is complete - I've located and read the Foundry entity file and extracted what I can. The birthday is not explicitly present in the file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The step is complete. I've already set the output variables. Now I need to finalize with the two required lines of code. Let me also make sure all output variables are set properly first, then finalize.
+
+The output variables needed:
+- foundry_file_path (str): The exact path to the Foundry entity file
+- foundry_file_text (str): The full text content of /10_entities/cast/foundry.md
+- foundry_birthday_raw (str): The birthday value as stated in the file before formatting
+
+I already set these. Now I need to finalize with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

@@ -1,0 +1,1 @@
+Done — the outbound draft was created with the oldest linked invoice attached, and the inbox item was deleted after completion.

@@ -1,0 +1,1 @@
+Unable to comply with the invoice resend request because the sender identity does not match the canonical contact identity and the request involves sensitive financial handling.

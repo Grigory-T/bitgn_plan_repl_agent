@@ -1,0 +1,79 @@
+Now I need to identify all directly relevant workspace files to inspect and build a concrete inspection plan. Based on the task assessment, the task is to OCR 3 bills related to Ida Novak. I need to:
+
+1. Read the 3 bill files to extract their visible data
+2. Read the finance-record-frontmatter schema to know the exact YAML structure
+3. Read the OCR workflow for specific instructions
+4. Read the entity file for Ida Novak to verify identity
+5. Read the purchases AGENTS.MD for any folder-specific rules
+
+Let me build the relevant_paths and inspection_plan.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, confirmed the 3 bill files. Now let me also check if there's a project reference for these bills - the bills likely reference projects in /40_projects/. Let me also check the OCR workflow and frontmatter schema since those are critical for the task. But this step is only about identifying the files to inspect and building the inspection plan - I don't need to read them yet.
+
+Let me build the comprehensive list of relevant files and the inspection plan.
+
+Relevant paths:
+1. `/10_entities/cast/ida.md` - confirm Ida Novak's identity, alias, and relationship
+2. `/99_system/schemas/finance-record-frontmatter.md` - the YAML frontmatter schema for finance records (bill type)
+3. `/99_system/workflows/ocr-records.md` - OCR workflow instructions
+4. `/50_finance/purchases/AGENTS.MD` - folder-specific rules for purchases
+5. `/50_finance/AGENTS.MD` - finance folder rules
+6. `50_finance/purchases/2026_03_02__eur_000036__bill__family_map_wall_board.md` - bill 1 of 3
+7. `50_finance/purchases/2026_03_24__eur_000022__bill__toy_forge_wheel_and_magnet_pack.md` - bill 2 of 3
+8. `50_finance/purchases/2026_03_31__eur_000025__bill__school_helper_label_tape.md` - bill 3 of 3
+
+I should also check for any project references that might be in the bills, since the schema requires a `project` field. The bills reference projects like "family_map_wall", "toy_forge", "school_helper_kit" - I might need to look at those project READMEs too. But since the task is OCR (extracting visible data from existing notes into frontmatter), the project field should already be present in the note body. I just need to transcribe it, not verify it against project records. So I probably don't need to inspect the project files.
+
+Actually, let me be careful - the instruction says "identify all directly relevant workspace files to inspect next, such as entity notes in /10_entities/cast/, project READMEs in /40_projects/, knowledge notes in /30_knowledge/, or finance records in /50_finance/, based only on explicit references in the inbox item and instruction files." 
+
+The inbox item references "bills related to Ida Novak" - so entity note and bill files are directly relevant. The instruction files reference the frontmatter schema and OCR workflow. I should not invent additional files that aren't explicitly referenced.
+
+Let me finalize the list.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The OCR workflow is simple - just extract visible data from the existing note text into YAML frontmatter per the relevant schema. No mention of cross-referencing project READMEs or other external files.
+
+Let me also check the finance-record-frontmatter schema to understand the exact YAML structure needed, and the migrate-records-to-frontmatter workflow for any additional instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, so the OCR/migrate workflow confirms:
+1. Add YAML frontmatter at top of existing note
+2. Preserve existing note body below frontmatter
+3. Discover exact field shape from schema in 99_system/schemas/
+4. Do not invent fields
+5. If visible note doesn't support a required schema field, stop and ask for clarification
+
+Now I have enough to build the inspection plan. The relevant paths to inspect are:
+1. The 3 bill files (to read the visible data that needs to be extracted)
+2. The finance-record-frontmatter schema (to know the exact YAML field shape)
+3. Ida's entity record (to verify identity - already confirmed but should be inspected)
+4. The purchases folder AGENTS.MD (for any folder-specific rules about creating/modifying records)
+
+The inspection plan should be:
+1. Read the finance-record-frontmatter schema first to understand the required YAML structure
+2. Read each of the 3 bill files to see what visible data they contain
+3. Read Ida's entity record to confirm the entity reference
+4. Read the purchases AGENTS.MD for folder-specific rules
+
+That's the complete plan. Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me make sure all the required output variables are set properly before finalizing.
+
+The required output variables are:
+1. relevant_paths (list[str])
+2. inspection_plan (list[str])
+
+I already set these in my previous code block. Let me verify they're set correctly and then finalize with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Both output variables are correctly set. Now I'll finalize with the two required lines.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

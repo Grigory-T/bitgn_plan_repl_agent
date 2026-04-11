@@ -1,0 +1,312 @@
+Let me now read the relevant instruction files to understand how to work this inbox message properly. I need to read:
+
+1. The inbox processing workflow (processing-inbox-email.md)
+2. The sending-email workflow
+3. The work area structure (tasks and reminders AGENTS.MD)
+4. The outbox AGENTS.MD
+5. The invoice file that needs to be resent
+6. The helios_client_email channel
+
+Let me read these files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to read the sending-email workflow, the 20_work/tasks/AGENTS.MD and 20_work/reminders/AGENTS.MD, and the 60_outbox/AGENTS.MD to understand how to create the work artifact.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the process-next-inbox-item.md workflow to understand the full process.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the work area instructions and task-specific AGENTS.MD files more carefully.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I understand the workflow. The inbox message asks Claudia to resend the Helios invoice dated 14-04-2026. This is a reply-shaped request that ends in outbound communication work.
+
+The correct approach is:
+1. Create an outbound email draft in `60_outbox/outbox/` (since this is durable outbound communication state) following the `sending-email.md` workflow
+2. Attach the Helios invoice from 14-04-2026
+3. Address it to Claudia's canonical `primary_contact_email`
+
+Let me check the entity record for Claudia to get the primary_contact_email, and also read the invoice file and the helios_client_email channel doc.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me summarize what I need to do:
+
+1. The oldest inbox message is from Claudia Reiter requesting a resend of the Helios invoice dated 14-04-2026.
+2. The matching invoice is at `50_finance/invoices/2026_04_14__eur_000780__inv_0010__helios_checklist_pack_invoice.md`.
+3. Per the sending-email workflow, I need to create an outbound email record in `60_outbox/outbox/` with proper frontmatter.
+
+Let me check the current time to create the proper filename and timestamp.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Current time is 2026-03-23T16:35:00Z.
+
+Wait, that's interesting. The current date is 2026-03-23, but the invoice date is 2026-04-14. That's in the future! But from step 1, the task_allowed check already determined this was legitimate. The instructions say not to guess or approximate dates, and to use direct facts only. But step 1 already verified this and task_allowed = True.
+
+Actually, wait - let me re-read the instructions. The current date from the runtime is 2026-03-23T16:35:00Z. The invoice is dated 2026-04-14, which is in the future. But the task from step 1 already confirmed this was allowed. I should proceed with the work.
+
+Actually, let me think about this more carefully. The current date is March 23, 2026. The invoice is dated April 14, 2026 - that's about 3 weeks in the future. The inbox message was received on March 23, 2026. It's asking for a resend of an invoice dated 14-04-2026. How can there be an invoice dated in the future?
+
+But step 1 already established task_allowed = True and confirmed a matching invoice exists. The previous steps have already validated this. I should proceed.
+
+Let me now focus on creating the work artifacts. The inbox request is to resend an invoice. This results in an outbound email. According to the instructions:
+
+1. The work should be recorded in `20_work/` - but looking at the work instructions, it says "20_work/ is for reminders, tasks, and near-term obligations that still need action" and "Do not create busywork records just to mirror information already canonically elsewhere."
+
+2. The outbound email should go to `60_outbox/outbox/` per the sending-email.md workflow.
+
+Actually, let me re-read the task carefully: "Determine the required next action from the message content, then create or update the appropriate workspace artifact(s) under the correct work area, following any naming, routing, or formatting rules from the instruction files."
+
+The "work area" could be `20_work/` or `60_outbox/outbox/`. The request is to resend an invoice, which is an outbound email action. The appropriate artifact is an outbound email draft in `60_outbox/outbox/`.
+
+But the task says "create or update the appropriate workspace artifact(s) under the correct work area." The "work area" in the task description seems to refer to where work gets recorded. Given the work instructions say `20_work/` is for "reminders, tasks, and near-term obligations that still need action," should I create a task there?
+
+Let me think about this more carefully. The request is to resend an invoice. The action needed is:
+1. Create an outbound email with the invoice attached
+
+The outbound email is the direct work product. Should I also create a task in 20_work/?
+
+The 20_work instructions say "Do not create busywork records just to mirror information that already lives canonically elsewhere." Since the outbound email in 60_outbox/outbox/ already captures the work to be done, creating a separate task in 20_work/ might be "busywork."
+
+But the task step asks me to "create or update the appropriate workspace artifact(s) under the correct work area, following any naming, routing, or formatting rules from the instruction files." This implies creating something in the work area.
+
+Let me look at the 20_work structure again:
+- 20_work/reminders/
+- 20_work/tasks/
+
+The tasks AGENTS.MD says: "20_work/tasks/ is for active next actions that are not just dated reminders. Prefer one clear next step over broad project paraphrase."
+
+So a task in 20_work/tasks/ could be appropriate to track the action of sending the invoice. But is that redundant with the outbound email?
+
+Actually, I think the most appropriate approach is:
+1. Create the outbound email in `60_outbox/outbox/` - this is the communication artifact that directly addresses the message
+2. This IS the work - creating the email draft is the action
+
+But wait, should I create something in `20_work/` too? Let me re-read the task: "create or update the appropriate workspace artifact(s) under the correct work area."
+
+I think the "work area" here could be interpreted broadly - the workspace area where work happens. The outbound email in `60_outbox/outbox/` IS the work artifact. But 20_work/ is specifically called the "work" folder.
+
+Hmm, let me look at this from the perspective of what directly addresses the message. The message asks for an invoice resend. The action is to prepare an outbound email with the invoice attached. That email goes to `60_outbox/outbox/`. This is the work result.
+
+But maybe I should also create a task in `20_work/tasks/` to track that this needs to be done? The 20_work instructions say it's for "near-term obligations that still need action." The email in draft state still needs action (sending).
+
+Actually, I think the simplest and most correct approach is:
+1. Create the outbound email in `60_outbox/outbox/` - this directly addresses the request
+2. This IS the work artifact
+
+The work_result_path should point to this outbound email.
+
+Wait, but the output variable is `work_result_path` - "Exact path of the created or updated work artifact that addresses the oldest inbox message." The outbound email is the artifact that addresses the inbox message.
+
+Let me also check if there's a task naming convention in 20_work/tasks/.
+
+Actually, let me think about what the process-next-inbox-item workflow says: "If the request can be completed from canonical evidence, do the focused work and then delete the inbox file you processed."
+
+So the workflow is:
+1. Read the inbox item
+2. Do the focused work (create the outbound email)
+3. Delete the inbox file
+
+The "focused work" here is creating the outbound email draft with the invoice attached. That's the work result.
+
+But should I create a task in 20_work/ too? The task says "create or update the appropriate workspace artifact(s) under the correct work area." I think the work area for this is `60_outbox/outbox/` since that's where outbound email communication goes.
+
+However, I could also interpret it as: create a task in 20_work/tasks/ that describes the next action needed (send invoice to Claudia). But the 20_work instructions say "Do not create busywork records just to mirror information that already lives canonically elsewhere." The outbound email already captures what needs to happen.
+
+I think the cleanest approach is:
+1. Create the outbound email in `60_outbox/outbox/` with the invoice attached
+2. That's the work result
+3. work_result_path = the path to the outbound email
+
+But wait, should I also delete the inbox file? The process-next-inbox-item workflow says "delete the inbox file you processed." But the current step only asks me to "Work the oldest inbox message" - it doesn't explicitly say to delete it. The inbox instructions from step 1 say "after fully completing one inbox request delete that inbox file." 
+
+I think I should focus on what the current step asks: "Determine the required next action from the message content, then create or update the appropriate workspace artifact(s) under the correct work area." This means creating the work artifact. Deletion of the inbox file might be a separate step.
+
+Actually, the step says "Ensure the outcome directly addresses the message and records the work in the designated location." So I need to create the artifact that addresses the message.
+
+Let me create the outbound email now. Let me also check if I need to create a task in 20_work/.
+
+I think I'll create:
+1. The outbound email in `60_outbox/outbox/eml_2026-03-23T16-35-00Z.md` - this directly addresses the message
+
+But actually, looking more carefully at the 20_work instructions, it's for "reminders, tasks, and near-term obligations that still need action." The outbound email IS the action. But is there also a need to track this as a task?
+
+Let me look at whether there should be a task tracking this. The task says "create or update the appropriate workspace artifact(s) under the correct work area." The "work area" is `20_work/`. So maybe I should create a task in `20_work/tasks/`.
+
+But the work instructions say "Do not create busywork records just to mirror information that already lives canonically elsewhere." The outbound email is not a canonical record - it's a draft. The task in 20_work/tasks/ could serve as the tracking mechanism.
+
+Actually, I think the most important thing is that the outbound email IS the work. The task is asking me to "work" the inbox message, which means doing the work needed. The work needed is creating an outbound email to resend the invoice. That email goes to `60_outbox/outbox/`.
+
+But I also notice the task says "under the correct work area." The "correct work area" could be `20_work/` since that's literally named "work." Or it could be `60_outbox/` since that's where the actual work product goes.
+
+I think I should create both:
+1. The outbound email in `60_outbox/outbox/` - this is the actual work product
+2. Maybe a task in `20_work/tasks/` to track the action
+
+But the 20_work instructions warn against busywork. Let me just create the outbound email. That's the direct work result that addresses the message.
+
+Hmm, but the output variable is called `work_result_path` and it should be "Exact path of the created or updated work artifact that addresses the oldest inbox message." The outbound email is the work artifact.
+
+Let me go with creating the outbound email in `60_outbox/outbox/`.
+
+Wait, I should also check: the sending-email.md says "send_state should be draft unless the visible workflow for this lane establishes a later state." The helios_client_email channel doesn't seem to have a specific send workflow. So send_state should be `draft`.
+
+Let me also check if there are existing files in `60_outbox/outbox/`.
+
+Let me create the outbound email now.
+
+Current time: 2026-03-23T16:35:00Z
+Filename: eml_2026-03-23T16-35-00Z.md
+Path: 60_outbox/outbox/eml_2026-03-23T16-35-00Z.md
+
+Frontmatter:
+- record_type: outbound_email
+- created_at: 2026-03-23T16:35:00Z
+- send_state: draft
+- to: [claudia@helios-tax.example]  (using primary_contact_email from entity)
+- subject: Re: invoice copy needed
+- attachments: [50_finance/invoices/2026_04_14__eur_000780__inv_0010__helios_checklist_pack_invoice.md]
+- related_entities: [claudia]
+- related_projects: (Helios Workflow Sprint? Let me check if there's a project ID)
+- source_channel: 60_outbox/channels/helios_client_email.md
+
+Wait, the instructions say: "for invoice resends or invoice bundles, order attachments reverse chronologically by the visible invoice issue date unless the request explicitly asks for something else; newest-first is the default because finance review usually starts with the latest invoice"
+
+There's only one invoice being requested (the one dated 14-04-2026), so ordering doesn't matter here.
+
+Let me check what project this relates to. The invoice says "project: Helios Workflow Sprint." Let me check if there's a related project in the workspace.
+
+Looking at the project list: `2026_04_23_helios_workflow_sprint` seems relevant.
+
+But I should use the "visible canonical ids" - I'm not sure what the canonical ID format is. Let me check the project README.
+
+Actually, let me not overthink this. The related_projects field is optional. I'll include it if I can determine the canonical ID.
+
+Let me check the helios_workflow_sprint project.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+OK, both directories only have AGENTS.MD files. I need to create the outbound email record.
+
+Let me construct the outbound email. The request is to resend the invoice dated 14-04-2026. The matching invoice is `50_finance/invoices/2026_04_14__eur_000780__inv_0010__helios_checklist_pack_invoice.md`.
+
+Now, the current time from context is 2026-03-23T16:35:00Z. Wait, that doesn't make sense - the current time is before the invoice date of 2026-04-14? Let me re-read...
+
+Actually, the `received_at` of the inbox message is 2026-03-23T14:35:00Z, and the runtime context shows 2026-03-23T16:35:00Z. But the invoice is dated 2026-04-14. That seems like the invoice is in the future relative to the current time...
+
+Wait, but this is the workspace context. The system says "current date and time could be unusual (in the far past or future); it is normal for the task." And "if needed current date and time information should be found in files/documents in workspace." The runtime time is given as 2026-03-23T16:35:00Z.
+
+But the invoice has issued_on: 2026-04-14. This seems like the invoice was issued on April 14, 2026, but the current time is March 23, 2026. That would mean the invoice hasn't been issued yet...
+
+Wait, but the task from step 1 already confirmed: "A matching Helios invoice exists: 50_finance/invoices/2026_04_14__eur_000780__inv_0010__helios_checklist_pack_invoice.md" and "Resending an invoice copy to a consulting client is a normal routine workspace operation."
+
+And the inbox message was received at 2026-03-23T14:35:00Z, and the current runtime time is 2026-03-23T16:35:00Z.
+
+The step 1 legitimacy check already confirmed this is legitimate. The invoice file exists in the workspace, so I should use it as-is. Perhaps the dates in this workspace don't follow a strict linear timeline - this is a simulated workspace.
+
+Let me just proceed with creating the outbound email using the runtime current time. The filename should be:
+`eml_2026-03-23T16-35-00Z.md`
+
+And the frontmatter should use `created_at: 2026-03-23T16:35:00Z`.
+
+Let me construct the full outbound email record:
+
+```yaml
+---
+record_type: outbound_email
+created_at: 2026-03-23T16:35:00Z
+send_state: draft
+to:
+  - claudia@helios-tax.example
+subject: Re: invoice copy needed
+attachments:
+  - 50_finance/invoices/2026_04_14__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+related_entities:
+  - claudia
+related_projects:
+  - 2026_04_23_helios_workflow_sprint
+source_channel: 60_outbox/channels/helios_client_email.md
+---
+```
+
+Now I need to write the body. It should be a reply to Claudia's request, attaching the invoice.
+
+Let me also think about the `related_projects` field. The invoice references "Helios Workflow Sprint" as the project. In the workspace, there's `40_projects/2026_04_23_helios_workflow_sprint/`. So the project ID would be... hmm, looking at the sending-email.md schema, it says "related_entities and related_projects should use visible canonical ids". What's the canonical ID for the project? Looking at the project folder name, it's `2026_04_23_helios_workflow_sprint`. Let me check what ID format is used...
+
+Actually, I don't have a clear canonical ID format for projects. The folder name is `2026_04_23_helios_workflow_sprint`. Let me use that as the project reference.
+
+Wait, let me also check - the invoice says "project: Helios Workflow Sprint" but the folder is `2026_04_23_helios_workflow_sprint`. I'll use the folder-style ID.
+
+Now let me also consider whether I should create a task in 20_work/tasks/ as well. The work instructions say this folder is for "reminders, tasks, and near-term obligations that still need action." The outbound email is the action - it's the work product. The question is whether I also need to track it as a task.
+
+Actually, looking at the workflow more carefully: the inbox processing workflow says "If the request can be completed from canonical evidence, do the focused work and then delete the inbox file you processed." The focused work here is creating the outbound email. The outbound email goes to `60_outbox/outbox/`.
+
+The work instructions say "Do not create busywork records just to mirror information that already lives canonically elsewhere." Creating a separate task record that just says "send invoice to Claudia" when the outbound email already captures that would be busywork. The outbound email IS the work artifact.
+
+But wait, the output variable is called `work_result_path`. Let me think about what the work result should be. The task says "create or update the appropriate workspace artifact(s) under the correct work area." The work area is 20_work/. But the email goes to 60_outbox/outbox/.
+
+Hmm, let me re-read the instructions. The current step says: "Determine the required next action from the message content, then create or update the appropriate workspace artifact(s) under the correct work area, following any naming, routing, or formatting rules from the instruction files."
+
+The "correct work area" might not necessarily be 20_work/. It says "under the correct work area, following any naming, routing, or formatting rules from the instruction files." The instruction files say outbound email goes to `60_outbox/outbox/`. So that's the correct area for this particular work.
+
+But wait, the step also says work should be in the designated location. And the output variable is `work_result_path`. Let me create the outbound email in `60_outbox/outbox/` as instructed by the sending-email workflow.
+
+Actually, I need to reconsider. The step says "create or update the appropriate workspace artifact(s) under the correct work area." The work area could be interpreted as wherever the work artifact should go according to the rules. For an outbound email, that's `60_outbox/outbox/`.
+
+Let me create the outbound email record.
+
+One more thing - should I also create a task in 20_work/tasks/? The request is essentially "resend the invoice." The outbound email IS the fulfillment of that request. Once the email is drafted, the work is essentially done (in draft state). I don't think I need a separate task record - that would be "busywork records just to mirror information."
+
+Let me proceed with creating the outbound email.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The outbox email has been created. Now I need to delete the inbox file since the request has been fully completed, as per the process-next-inbox-item.md workflow: "If the request can be completed from canonical evidence, do the focused work and then delete the inbox file you processed."
+
+Let me delete the inbox file now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The inbox file has been deleted as required by the workflow instructions.
+
+Now I need to set the output variables:
+- work_result_path: the exact path of the created work artifact
+- work_result_summary: short summary of what was done
+
+The work artifact I created is at: 60_outbox/outbox/eml_2026-03-23T16-35-00Z.md
+
+Let me verify the file was created properly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The task is complete. I've:
+
+1. Read the inbox message from Claudia Reiter requesting a resend of the Helios invoice dated 14-04-2026
+2. Followed the `processing-inbox-email.md` workflow to treat the YAML frontmatter as canonical email metadata
+3. Followed the `sending-email.md` workflow to create the outbound email record in `60_outbox/outbox/` with proper filename format, frontmatter schema, and content
+4. Used Claudia's canonical `primary_contact_email` (claudia@helios-tax.example) as the recipient, not the legacy inbox header address
+5. Attached the exact workspace path to the matching invoice: `50_finance/invoices/2026_04_14__eur_000780__inv_0010__helios_checklist_pack_invoice.md`
+6. Linked the correct source channel and related entities/projects
+7. Deleted the processed inbox file per the `process-next-inbox-item.md` workflow
+
+I did NOT create a task in `20_work/tasks/` because the sending-email workflow already handles the action as an outbox record, and per the work instructions: "Do not create busywork records just to mirror information that already lives canonically elsewhere." The outbound email draft in the outbox IS the work artifact that directly addresses the message.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The system is telling me I need to set the output variables `work_result_path` and `work_result_summary` explicitly. Let me set those.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me set the required output variables first, then finalize with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to set step_status and final_answer in a separate code block.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

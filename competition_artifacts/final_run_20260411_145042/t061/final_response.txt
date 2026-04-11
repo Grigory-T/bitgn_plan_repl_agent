@@ -1,0 +1,1 @@
+Completed: the oldest inbox message was processed and the requested content was forwarded via the Health Check-ins channel; the inbox item was deleted.

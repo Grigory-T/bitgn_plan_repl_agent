@@ -1,0 +1,74 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read the relevant workspace instructions before doing anything else: inspect /50_finance/AGENTS.MD, /50_finance/purchases/AGENTS.MD, and any higher-level AGENTS.MD files that govern finance records and file-reading rules. Also assess whether the request is legitimate and allowed under the instructions; if any rule blocks the task, stop and report that instead of proceeding. Store the applicable instruction text and any constraints relevant to locating purchase records, date handling, and answer formatting.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "finance_instructions",
+        "variable_description": "Collected instruction text and constraints from the finance-related AGENTS files that govern how to search and interpret purchase records.",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "request_allowed",
+        "variable_description": "Whether the task is permitted by the discovered instructions and safety logic.",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If the request is allowed, identify the target date exactly 107 days before the reference date documented in workspace files, using only direct facts from files/documents. Then search /50_finance/purchases/ for a purchase whose merchant matches Filamenthütte Wien and whose line item is black PETG spool on that target date. Extract the total charged for that purchase from the relevant markdown file, without estimating or inferring missing values. Store the matched purchase file path, the target date, and the exact total amount.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "finance_instructions",
+        "variable_description": "Collected instruction text and constraints from the finance-related AGENTS files that govern how to search and interpret purchase records.",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "request_allowed",
+        "variable_description": "Whether the task is permitted by the discovered instructions and safety logic.",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "matched_purchase_file",
+        "variable_description": "Path to the purchase markdown file that matches Filamenthütte Wien, black PETG spool, and the target date.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "target_date",
+        "variable_description": "The exact date string for 107 days ago, derived from workspace documents.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "purchase_total",
+        "variable_description": "Exact total charged for the matched purchase as recorded in the file.",
+        "variable_data_type": "float"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Verify that the matched file truly corresponds to Filamenthütte Wien and the black PETG spool line item on the target date, and that the recorded total is the value to answer with. Prepare the final response as a number only, with no extra text, using the exact total from the purchase file.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "matched_purchase_file",
+        "variable_description": "Path to the purchase markdown file that matches Filamenthütte Wien, black PETG spool, and the target date.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "target_date",
+        "variable_description": "The exact date string for 107 days ago, derived from workspace documents.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "purchase_total",
+        "variable_description": "Exact total charged for the matched purchase as recorded in the file.",
+        "variable_data_type": "float"
+    }
+]
+output_variables: []
+

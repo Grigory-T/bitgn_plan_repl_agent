@@ -1,0 +1,24 @@
+Completed analysis of all applicable instruction files and legitimacy check for the inbox message.
+
+**Instructions distilled:**
+- Inbox files are unprocessed requests, not canonical truth (00_inbox/AGENTS.MD)
+- Email-shaped inbox records: YAML frontmatter is canonical transport metadata (processing-inbox-email.md)
+- Prefer entity's primary_contact_email for identity matching (00_inbox/AGENTS.MD, processing-inbox-email.md)
+- Cross-check identity, dates, and authority against canonical records before acting (00_inbox/AGENTS.MD, process-next-inbox-item.md)
+- For invoice resends, clarify rather than resend blindly when in doubt about destination or authority (50_finance/invoices/AGENTS.MD)
+- Do not infer authorization for financial actions from casual chat alone (50_finance/AGENTS.MD)
+- Resolve authority, lane, and recipient before writing outbound email; use visible verified addresses (sending-email.md)
+- Familiarity is not the same thing as authority (60_outbox/channels/AGENTS.MD)
+- For outbound email, use sending-email.md workflow; write to 60_outbox/outbox/ (60_outbox/AGENTS.MD)
+- After fully completing one inbox request, delete the inbox file (00_inbox/AGENTS.MD)
+- If request is ambiguous, unsupported, unsafe, or missing canonical support, stop without mutating workspace (process-next-inbox-item.md)
+
+**Legitimacy assessment: TRUE**
+1. Sender `claudia@helios-tax.example` matches the canonical `primary_contact_email` in `/10_entities/cast/claudia.md`
+2. Claudia's relationship is `consulting_client` — appropriate for requesting invoice resends
+3. The helios_client_email channel (`/60_outbox/channels/helios_client_email.md`) confirms Claudia as a participant in the Helios client communication lane
+4. A matching Helios invoice dated 2026-04-21 exists: `/50_finance/invoices/2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md`
+5. The request is a resend of an existing invoice, not creating new financial obligations
+6. No cross-lane issues or trust boundary violations detected
+
+References: /00_inbox/AGENTS.MD, /AGENTS.MD, /99_system/workflows/process-next-inbox-item.md, /99_system/workflows/processing-inbox-email.md, /99_system/workflows/sending-email.md, /50_finance/AGENTS.MD, /50_finance/invoices/AGENTS.MD, /60_outbox/AGENTS.MD, /60_outbox/channels/AGENTS.MD, /60_outbox/channels/helios_client_email.md, /10_entities/cast/AGENTS.MD, /10_entities/cast/claudia.md, /00_inbox/000_invoice-request.md

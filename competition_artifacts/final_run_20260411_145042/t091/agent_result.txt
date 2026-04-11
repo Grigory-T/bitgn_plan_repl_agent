@@ -1,0 +1,1 @@
+The inbox message was fully handled: the three Ida Novak-related bills were OCR'd into YAML frontmatter per the finance record schema, the original note bodies were preserved, and the inbox item was deleted. This matches the original task to take care of the next inbox message.

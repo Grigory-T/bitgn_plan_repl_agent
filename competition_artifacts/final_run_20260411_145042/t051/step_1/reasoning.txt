@@ -1,0 +1,45 @@
+Let me read the instruction files as specified in the current step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The key rule from `/40_projects/AGENTS.MD` is:
+- "Project folders use the project creation date as a `YYYY_MM_DD_` prefix."
+- "The canonical reference for each project is `README.MD` inside that project folder."
+
+So the project start date should be derived from the folder prefix. Now I need to also read the specific project README as instructed.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check if there are any other instruction files in the project folder or related directories that might provide additional guidance.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me summarize the key rules and guidance I found:
+
+From `/40_projects/AGENTS.MD`:
+- "Project folders use the project creation date as a `YYYY_MM_DD_` prefix."
+- "The canonical reference for each project is `README.MD` inside that project folder."
+
+From the root `/AGENTS.MD`:
+- "40_projects/: concrete project folders and artifacts; folder names start with the project creation date as YYYY_MM_DD_, and the canonical project record is README.MD inside each folder"
+
+So the project start date is recorded in the folder name as a `YYYY_MM_DD_` prefix, and the canonical project record is the `README.MD` inside the project folder.
+
+For the Helios Workflow Sprint project:
+- Folder name: `2026_04_30_helios_workflow_sprint`
+- The project creation date (start date) is `2026_04_30` = April 30, 2026
+
+Now let me compile the instruction_paths and instruction_notes.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me set the output variables correctly and then finalize.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The step has been completed. I've read all the specified instruction files and extracted the relevant rules about where project start dates are recorded. Let me finalize by setting the two output variables.
+
+The instruction_paths and instruction_notes were already set in a previous code block. Now I need to finalize with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

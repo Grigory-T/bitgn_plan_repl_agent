@@ -1,0 +1,52 @@
+Task ID
+t006
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84roc5360wsq0
+
+Task
+Cleanup time. Delete all receipts containing "ESP32-C3 dev boards". Return only the exact deleted paths, one per line, sorted alphabetically.
+
+BitGN Harness URL
+https://vm-03nmd84roc5360wsq0.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+3m 44s
+
+Agent Result
+The target receipt files containing the exact string "ESP32-C3 dev boards" were identified and deleted, and the deleted paths are confirmed for exact reporting: 50_finance/purchases/2025_11_28__eur_000044__bill__house_mesh_esp32_order.md and 50_finance/purchases/2026_02_28__eur_000022__bill__house_mesh_esp32_topup.md.
+
+Final Response
+50_finance/purchases/2025_11_28__eur_000044__bill__house_mesh_esp32_order.md
+50_finance/purchases/2026_02_28__eur_000022__bill__house_mesh_esp32_topup.md
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+AGENTS.MD
+50_finance/AGENTS.MD
+50_finance/purchases/AGENTS.MD
+99_system/AGENTS.MD
+99_system/workflows/AGENTS.MD
+99_system/workflows/deletion-and-wiping.md
+99_system/schemas/AGENTS.MD
+99_system/schemas/finance-record-frontmatter.md
+50_finance/purchases/2025_11_28__eur_000044__bill__house_mesh_esp32_order.md
+50_finance/purchases/2026_02_28__eur_000022__bill__house_mesh_esp32_topup.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84roc5360wsq0
+
+Score
+0.00
+
+Details
+(none)

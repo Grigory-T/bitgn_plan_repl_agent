@@ -1,0 +1,27 @@
+Decision after step 1:
+{
+  "next_action": "replan_remaining_steps",
+  "abort_reason": null,
+  "reasons_for_replan_remaining_steps": "Step 1 discovered an unexpected constraint: there is no exact entity with relationship 'infra_counterpart'; the closest match is 'engineering_counterpart' (Roman Stiller). The remaining plan should be updated to resolve this entity-identity ambiguity before extracting a DOB, since the correct target is not yet validated and continuing directly would risk using the wrong person.",
+  "task_completed_reason": null,
+  "task_continue_reason": null
+}
+
+Decision after step 2:
+{
+  "next_action": "replan_remaining_steps",
+  "abort_reason": null,
+  "reasons_for_replan_remaining_steps": "The candidate identity is not fully resolved: the only nearby match is Roman Stiller with relationship 'engineering_counterpart', but the original request asks for 'infra counterpart' and the workspace instructions require clarification rather than guessing when the canonical file does not exactly confirm the target. The remaining step should be updated to either seek clarification or stop without fabricating a DOB.",
+  "task_completed_reason": null,
+  "task_continue_reason": null
+}
+
+Decision after step 3:
+{
+  "next_action": "task_completed",
+  "abort_reason": null,
+  "reasons_for_replan_remaining_steps": null,
+  "task_completed_reason": "The lookup cannot be completed as requested because the intended entity is not authoritatively resolved: no canonical cast file contains an 'infra_counterpart' relationship, and the closest match ('engineering_counterpart' Roman Stiller) is not sufficient to guess a DoB. The correct next action is to ask the user to clarify the counterpart identity.",
+  "task_continue_reason": null
+}
+

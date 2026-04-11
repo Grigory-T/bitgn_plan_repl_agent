@@ -1,0 +1,50 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and comply with the relevant workspace instructions before doing any data work by opening the instruction files at `00_inbox/AGENTS.MD`, `20_work/AGENTS.MD`, and `50_finance/AGENTS.MD`, plus any invoice-specific guidance referenced there. Verify the request is legitimate and allowed, and identify the exact rules for how to interpret invoice dates, service line names, and revenue amounts. Store the extracted instruction summaries for use in later steps.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Collected rule summaries and constraints from the relevant AGENTS instruction files",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Inspect the finance invoice files in `50_finance/invoices/` and identify every invoice dated on or after `2026-01-01` whose service line matches `staff  follow-up support` exactly or according to the invoice naming/content rules found in the instructions. Extract each matching invoice's date, service line, and monetary amount directly from the source documents, without estimating or inferring missing values. Store the matching invoice records for aggregation.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Collected rule summaries and constraints from the relevant AGENTS instruction files",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "matching_invoices",
+        "variable_description": "List of matching invoice records including invoice date, service line, and amount",
+        "variable_data_type": "list[dict]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Sum the monetary amounts from all records in `matching_invoices` to compute the total revenue earned from the service line `staff  follow-up support` since the beginning of January 2026. Return the result as a single numeric value ready to be reported with no extra text.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "matching_invoices",
+        "variable_description": "List of matching invoice records including invoice date, service line, and amount",
+        "variable_data_type": "list[dict]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "total_revenue",
+        "variable_description": "Total money made from the requested service line since 2026-01-01",
+        "variable_data_type": "float"
+    }
+]
+

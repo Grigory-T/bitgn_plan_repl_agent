@@ -1,0 +1,1 @@
+The project start date was identified as 2026_03_29 from the canonical project record, which corresponds to 29-03-2026 in the required DD-MM-YYYY format.

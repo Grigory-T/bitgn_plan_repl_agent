@@ -1,0 +1,50 @@
+Task ID
+t028
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84th34dzrz0yu
+
+Task
+In which projects is my startup sounding board involved? Return only the exact project names, one per line, sorted alphabetically.
+
+BitGN Harness URL
+https://vm-03nmd84th34dzrz0yu.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+3m 58s
+
+Agent Result
+The remaining step is only to deduplicate, verify the exact project name, and format the already-confirmed result. The workspace review established that only one project is involved: Northstar Ledger.
+
+Final Response
+Northstar Ledger
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/AGENTS.MD
+/10_entities/AGENTS.MD
+/10_entities/cast/AGENTS.MD
+/10_entities/cast/tobias.md
+/40_projects/AGENTS.MD
+/40_projects/2026_04_01_northstar_ledger/README.MD
+/50_finance/AGENTS.MD
+/99_system/AGENTS.MD
+/99_system/workflows/AGENTS.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84th34dzrz0yu
+
+Score
+0.00
+
+Details
+(none)

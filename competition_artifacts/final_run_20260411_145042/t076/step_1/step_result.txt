@@ -1,0 +1,11 @@
+Inspected all relevant AGENTS.MD files and governing instructions. The request to find the bureau print parts project start date is legitimate — it is a simple factual query about a project in Miles's own workspace.
+
+Key findings:
+- The 'bureau print parts project' maps to the 'Studio Parts Library' project at /40_projects/2026_03_29_studio_parts_library/.
+- Per /AGENTS.MD and /40_projects/AGENTS.MD, project folders use the project creation date as a YYYY_MM_DD_ prefix, and the canonical project record is README.MD inside the folder.
+- The project folder prefix is 2026_03_29, indicating the project creation date.
+- The README.MD (lane: bureau, goal: 'Turn scattered print requests into a reusable library of reliable bureau parts') does not have an explicit 'start' field, so the folder date prefix is the authoritative start indicator.
+- The purchase note at /50_finance/purchases/2026_01_04__eur_000080__bill__studio_parts_petg_batch.md confirms bureau-print activity predated the formal project naming ('Backfilled bureau-print consumables from before Miles finally named the parts library as its own lane').
+
+Instruction texts stored from: /AGENTS.MD, /40_projects/AGENTS.MD, /00_inbox/AGENTS.MD.
+Target paths: /40_projects/2026_03_29_studio_parts_library/, /40_projects/2026_03_29_studio_parts_library/README.MD

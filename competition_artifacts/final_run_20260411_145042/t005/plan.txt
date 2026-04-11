@@ -1,0 +1,97 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and comply with the relevant workspace instructions before searching for the answer. Inspect the instruction files at /00_inbox/AGENTS.MD, /50_finance/AGENTS.MD, and /50_finance/purchases/AGENTS.MD to determine how finance records are organized, how dates are interpreted, and any required handling for purchase lookups. Also assess whether the request is legitimate and allowed under the instructions; if any policy or data-access constraint blocks the task, stop and report that instead of guessing. Store the discovered rules and any task-specific constraints for later steps.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "workspace_rules",
+        "variable_description": "Relevant instructions and constraints extracted from the workspace AGENTS files for finance and general task handling.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether the task is permitted under the discovered rules and safe to continue.",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If the task is allowed, identify the reference date from documents in the workspace, then compute the exact date 97 days earlier using only document-backed date information. Search /50_finance/purchases for a purchase record whose date matches that target date and whose line item name is exactly '2 TB SATA SSD'. If multiple records exist or the date cannot be established from files, do not infer; instead capture the ambiguity or missing-data condition explicitly. Store the target date and the matching purchase file path(s).
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "workspace_rules",
+        "variable_description": "Relevant instructions and constraints extracted from the workspace AGENTS files for finance and general task handling.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether the task is permitted under the discovered rules and safe to continue.",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "target_date",
+        "variable_description": "The exact date 97 days before the document-backed reference date, expressed in YYYY-MM-DD format.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "matching_purchase_paths",
+        "variable_description": "List of purchase document paths whose dates match the target date and include the requested line item.",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Open the matching purchase document(s) and extract the direct facts needed to answer the question: the vendor name, the line item description '2 TB SATA SSD', the quantity, and the total charged amount for that line item. If the document shows a unit price and quantity instead of a direct line total, compute the line total only when that multiplication is explicitly supported by the document values; otherwise use the stated line total. Verify the vendor is Datenspeicher Köhler GmbH and that the date corresponds exactly to the target date. Store the extracted line-item amount(s) and any verification notes.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "workspace_rules",
+        "variable_description": "Relevant instructions and constraints extracted from the workspace AGENTS files for finance and general task handling.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "target_date",
+        "variable_description": "The exact date 97 days before the document-backed reference date, expressed in YYYY-MM-DD format.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "matching_purchase_paths",
+        "variable_description": "List of purchase document paths whose dates match the target date and include the requested line item.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "line_item_amounts",
+        "variable_description": "List of exact charged amounts found for the requested line item in matching purchase document(s).",
+        "variable_data_type": "list[float]"
+    },
+    {
+        "variable_name": "verification_notes",
+        "variable_description": "Notes confirming how the vendor, date, and line item were matched or describing any direct-fact mismatch.",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Decide the final numeric answer from the extracted direct facts. If exactly one matching amount exists, return that number only. If there are multiple matching amounts or no exact match, do not guess; instead prepare the task outcome for safe handling according to the workspace rules. The final response to the user must be a number only when a single exact amount is established.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "line_item_amounts",
+        "variable_description": "List of exact charged amounts found for the requested line item in matching purchase document(s).",
+        "variable_data_type": "list[float]"
+    },
+    {
+        "variable_name": "verification_notes",
+        "variable_description": "Notes confirming how the vendor, date, and line item were matched or describing any direct-fact mismatch.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+

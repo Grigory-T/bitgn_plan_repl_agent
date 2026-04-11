@@ -1,0 +1,90 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and follow the relevant workspace instructions before doing any content lookup. Inspect the instruction files at /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD, and any more specific AGENTS.MD files needed for reading entity files. Confirm the task is legitimate and that the response must be based only on direct facts found in the workspace, with no estimation or inference beyond what the files explicitly state.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and deemed relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether the task is allowed under the applicable workspace instructions",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If task_allowed is false, stop and return no names. Otherwise, identify the source files that may contain birthday information for the cast entity files under /10_entities/cast/ and any related reminder or note files that explicitly record birthdays or upcoming birthdays. Collect the exact file paths to inspect so the search is grounded in direct workspace facts.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and deemed relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether the task is allowed under the applicable workspace instructions",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "birthday_source_files",
+        "variable_description": "Exact file paths that were identified as potentially containing birthday information",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Read each identified birthday source file and extract only explicit birthday dates and exact person names as stated in the files. For each person, capture the birthday date string and the exact file path where it was found, without converting or estimating dates.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "birthday_source_files",
+        "variable_description": "Exact file paths that were identified as potentially containing birthday information",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "birthday_records",
+        "variable_description": "Explicit birthday records extracted from source files, each including a person's exact name, explicit birthday date string, and source file path",
+        "variable_data_type": "list[tuple[str, str, str]]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Determine which explicit birthday date is the next upcoming birthday using only direct date facts from the workspace. If multiple people share that exact next birthday date, include all of them. Then sort the matching exact names alphabetically and format the final answer as one name per line with no extra text.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "birthday_records",
+        "variable_description": "Explicit birthday records extracted from source files, each including a person's exact name, explicit birthday date string, and source file path",
+        "variable_data_type": "list[tuple[str, str, str]]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "final_names",
+        "variable_description": "Alphabetically sorted exact names of the person or people whose birthday comes up next",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: Return only the exact names in final_names, one per line, with no bullets, numbering, commentary, or additional text.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "final_names",
+        "variable_description": "Alphabetically sorted exact names of the person or people whose birthday comes up next",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+

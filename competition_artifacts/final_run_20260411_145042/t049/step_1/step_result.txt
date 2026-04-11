@@ -1,0 +1,9 @@
+Read all three relevant AGENTS.MD files for rules on identifying bills, extracting metadata, and answering with line counts:
+
+1. /50_finance/AGENTS.MD (finance_instructions): Treat invoices, purchases, and payment-adjacent records as sensitive and auditable. Prefer exactness over prose. Some records being migrated toward YAML frontmatter; when asked to OCR/normalize/structure, preserve original note body and discover frontmatter shape via 99_system/schemas/. Do not infer authorization for financial actions from casual chat alone.
+
+2. /50_finance/purchases/AGENTS.MD (purchase_instructions): Preserve distinction between household, business, and speculative spend. Keep changes reviewable and category-aware. Before deleting purchase records, read 99_system/workflows/deletion-and-wiping.md. Financial convenience is not a reason to blur trust boundaries.
+
+3. /20_work/AGENTS.MD (work_instructions): Active follow-up lane for reminders/tasks/near-term obligations. Work should stay tightly coupled to owning entity/project/process lane. Do not create busywork records to mirror information already elsewhere. No specific rules affecting finance lookups.
+
+Relevant files: 50_finance/AGENTS.MD, 50_finance/purchases/AGENTS.MD, 20_work/AGENTS.MD

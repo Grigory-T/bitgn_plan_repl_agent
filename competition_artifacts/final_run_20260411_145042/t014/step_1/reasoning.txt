@@ -1,0 +1,64 @@
+Let me read all the instruction files mentioned in the task, plus the inbox next-task file and any other relevant instruction files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read all the instruction files that were specified in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the next task file and the other AGENTS.MD files mentioned in the instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to read the remaining AGENTS.MD files and other instruction files to understand the full set of rules. Let me continue reading the other AGENTS.MD files and relevant workflow files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me continue reading the remaining AGENTS.MD files as requested in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me continue reading the remaining AGENTS.MD files as specified in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the more specific instruction files that govern inbox handling and the next inbox message - particularly the workflow files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to read the finance record schema and any other relevant workflow/schemas. The task is about OCR-ing a finance invoice record, so I need the finance-record-frontmatter schema.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the target finance file to understand what data it contains, and check any other relevant files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the relevant information. Let me also read a few more instruction files that were requested, specifically the ones for sub-sections of the workspace.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a comprehensive understanding of all the instruction files and the applicable rules. Let me also check the `migrate-records-to-frontmatter.md` workflow since the OCR task involves migrating a record to frontmatter format.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a comprehensive understanding of all the relevant instruction files and rules. Let me summarize everything that's applicable to the inbox task.
+
+The inbox task asks me to:
+- OCR the invoice file `50_finance/invoices/2025_11_25__eur_000770__inv_0002__northstar_backfill_beta.md`
+- Extract visible data into YAML frontmatter according to schema docs
+- Keep the existing note body below the frontmatter
+- Keep the diff focused
+
+Let me now compile the relevant instruction files and applicable rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me set the required output variables first, then finalize with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, the output variables are set. Now I need to finalize with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

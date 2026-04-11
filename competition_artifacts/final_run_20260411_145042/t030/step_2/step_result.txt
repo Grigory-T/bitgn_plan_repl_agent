@@ -1,0 +1,15 @@
+Identified the target date and matched purchase successfully.
+
+Reference date: 2026-05-21, the most recent direct date documented in workspace files (from /40_projects/2026_05_03_school_helper_kit/README.MD updated_on field). 107 days before 2026-05-21 = 2026-02-03.
+
+Matched purchase file: 50_finance/purchases/2026_02_03__eur_000080__bill__studio_parts_petg_batch.md
+- counterparty: Filamenthütte Wien ✓
+- purchased_on: 2026-02-03 ✓
+- Line item 'black PETG spool' present (qty 2, unit_eur 26, line_eur 52) ✓
+- Purchase total (total_eur): 80
+
+Relevant files:
+- /50_finance/purchases/2026_02_03__eur_000080__bill__studio_parts_petg_batch.md (matched purchase record)
+- /40_projects/2026_05_03_school_helper_kit/README.MD (source of reference date)
+- /99_system/schemas/finance-record-frontmatter.md (schema for reading finance records)
+- /50_finance/AGENTS.MD, /50_finance/purchases/AGENTS.MD (finance lane instructions)

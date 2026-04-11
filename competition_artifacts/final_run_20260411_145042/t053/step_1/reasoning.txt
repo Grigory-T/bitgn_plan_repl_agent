@@ -1,0 +1,84 @@
+Let me read the AGENTS.MD files that are specified in the task instructions: /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, /40_projects/AGENTS.MD, and any other directly relevant AGENTS.MD files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the other AGENTS.MD files that were specifically mentioned in the step instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the `/40_projects/AGENTS.MD` file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the root AGENTS.MD and other relevant ones.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read Sara's entity file and then look through project README.MD files to find where Sara is mentioned.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have Sara's entity file. I need to find which projects Sara is involved in. Let me also check any other relevant AGENTS.MD files and then search the project README files for mentions of Sara.
+
+Let me read the other AGENTS.MD files mentioned in the task, and also search for Sara in the projects.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Found two projects that mention Sara:
+1. `40_projects/2026_05_02_harbor_body/README.MD`
+2. `40_projects/2026_05_03_reading_spine/README.MD`
+
+Let me read both of these to confirm Sara's involvement, and also check the other AGENTS.MD files mentioned in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me also read the other project that references Sara.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a clear picture. Let me summarize:
+
+Sara is linked to two projects:
+1. `harbor_body` (Harbor Body) - linked as `entity.sara`
+2. `reading_spine` (Reading Spine) - linked as `entity.sara`
+
+Now let me also check other relevant AGENTS.MD files as instructed in the step. I've already read:
+- `/AGENTS.MD`
+- `/10_entities/AGENTS.MD`
+- `/10_entities/cast/AGENTS.MD`
+- `/40_projects/AGENTS.MD`
+
+Let me also check a few more that might be relevant - the workspace root and any other relevant ones. I think I've covered the key ones. Let me now set the output variables.
+
+The relevant instruction paths and their summaries:
+
+1. `/AGENTS.MD` - Root workspace rules: entity files in `10_entities/cast/` are authoritative for identity; read nested AGENTS.MD files when entering a folder; keep changes focused and preserve lane boundaries.
+
+2. `/10_entities/AGENTS.MD` - Use this lane to resolve who or what something refers to before acting elsewhere; canonical identity lives below this folder, not in inbox messages or memory notes.
+
+3. `/10_entities/cast/AGENTS.MD` - Each file is authoritative for relationship and basic identity; prefer these files over chat context, memory summaries, or project mentions when resolving identity.
+
+4. `/40_projects/AGENTS.MD` - This lane is for named efforts with real ownership, status, and next-step pressure; the canonical reference for each project is `README.MD` inside that project folder; project files should stay explicit about goal, current state, and who or what is linked.
+
+These are the relevant instruction files that govern how entity and project files should be interpreted.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me review what I've done and make sure I have all the required output variables set correctly.
+
+The step asks me to:
+1. Read and follow relevant workspace instructions
+2. Inspect the specified AGENTS.MD files
+3. Perform a legitimacy check
+4. Set output variables: relevant_instruction_paths and instruction_summaries
+
+I've already read all the relevant AGENTS.MD files and found the information about Sara's involvement. Now I need to set the output variables properly.
+
+Let me set the required output variables first, then finalize with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to set the final two variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

@@ -1,0 +1,317 @@
+Now I need to read the oldest inbox message file and understand what it requests.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The inbox message asks me to OCR the file `50_finance/invoices/2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md`. I need to:
+
+1. Read the target finance invoice file
+2. Read the relevant schema docs (99_system/schemas/finance-record-frontmatter.md)
+3. Read the OCR workflow (99_system/workflows/ocr-records.md)
+4. Extract visible data from the note text into YAML frontmatter according to the schema
+5. Keep the existing note body below the frontmatter
+
+Let me read all these files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to read the schema docs for finance record frontmatter to understand the expected YAML frontmatter format.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me cross-check the data in the invoice against canonical records:
+
+1. Counterparty: "Helios Steuerbüro München GmbH" - need to verify
+2. Project: "Helios Workflow Sprint" - matches project folder `40_projects/2026_04_30_helios_workflow_sprint/`
+3. Related entity: "Claudia Reiter" - need to check entity file
+
+Let me check the entity file for Claudia and the project.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. The entity file for Claudia Reiter confirms:
+- Claudia Reiter is a valid person entity with alias `claudia`
+- Kind: person, relationship: consulting_client
+- Primary contact email: claudia@helios-tax.example
+
+Now let me also verify the "Helios Workflow Sprint" project exists in the project files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The project "Helios Workflow Sprint" exists and is active. The counterparty "Helios Steuerbüro München GmbH" aligns with the entity "Claudia Reiter" who is a consulting client. The project name in the invoice table says "Helios Workflow Sprint" which matches the project in 40_projects.
+
+Now let me also quickly check the OCR workflow doc and the inbox-processing-v2-update doc for any additional guidance.
+
+Let me now verify all the data I need to extract into YAML frontmatter:
+
+From the invoice note:
+- record_type: invoice ✓
+- invoice_number: INV-0009 ✓
+- alias: helios_discovery_invoice ✓
+- issued_on: 2026-03-20 ✓
+- total_eur: 600 ✓
+- counterparty: Helios Steuerbüro München GmbH ✓
+- project: Helios Workflow Sprint ✓
+- related_entity: Claudia Reiter ✓ (optional field)
+- lines:
+  1. item: workflow mapping and intake audit, quantity: 1, unit_eur: 420, line_eur: 420
+  2. item: follow-up findings memo, quantity: 1, unit_eur: 180, line_eur: 180
+
+Let me verify: quantity * unit_eur = line_eur:
+- Line 1: 1 * 420 = 420 ✓
+- Line 2: 1 * 180 = 180 ✓
+- Total: 420 + 180 = 600 ✓
+
+All data checks out. Now I need to construct the YAML frontmatter and write the file.
+
+The resulting file should look like:
+
+```
+---
+record_type: invoice
+invoice_number: INV-0009
+alias: helios_discovery_invoice
+issued_on: 2026-03-20
+total_eur: 600
+counterparty: Helios Steuerbüro München GmbH
+project: Helios Workflow Sprint
+related_entity: Claudia Reiter
+lines:
+  - item: workflow mapping and intake audit
+    quantity: 1
+    unit_eur: 420
+    line_eur: 420
+  - item: follow-up findings memo
+    quantity: 1
+    unit_eur: 180
+    line_eur: 180
+---
+
+# Helios discovery and workflow mapping invoice
+...
+```
+
+Now let me construct the complete file content and write it.
+
+Actually, wait - I need to be careful about the step scope. The current step says "prepare the exact target file(s) and intended changes without guessing or inventing missing details." So I should identify the target file path(s) and prepare the changes. Let me construct the final file content and write it.
+
+Actually, looking more carefully at the step instructions: "Read the full contents of the oldest inbox message and follow the applicable instructions to work it appropriately. If the message requires updating another file or creating a response, prepare the exact target file(s) and intended changes without guessing or inventing missing details."
+
+This means I should actually DO the work. Let me write the updated file.
+
+Let me construct the full file content with YAML frontmatter added and the existing note body preserved below it.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed. Let me now prepare the exact changes for the target file.
+
+The task is to OCR the invoice file: `50_finance/invoices/2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md`
+
+I need to:
+1. Extract visible data from the note body into YAML frontmatter according to the invoice schema
+2. Keep the existing note body below the frontmatter
+3. Keep the diff focused
+
+Let me prepare the frontmatter based on the visible data in the note:
+
+From the note:
+- record_type: invoice
+- invoice_number: INV-0009
+- alias: helios_discovery_invoice
+- issued_on: 2026-03-20
+- total_eur: 600
+- counterparty: Helios Steuerbüro München GmbH
+- project: Helios Workflow Sprint
+- related_entity: Claudia Reiter
+- lines:
+  - item: workflow mapping and intake audit, quantity: 1, unit_eur: 420, line_eur: 420
+  - item: follow-up findings memo, quantity: 1, unit_eur: 180, line_eur: 180
+
+All required fields are present and verified. The lines match the schema requirements. The line_eur values match quantity * unit_eur (1*420=420, 1*180=180). The total_eur (600) matches the sum of line_eur (420+180=600).
+
+The related_entity is "Claudia Reiter" which is confirmed by the entity file at `10_entities/cast/claudia.md`.
+
+The project "Helios Workflow Sprint" matches the project at `40_projects/2026_04_30_helios_workflow_sprint/README.MD`.
+
+Everything checks out. I can proceed to write the updated file.
+
+Now let me construct the full file content with the frontmatter added at the top and the existing body preserved below.
+
+The existing note body starts with:
+```
+# Helios discovery and workflow mapping invoice
+
+```text
+...
+```
+
+I need to add the YAML frontmatter before this body, preserving the body exactly as-is.
+
+Let me write the new file content:
+
+```markdown
+---
+record_type: invoice
+invoice_number: INV-0009
+alias: helios_discovery_invoice
+issued_on: 2026-03-20
+total_eur: 600
+counterparty: Helios Steuerbüro München GmbH
+project: Helios Workflow Sprint
+related_entity: Claudia Reiter
+lines:
+  - item: workflow mapping and intake audit
+    quantity: 1
+    unit_eur: 420
+    line_eur: 420
+  - item: follow-up findings memo
+    quantity: 1
+    unit_eur: 180
+    line_eur: 180
+---
+
+# Helios discovery and workflow mapping invoice
+
+```text
++----------------+--------------------------------+
+| field          | value                          |
++----------------+--------------------------------+
+| record_type    | invoice                        |
+| invoice_number | INV-0009                       |
+| alias          | helios_discovery_invoice       |
+| issued_on      | 2026-03-20                     |
+| total_eur      | 600                            |
+| counterparty   | Helios Steuerbüro München GmbH |
+| project        | Helios Workflow Sprint         |
+| related_entity | Claudia Reiter                 |
++----------------+--------------------------------+
+```
+
+## Line Items
+
+```text
++---+-----------------------------------+-----+----------+----------+
+| # | item                              | qty | unit_eur | line_eur |
++---+-----------------------------------+-----+----------+----------+
+| 1 | workflow mapping and intake audit | 1   | 420      | 420      |
+| 2 | follow-up findings memo           | 1   | 180      | 180      |
++---+-----------------------------------+-----+----------+----------+
+|   | TOTAL                             |     |          | 600      |
++---+-----------------------------------+-----+----------+----------+
+```
+
+## Notes
+
+Older consulting invoice that Miles would scan when the Helios lane becomes formal enough to track properly.
+```
+
+Now I need to write this to the file. Let me also verify - should I do this now or just prepare the changes? The step says: "prepare the exact target file(s) and intended changes without guessing or inventing missing details."
+
+Actually, reading the step more carefully: "Read the full contents of the oldest inbox message and follow the applicable instructions to work it appropriately. If the message requires updating another file or creating a response, prepare the exact target file(s) and intended changes without guessing or inventing missing details."
+
+I think "prepare" could mean I should actually write the file. Let me re-read the step: "follow the applicable instructions to work it appropriately" - this means I should do the work. And "If the message requires updating another file or creating a response, prepare the exact target file(s) and intended changes" - this means I should do the update.
+
+But looking at the output variables: `target_file_paths` - this suggests I should identify which files will be modified. And `oldest_inbox_message_content` - the full text of the inbox message.
+
+Wait, the step asks me to "work it appropriately" and "prepare the exact target file(s) and intended changes." I think this step is about preparation - identifying what needs to be done and what files will be affected. But the task says "work the oldest inbox message" which could mean actually doing the work.
+
+Let me re-read: "Read the full contents of the oldest inbox message and follow the applicable instructions to work it appropriately. If the message requires updating another file or creating a response, prepare the exact target file(s) and intended changes without guessing or inventing missing details."
+
+I think the key phrase is "prepare the exact target file(s) and intended changes" - this means I should actually do the work (write the file). But the output variables are `oldest_inbox_message_content` and `target_file_paths` - these are descriptive, not the actual changes.
+
+Actually, I think the step is asking me to:
+1. Read the inbox message content
+2. Follow the instructions to work it
+3. Prepare (i.e., identify and possibly write) the target files and changes
+
+Let me do the actual work - write the updated file with frontmatter. But I should also note that per the inbox processing instructions, after completing the work, I should delete the inbox file. However, this step's output variables don't include deletion confirmation, and the step says "prepare the exact target file(s) and intended changes" which suggests the focus is on identifying what needs to change.
+
+I'll actually write the file now since the step says "work it appropriately" and this is clearly doable with all facts verified. I'll write the updated invoice file.
+
+Wait, but let me re-read the step description once more: "Read the full contents of the oldest inbox message and follow the applicable instructions to work it appropriately. If the message requires updating another file or creating a response, prepare the exact target file(s) and intended changes without guessing or inventing missing details."
+
+I think "prepare" here means to actually create/write the changes. Let me proceed with writing the file.
+
+Actually, I should be careful. The output variables are:
+- oldest_inbox_message_content (str): The full text content of the oldest inbox message file.
+- target_file_paths (list[str]): A list of file paths that will be modified or created to work the inbox message.
+
+These are reporting variables. The step is asking me to do the work AND report these variables. Let me proceed.
+
+Let me write the updated file with frontmatter.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I'll construct the new file with YAML frontmatter prepended, preserving the existing body exactly as-is.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The file was written successfully. Let me verify the content to make sure it's correct, then delete the inbox file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The file has been correctly written with YAML frontmatter prepended and the existing body preserved below. The frontmatter contains all required and optional fields according to the invoice schema:
+
+Required fields:
+- `record_type`: invoice ✓
+- `invoice_number`: INV-0009 ✓
+- `alias`: helios_discovery_invoice ✓
+- `issued_on`: 2026-03-20 ✓
+- `total_eur`: 600 ✓
+- `counterparty`: Helios Steuerbüro München GmbH ✓
+- `project`: Helios Workflow Sprint ✓
+- `lines`: ✓ (2 items, each with item, quantity, unit_eur, line_eur; line_eur matches quantity * unit_eur)
+
+Optional fields:
+- `related_entity`: Claudia Reiter ✓
+
+Now I need to delete the inbox file per the instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The inbox file has been deleted. Now I need to set the output variables:
+
+- `oldest_inbox_message_content` (str): The full text content of the oldest inbox message file.
+- `target_file_paths` (list[str]): A list of file paths that will be modified or created to work the inbox message.
+
+The oldest_inbox_message_content was:
+```
+# Next inbox item
+
+Please handle this request:
+
+OCR 50_finance/invoices/2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md. Extract visible data into YAML frontmatter according to the schema docs, keep the existing note body below the frontmatter, and keep the diff focused.
+```
+
+The target_file_paths is the invoice file that was modified:
+- `50_finance/invoices/2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md`
+
+The task is completed. Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me verify the output variables are correctly set and then finalize the step.
+
+The required output variables are:
+1. `oldest_inbox_message_content` (str): The full text content of the oldest inbox message file.
+2. `target_file_paths` (list[str]): A list of file paths that will be modified or created to work the inbox message.
+
+These were already set in the previous code block. Let me verify they're correct and then finalize with the exact two-line format.
+
+I need to make sure the paths in the final answer use exact runtime file paths from tool output verbatim.
+
+From the tool outputs:
+- The inbox message path was: `00_inbox/000_next-task.md`
+- The target file path was: `50_finance/invoices/2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md`
+- Schema file: `99_system/schemas/finance-record-frontmatter.md`
+- Workflow files: `99_system/workflows/ocr-records.md`, `99_system/workflows/inbox-processing-v2-update.md`, `99_system/workflows/migrate-records-to-frontmatter.md`, `99_system/workflows/process-next-inbox-item.md`
+- Entity file: `10_entities/cast/claudia.md`
+- Project file: `40_projects/2026_04_30_helios_workflow_sprint/README.MD`
+- Inbox AGENTS.MD: `00_inbox/AGENTS.MD`
+- Root AGENTS.MD: `AGENTS.MD`
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to set the final two variables: step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

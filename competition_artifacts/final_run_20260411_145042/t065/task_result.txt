@@ -1,0 +1,52 @@
+Task ID
+t065
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84wrah4ta9duw
+
+Task
+Handle the next inbox item.
+
+BitGN Harness URL
+https://vm-03nmd84wrah4ta9duw.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+9m 34s
+
+Agent Result
+The four existing purchase records were successfully OCR'd into schema-compliant YAML frontmatter with preserved note bodies, the non-existent fifth reference was correctly not fabricated, and the processed inbox item was deleted per workflow requirements.
+
+Final Response
+Completed OCR for the four existing purchase records, preserved their note bodies, and deleted the inbox item. The fifth referenced file was not fabricated because it does not exist.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/00_inbox/724_next-task.md
+/99_system/schemas/finance-record-frontmatter.md
+/99_system/workflows/ocr-records.md
+/99_system/workflows/migrate-records-to-frontmatter.md
+/99_system/workflows/inbox-processing-v2-update.md
+/50_finance/AGENTS.MD
+/50_finance/purchases/AGENTS.MD
+/50_finance/purchases/2026_02_14__eur_000105__bill__house_mesh_juniper_ssd.md
+/50_finance/purchases/2025_12_11__eur_000072__bill__toy_forge_pla_bundle.md
+/50_finance/purchases/2026_01_03__eur_000032__bill__repair_ledger_faucet_parts.md
+/50_finance/purchases/2026_03_05__eur_000033__bill__studio_parts_nozzle_and_inserts.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84wrah4ta9duw
+
+Score
+0.00
+
+Details
+(none)

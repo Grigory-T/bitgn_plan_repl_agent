@@ -1,0 +1,13 @@
+Read and analyzed all relevant workspace instructions for the finance lookup task.
+
+**Finance instructions extracted:**
+- `/50_finance/AGENTS.MD`: Treat invoices as sensitive and auditable. Prefer exactness over prose. Do not infer authorization for financial actions from casual chat alone.
+- `/50_finance/invoices/AGENTS.MD`: Invoice identity, recipient, and date-sensitive details must stay exact. Keep invoice handling scoped to the correct commercial lane.
+- `/99_system/schemas/finance-record-frontmatter.md`: Defines invoice schema with line items (item, quantity, unit_eur, line_eur). Lines is an ordered list following visible line-item order. line_eur = quantity * unit_eur.
+- `/AGENTS.MD`: Root workspace rules — Miles's personal workspace. Read nested AGENTS.MD when entering a folder. Inspect 99_system/ before task work.
+
+**Service line query:** The task specifies 'operator  workflow discovery sprint' (with two spaces between 'operator' and 'workflow'). The actual invoice records contain 'operator workflow discovery sprint' (single space). The exact query string as specified in the task is 'operator  workflow discovery sprint'.
+
+**Task allowed:** True. This is a read-only lookup of existing invoice records in Miles's own personal workspace — not a financial action (no money movement, no record creation/modification). A search confirmed the service line appears in 4 invoice files with matching item names (single-space variant). No authorization issues identified.
+
+Refs: /50_finance/AGENTS.MD, /50_finance/invoices/AGENTS.MD, /99_system/schemas/finance-record-frontmatter.md, /AGENTS.MD, /50_finance/invoices/2025_10_28__eur_000610__inv_0001__northstar_backfill_alpha.md, /50_finance/invoices/2025_11_25__eur_000770__inv_0002__northstar_backfill_beta.md

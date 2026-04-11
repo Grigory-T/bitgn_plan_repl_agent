@@ -1,0 +1,74 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Check the applicable instructions by reading the relevant AGENTS.MD files for the workspace root and the target entity area, especially /10_entities/AGENTS.MD and /10_entities/cast/AGENTS.MD, to confirm how to search entity files and whether any special rules apply before extracting Foundry's birthday.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_texts",
+        "variable_description": "Mapping from instruction file path to its full text content",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Locate the Foundry entity file at /10_entities/cast/foundry.md, read it directly, and extract the birthday from explicit facts only, without estimating or inferring from other files.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_texts",
+        "variable_description": "Mapping from instruction file path to its full text content",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "foundry_file_path",
+        "variable_description": "The exact path to the Foundry entity file",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "foundry_file_text",
+        "variable_description": "The full text content of /10_entities/cast/foundry.md",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "foundry_birthday_raw",
+        "variable_description": "The birthday value as stated in the file before formatting",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Normalize the extracted birthday into the required output format Month DD, YYYY and verify that the final value is directly supported by the file contents; if the birthday is missing or not explicit, stop and report that it cannot be determined from the workspace facts.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "foundry_file_path",
+        "variable_description": "The exact path to the Foundry entity file",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "foundry_file_text",
+        "variable_description": "The full text content of /10_entities/cast/foundry.md",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "foundry_birthday_raw",
+        "variable_description": "The birthday value as stated in the file before formatting",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+

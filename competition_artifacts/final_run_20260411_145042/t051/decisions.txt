@@ -1,0 +1,27 @@
+Decision after step 1:
+{
+  "next_action": "continue",
+  "abort_reason": null,
+  "reasons_for_replan_remaining_steps": null,
+  "task_completed_reason": null,
+  "task_continue_reason": "Step 1 completed the instruction discovery and established the likely project date from the folder prefix, but the authoritative source for the Helios workflow cleanup still needs to be located and verified in the project/linked files before producing the final DD-MM-YYYY answer."
+}
+
+Decision after step 2:
+{
+  "next_action": "continue",
+  "abort_reason": null,
+  "reasons_for_replan_remaining_steps": null,
+  "task_completed_reason": null,
+  "task_continue_reason": "The plan is on track: the authoritative project source has been identified, but the exact start date still needs direct extraction and normalization in the remaining steps. Continuing to Step 3 follows the intended workflow without requiring replanning."
+}
+
+Decision after step 3:
+{
+  "next_action": "task_completed",
+  "abort_reason": null,
+  "reasons_for_replan_remaining_steps": null,
+  "task_completed_reason": "The project start date has been extracted and normalized as 2026-04-30 from the canonical project record and folder naming convention; it can now be returned in the required DD-MM-YYYY format as 30-04-2026.",
+  "task_continue_reason": null
+}
+

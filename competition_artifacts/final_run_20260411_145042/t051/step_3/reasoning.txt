@@ -1,0 +1,45 @@
+I need to read the authoritative source files to extract the exact project start date from direct textual evidence. Let me read all three candidate source files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The README.MD does not contain an explicit `start_date` field. It has `updated_on: 2026-05-12` but no `created_on` or `start_date`. 
+
+Per the convention documented in `/40_projects/AGENTS.MD`, the project creation date is encoded in the folder name prefix `2026_04_30`. Let me verify this convention explicitly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the authoritative source files read. Let me also read the helios_client_email.md to see if there's any conflicting date information.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me analyze the evidence:
+
+1. `/40_projects/AGENTS.MD` explicitly states: "Project folders use the project creation date as a `YYYY_MM_DD_` prefix." and "The canonical reference for each project is `README.MD` inside that project folder."
+
+2. The project folder is named `2026_04_30_helios_workflow_sprint`, so the project creation date prefix is `2026_04_30`.
+
+3. The README.MD at `/40_projects/2026_04_30_helios_workflow_sprint/README.MD` is the canonical project record but does not contain an explicit `start_date` field. It has `updated_on: 2026-05-12` but no `start_date` or `created_on`.
+
+4. The helios_client_email channel has `created_on: 2026-04-30`, corroborating the folder prefix date.
+
+Per the authoritative convention documented in `/40_projects/AGENTS.MD`, the project creation/start date is derived from the folder name prefix `2026_04_30`, which converts to ISO format `2026-04-30`.
+
+The task asks me to "extract the exact project start date for the Helios workflow cleanup from direct textual evidence only." The direct textual evidence is:
+- The folder name prefix `2026_04_30` as documented in the convention from `/40_projects/AGENTS.MD`
+- The channel `created_on: 2026-04-30` in `/60_outbox/channels/helios_client_email.md`
+
+There are no conflicting references. The project start date is `2026-04-30` in ISO format.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have extracted the project start date. Let me set the final answer and step status.
+
+The project start date for the Helios workflow cleanup (Helios Workflow Sprint) is 2026-04-30, derived from:
+1. The folder name prefix `2026_04_30_` per the convention documented in `/40_projects/AGENTS.MD`: "Project folders use the project creation date as a `YYYY_MM_DD_` prefix."
+2. The README.MD at `/40_projects/2026_04_30_helios_workflow_sprint/README.MD` is the canonical project record but does not contain an explicit start_date field.
+3. The helios_client_email channel at `/60_outbox/channels/helios_client_email.md` has `created_on: 2026-04-30`, which corroborates the date.
+
+No conflicting references were found. The primary project record (folder naming convention) provides the date directly as 2026-04-30.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

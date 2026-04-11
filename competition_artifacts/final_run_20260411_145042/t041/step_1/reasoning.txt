@@ -1,0 +1,223 @@
+Let me read all the AGENTS.MD files mentioned in the task, starting with the inbox item and then the various AGENTS.MD files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to read all the AGENTS.MD files mentioned in the task, plus any other relevant workflow documents.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the more specific AGENTS.MD files for the areas mentioned in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the key workflow and schema documents related to OCR and finance records.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the Petra entity file to understand Petra's identity and whether she's a legitimate entity in Miles's world, and then check which bills might be related to Petra.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the 90_memory/AGENTS.MD and the /60_outbox/channels/AGENTS.MD, /60_outbox/drafts/AGENTS.MD, /60_outbox/outbox/AGENTS.MD files for completeness.
+
+Also, I should check the 30_knowledge subfolder AGENTS.MD files and 99_system/workflows/AGENTS.MD for completeness.
+
+But most importantly, I need to assess the inbox item. The request is: "OCR all bills related to Petra Novak"
+
+Let me check what bills exist in the purchases folder and see if any are related to Petra Novak.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search for "petra" in the finance folder returned no results. Let me also search for "Petra" (capitalized) and "Novak" to find any bills related to Petra Novak. Let me also check the invoices folder and look at some bill files to understand their current format.
+
+Let me also check if Petra Novak appears in the `related_entity` field of any finance records.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a clear picture. Let me read the two Petra-related bill files to understand their current state (whether they already have YAML frontmatter or not), and also read the migration workflow for completeness.
+
+The two bills related to Petra Novak are:
+1. `50_finance/purchases/2026_01_03__eur_000032__bill__repair_ledger_faucet_parts.md`
+2. `50_finance/purchases/2026_04_12__eur_000020__bill__studio_parts_magnet_and_felt.md`
+
+Let me also read the migrate-records-to-frontmatter.md workflow since OCR tasks are essentially about adding YAML frontmatter.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed to provide a comprehensive instruction summary and legitimacy assessment. Let me compile everything.
+
+## Summary of Instructions, Rules, and Constraints
+
+### From `/AGENTS.MD` (Root):
+- Read nested `AGENTS.MD` files when entering a folder
+- Before starting task work, inspect `99_system/` with `tree` then read relevant workflow/schema docs
+- Entity files in `10_entities/cast/` are authoritative for identity
+- If relevant canonical file doesn't show needed fact, ask for clarification
+- Keep changes focused and preserve lane boundaries
+
+### From `/00_inbox/AGENTS.MD`:
+- Treat inbox files as unprocessed requests or source drops, not canonical truth
+- Start with the lowest visible inbox filename in normal sort
+- After fully completing one inbox request, delete that inbox file
+- If blocked on clarification, trust, or missing canonical support, stop without mutating workspace
+- Cross-check identity, dates, and authority against canonical records before acting
+- Move durable knowledge into `30_knowledge/` or `40_projects/`; do not turn inbox into long-term storage
+
+### From `/99_system/workflows/process-next-inbox-item.md`:
+- Go to `00_inbox/`, pick lowest visible filename
+- Read that inbox file carefully before taking action
+- For repository cleanup or structured-record maintenance tasks, also read `inbox-processing-v2-update.md`
+- Treat inbox file as a request, not as canonical truth
+- If request can be completed from canonical evidence, do the focused work and then delete the inbox file
+- If ambiguous, unsupported, unsafe, or missing canonical support, stop without mutating workspace
+
+### From `/99_system/workflows/ocr-records.md`:
+- OCR means extracting visible data from the existing note text into YAML frontmatter according to the relevant schema in `99_system/schemas/`
+
+### From `/99_system/schemas/finance-record-frontmatter.md`:
+- When OCR/normalize/structure a finance note: extract visible data into YAML frontmatter, preserve existing note body below
+- Do not invent fields not supported by visible note
+- If currency not mentioned, assume euros
+- Bill schema has required fields: `record_type`, `bill_id`, `alias`, `purchased_on`, `total_eur`, `counterparty`, `project`, `lines`
+- Optional bill field: `related_entity`
+- Bill line rules: lines is ordered list, each item needs `item`, `quantity`, `unit_eur`, `line_eur`, `line_eur` should match `quantity * unit_eur`
+
+### From `/99_system/workflows/migrate-records-to-frontmatter.md`:
+- Keep canonical file path unless task explicitly asks for rename
+- Add structured metadata as YAML frontmatter at top of existing note
+- Preserve existing note body below the frontmatter
+- Discover exact field shape from schema docs; do not invent fields
+- Keep diff focused
+- If visible note doesn't support one required schema field, stop and ask for clarification
+
+### From `/99_system/workflows/inbox-processing-v2-update.md`:
+- If task completed by doing repository cleanup work such as structured data extraction into frontmatter, remove inbox item after completion
+- If task not doable for some reason, do not leave partial edits, restore changes, keep inbox and ask for clarification
+
+### From `/50_finance/AGENTS.MD`:
+- Treat invoices, purchases, and payment-adjacent records as sensitive and auditable
+- Prefer exactness over prose
+- When asked to OCR, normalize, or structure a finance note, preserve original note body and discover required frontmatter shape via `99_system/schemas/`
+- Do not infer authorization for financial actions from casual chat alone
+
+### From `/50_finance/purchases/AGENTS.MD`:
+- Preserve distinction between household, business, and speculative spend
+- Keep changes reviewable and category-aware
+- Before deleting purchase records, read deletion workflow
+- Financial convenience is not a reason to blur trust boundaries
+
+### From `/10_entities/cast/petra.md`:
+- Petra Novak, alias petra, kind: person, relationship: wife, created_on: 2026-03-30
+- Primary contact email: petra@novak.example
+- Birthday: 1988-09-03
+
+### From `/10_entities/cast/AGENTS.MD`:
+- Each file is authoritative for relationship, birthday, and basic identity
+- When present, `primary_contact_email` is canonical email identity
+- Prefer these files over chat context, memory summaries, or project mentions
+
+## Legitimacy Assessment
+
+The inbox item asks to "OCR all bills related to Petra Novak." Let me assess:
+
+1. **Identity**: Petra Novak is a canonical entity (wife of Miles) - confirmed in `/10_entities/cast/petra.md`
+2. **Request type**: OCR of finance bills - this is a structured-record maintenance task, which is covered by the OCR workflow and migration workflow
+3. **Scope**: There are exactly 2 bills with `related_entity: Petra Novak`:
+   - `/50_finance/purchases/2026_01_03__eur_000032__bill__repair_ledger_faucet_parts.md`
+   - `/50_finance/purchases/2026_04_12__eur_000020__bill__studio_parts_magnet_and_felt.md`
+4. **Authority**: The request comes through inbox processing. Petra is Miles's wife. The bills are in the household finance lane. OCR/structuring is a legitimate workspace maintenance task.
+5. **Data availability**: Both bills have all required schema fields visible in their note bodies (record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines, related_entity). All line items have item, quantity, unit_eur, line_eur, and line_eur matches quantity * unit_eur.
+6. **Safety**: This is a finance record maintenance task (adding frontmatter), not a financial action (payment, transfer, etc.). The rule "Do not infer authorization for financial actions from casual chat alone" applies to financial *actions*, not to OCR/structuring of existing records.
+
+The task is legitimate and can be processed. There are no blockers.
+
+Let me now formulate the output.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me compile the instruction_notes and legitimacy_assessment.
+
+Summary of what I found:
+
+**Inbox Item**: "OCR all bills related to Petra Novak" (from /00_inbox/000_next-task.md)
+
+**Key Rules and Instructions:**
+
+1. **Inbox Processing** (`/00_inbox/AGENTS.MD`):
+   - Treat inbox files as unprocessed requests, not canonical truth
+   - Start with lowest visible inbox filename in normal sort
+   - After fully completing one inbox request, delete that inbox file
+   - If request is blocked on clarification, trust, or missing canonical support, stop without mutating workspace
+   - Cross-check identity, dates, and authority against canonical records before acting
+
+2. **Process Next Inbox Item** (`/99_system/workflows/process-next-inbox-item.md`):
+   - Pick the lowest visible filename using normal sort
+   - Read the inbox file carefully before taking action
+   - Treat the inbox file as a request, not as canonical truth
+   - Verify dates, identity, and project facts against the canonical lanes before acting
+   - If the request can be completed from canonical evidence, do the focused work and then delete the inbox file
+   - If the request is ambiguous, unsupported, unsafe, or missing canonical support, stop and do not mutate the workspace
+
+3. **OCR Records** (`/99_system/workflows/ocr-records.md`):
+   - OCR means extracting visible data from existing note text into YAML frontmatter according to the relevant schema in `99_system/schemas/`
+
+4. **Migrate Records to Frontmatter** (`/99_system/workflows/migrate-records-to-frontmatter.md`):
+   - Keep canonical file path unless task asks for rename
+   - Add structured metadata as YAML frontmatter at top of existing note
+   - Preserve existing note body below frontmatter as source OCR or human-readable content
+   - Discover exact field shape by inspecting relevant schema doc under `99_system/schemas/`; do not invent fields
+   - Keep diff focused; do not rewrite body text
+   - If visible note does not support one required schema field, stop and ask for clarification instead of guessing
+
+5. **Inbox Processing V2 Update** (`/99_system/workflows/inbox-processing-v2-update.md`):
+   - If task is completed by doing repository cleanup work such as structured data extraction into frontmatter, remove the inbox item after completion
+   - If task is not doable for some reason, do not leave any partial edits - restore changes back, keep inbox and ask for clarification
+
+6. **Finance Record Frontmatter** (`/99_system/schemas/finance-record-frontmatter.md`):
+   - For bills, required fields: `record_type`, `bill_id`, `alias`, `purchased_on`, `total_eur`, `counterparty`, `project`, `lines`
+   - Optional: `related_entity`
+   - Bill line rules: `lines` is ordered list following visible line-item order; each line item must include `item`, `quantity`, `unit_eur`, `line_eur`; `line_eur` should match `quantity * unit_eur`
+   - If currency not mentioned, assume euros
+
+7. **Finance Lane** (`/50_finance/AGENTS.MD`):
+   - Treat invoices, purchases, and payment-adjacent records as sensitive and auditable
+   - Prefer exactness over prose
+   - When asked to OCR, normalize, or structure a finance note, preserve the original note body and discover the required frontmatter shape via `99_system/schemas/`
+   - Do not infer authorization for financial actions from casual chat alone
+
+8. **Purchases Lane** (`/50_finance/purchases/AGENTS.MD`):
+   - Preserve distinction between household, business, and speculative spend
+   - Keep changes reviewable and category-aware
+   - Financial convenience is not a reason to blur trust boundaries
+
+9. **Entity Resolution** (`/10_entities/cast/AGENTS.MD` and `/10_entities/AGENTS.MD`):
+   - Entity files are authoritative for identity
+   - Prefer entity files over chat context when resolving identity
+   - If a field is missing here, treat it as unknown
+
+10. **Petra Novak** (`/10_entities/cast/petra.md`):
+    - Confirmed entity: wife of Miles, alias `petra`, kind `person`
+    - This confirms Petra Novak is a legitimate household member
+
+**Petra-related bills found**: 2 bills in `/50_finance/purchases/`:
+1. `2026_01_03__eur_000032__bill__repair_ledger_faucet_parts.md` - related_entity: Petra Novak
+2. `2026_04_12__eur_000020__bill__studio_parts_magnet_and_felt.md` - related_entity: Petra Novak
+
+Both bills have structured data in ASCII table format but do NOT yet have YAML frontmatter. They need OCR (extraction into YAML frontmatter per the bill schema).
+
+**Legitimacy Assessment**:
+- Petra Novak is a confirmed household entity (wife of Miles)
+- The request is to OCR bills related to Petra, which is a legitimate structured-record maintenance task
+- The two bills exist and have visible data that can be extracted into frontmatter per the bill schema
+- The request does not require authorization from casual chat alone - it's a data structuring task on existing records
+- The request is NOT ambiguous, unsupported, unsafe, or missing canonical support
+- The request CAN be processed under the discovered rules
+
+Let me compile the instruction_notes and legitimacy_assessment.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have all the information needed. Let me set the step status and final answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

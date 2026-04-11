@@ -1,0 +1,79 @@
+Now I need to:
+1. Read the inbox item to confirm the 5 files listed
+2. Verify which of the 5 files actually exist in the workspace
+3. Confirm file #5 (with leading underscore) is missing and is a duplicate of file #4
+4. Derive the set of target file paths to update (the 4 existing files)
+5. Prepare a precise handling plan
+
+I already have the inbox item content and the tree. Let me verify each file's existence by trying to read them.
+
+From the tree output, the purchases directory contains:
+- 2026_02_14__eur_000105__bill__house_mesh_juniper_ssd.md [33]
+- 2025_12_11__eur_000072__bill__toy_forge_pla_bundle.md [32]
+- 2026_01_03__eur_000032__bill__repair_ledger_faucet_parts.md [33]
+- 2026_03_05__eur_000033__bill__studio_parts_nozzle_and_inserts.md [33]
+
+No file with a leading underscore exists. So files 1-4 exist, file 5 does not.
+
+Let me read each of the 4 files to confirm their content and ensure they need OCR (i.e., they don't already have frontmatter).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All four real files exist and none of them have YAML frontmatter yet (they start with a markdown heading, not `---`). The fifth file with the leading underscore does not exist.
+
+Let me also read the full contents of the four existing files to understand their structure for planning the OCR work, and also re-read the schema to confirm the exact field shape.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me read the full contents of each of the four existing files and the schema to confirm the exact field shape needed for the plan.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed to prepare the precise handling plan. Let me summarize:
+
+**Four existing files (to be OCR'd):**
+1. `/50_finance/purchases/2026_02_14__eur_000105__bill__house_mesh_juniper_ssd.md`
+2. `/50_finance/purchases/2025_12_11__eur_000072__bill__toy_forge_pla_bundle.md`
+3. `/50_finance/purchases/2026_01_03__eur_000032__bill__repair_ledger_faucet_parts.md`
+4. `/50_finance/purchases/2026_03_05__eur_000033__bill__studio_parts_nozzle_and_inserts.md`
+
+**Missing file (item 5):**
+- `/50_finance/purchases/_2026_03_05__eur_000033__bill__studio_parts_nozzle_and_inserts.md` - does NOT exist. This is a duplicate reference to file #4 with an erroneous leading underscore.
+
+**Handling plan for the missing 5th file:**
+Per the instructions: "If task is not doable, do not leave any partial edits - restore changes, keep inbox and ask for clarification." However, the task IS doable for the 4 existing files. The 5th file simply doesn't exist and should not be invented. The correct approach per the workflow rules is:
+- Do NOT invent or fabricate content for a non-existent file
+- Flag/note the missing 5th reference in the plan
+- Proceed with OCR for the 4 real files
+- The missing 5th file will be noted as not processable
+
+For each of the 4 existing files, I need to:
+1. Read the visible data from the note body (field table + line items table)
+2. Extract that data into YAML frontmatter per the bill schema
+3. Preserve the existing note body below the frontmatter
+
+All 4 files have complete data visible in their note bodies matching the required bill schema fields:
+- record_type: bill
+- bill_id: (from table)
+- alias: (from table)
+- purchased_on: (from table)
+- total_eur: (from table)
+- counterparty: (from table)
+- project: (from table)
+- related_entity: (from table - optional, but present)
+- lines: (from line items table)
+
+All required fields are present in all 4 files, so no clarification is needed for those.
+
+Let me set the output variables now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I need to set the output variables `target_paths` and `planned_actions` first, then set `step_status` and `final_answer`.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to set the final two variables: step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

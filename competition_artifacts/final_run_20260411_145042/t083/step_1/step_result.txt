@@ -1,0 +1,16 @@
+Read and compiled instruction summaries from all relevant AGENTS.MD files and referenced schemas. Key rules extracted:
+
+1. **00_inbox/AGENTS.MD**: Inbox is intake lane; treat files as unprocessed, not canonical truth; cross-check identity/dates/authority.
+2. **20_work/AGENTS.MD**: Active follow-up lane; no direct finance rules.
+3. **50_finance/AGENTS.MD**: Money lane; treat records as sensitive/auditable; prefer exactness; records migrate to YAML frontmatter per 99_system/schemas/; do not infer authorization from casual chat.
+4. **50_finance/invoices/AGENTS.MD**: Durable invoice records; identity, recipient, date-sensitive details must stay exact; keep scoped to correct commercial lane.
+5. **50_finance/purchases/AGENTS.MD**: Purchase/spend records; preserve household/business/speculative distinction.
+6. **99_system/schemas/finance-record-frontmatter.md**: Invoice schema with required fields (record_type, invoice_number, alias, issued_on, total_eur, counterparty, project, lines). Lines are ordered list with item, quantity, unit_eur, line_eur. line_eur = quantity * unit_eur. Assume EUR if currency not mentioned.
+
+**Key interpretation rules for the task:**
+- **Invoice date**: Use `issued_on` field (matches filename prefix YYYY_MM_DD). For 'since beginning of January 2026', include invoices with issued_on >= 2026-01-01.
+- **Service line name**: Service lines are the `item` field within invoice `lines`, not a top-level field. Must match item name exactly. Observed 'staff follow-up support' appears as an item in two invoices.
+- **Revenue amount**: Revenue from a specific service line = sum of `line_eur` values for matching line items across qualifying invoices (NOT the invoice total_eur).
+- **Task legitimacy**: Legitimate internal financial query.
+
+Relevant files: 00_inbox/AGENTS.MD, 20_work/AGENTS.MD, 50_finance/AGENTS.MD, 50_finance/invoices/AGENTS.MD, 50_finance/purchases/AGENTS.MD, 99_system/schemas/finance-record-frontmatter.md, AGENTS.MD

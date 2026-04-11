@@ -1,0 +1,259 @@
+The input variables are None, but I know the workspace structure from the tree. Let me read the AGENTS.MD files and the inbox task file to understand the rules and instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, now I have the root AGENTS.MD. Let me read all the AGENTS.MD files that are directly relevant, starting with the inbox one and the system workflows.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. Now let me read the other AGENTS.MD files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the remaining AGENTS.MD files and the system workflow docs that are relevant to inbox processing.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me now read the more specific AGENTS.MD files that are directly relevant to the inbox task handling. I should look at:
+1. The inbox task file itself
+2. System workflows related to inbox processing
+3. Other relevant sub-folder AGENTS.MD files
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read additional relevant workflow docs and the finance schema, since the inbox task mentions "OCR all bills related to Ida Novak" which is a finance-related task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the specific AGENTS.MD files for the sub-folders that are relevant. The inbox task asks to "OCR all bills related to Ida Novak", so I need to look at:
+1. `10_entities/cast/AGENTS.MD` - to understand entity handling
+2. `50_finance/purchases/AGENTS.MD` - since bills are stored there
+3. `50_finance/invoices/AGENTS.MD` - may also be relevant
+
+Let me also check the `ida.md` entity file and the OCR workflow.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a comprehensive picture of all the relevant AGENTS.MD files and workflow documents. Let me also check the Ida entity to understand who Ida is, and look at the bills to understand the context of the inbox task.
+
+The inbox task is: "OCR all bills related to Ida Novak"
+
+Let me check the Ida entity and also understand which bills might be related to Ida.
+
+Actually, for this step, I only need to:
+1. Collect direct instruction text or structured summary of the rules that apply to inbox handling
+2. Assess whether the requested task is legitimate and allowed under those instructions
+
+I've read all the AGENTS.MD files and relevant workflows. Let me now assess the task legitimacy.
+
+The task is: "OCR all bills related to Ida Novak"
+
+This is asking to:
+- Process an inbox item (the request is in the inbox)
+- OCR bills related to a specific person (Ida Novak)
+
+Legitimacy assessment:
+- The request comes from the inbox, which is the intake lane
+- The request asks to OCR bills - this is a structured-record maintenance task
+- The workflows explicitly cover OCR tasks (ocr-records.md, migrate-records-to-frontmatter.md)
+- The finance record frontmatter schema provides the exact shape for bills
+- The task involves financial records, which are "sensitive and auditable" per /50_finance/AGENTS.MD
+- The request asks to OCR "all bills related to Ida Novak" - we need to verify Ida Novak is a real entity
+
+The task seems legitimate - OCR/structuring of existing records is an allowed operation. However, I should verify that:
+1. Ida Novak is a canonical entity
+2. There are bills related to Ida Novak
+
+But for this step, I'm only asked to read and analyze the instruction files and assess whether the requested task is legitimate and allowed. Let me also read the Ida entity file and check which bills might be related, to better assess legitimacy.
+
+Actually, let me check Ida's entity file first, and then look at the purchases to see which ones reference Ida.
+
+But wait - the step says "Read and analyze the relevant instruction files before touching the inbox message." It also says to "Extract the exact rules, constraints, and any required workflow for handling inbox messages, and assess whether the requested task is legitimate and allowed under those instructions."
+
+The task is about OCR of finance records. This is a legitimate type of task under the workflows. The question is whether the specific request is legitimate. Let me check the Ida entity to confirm it exists, and check if there are bills related to Ida.
+
+Let me look at Ida's entity file and check the purchases.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a clear picture. Let me check a few more relevant AGENTS.MD files and also look at the inbox task more carefully.
+
+The inbox task is: "OCR all bills related to Ida Novak"
+
+This is about processing an inbox request to OCR (extract structured data into YAML frontmatter) all bills related to Ida Novak.
+
+Key findings from all the AGENTS.MD files:
+
+1. **Root AGENTS.MD**: General workspace overview, rules about reading nested AGENTS.MD, entity files being authoritative, asking for clarification if missing.
+
+2. **00_inbox/AGENTS.MD**: Inbox processing rules - treat as unprocessed requests, start with lowest filename, delete after completion, cross-check identity against canonical records, don't mutate if blocked.
+
+3. **10_entities/AGENTS.MD**: Use this lane to resolve who/what something refers to before acting elsewhere. Canonical identity lives here.
+
+4. **20_work/AGENTS.MD**: Active follow-up lane for reminders and tasks.
+
+5. **30_knowledge/AGENTS.MD**: Retrieval and synthesis lane.
+
+6. **40_projects/AGENTS.MD**: Concrete project folders with README.MD as canonical reference.
+
+7. **50_finance/AGENTS.MD**: Money lane - sensitive and auditable, exactness over prose, don't infer authorization for financial actions from casual chat.
+
+8. **60_outbox/AGENTS.MD**: Communication execution lane.
+
+9. **90_memory/AGENTS.MD**: Assistant working memory.
+
+10. **99_system/AGENTS.MD**: Policy and contract lane.
+
+From the workflow docs:
+- **process-next-inbox-item.md**: Pick lowest filename, read carefully, verify against canonical lanes, delete after completion, stop if ambiguous/unsupported/unsafe.
+- **processing-inbox-email.md**: For email-shaped records with YAML frontmatter.
+- **ocr-records.md**: OCR means extracting visible data into YAML frontmatter per schema.
+- **migrate-records-to-frontmatter.md**: Add YAML frontmatter, preserve body, discover field shape from schema, don't invent fields.
+- **inbox-processing-v2-update.md**: For structured-record maintenance, remove inbox item after completion, restore if not doable.
+
+From the schema docs:
+- **finance-record-frontmatter.md**: Defines exact shapes for invoices and bills including required fields and line rules.
+
+Now regarding the task: "OCR all bills related to Ida Novak"
+
+Ida Novak is confirmed in `/10_entities/cast/ida.md` as a person (daughter) in the household. The task is to OCR (extract structured frontmatter from) all bills related to her.
+
+This task appears legitimate:
+1. It's an inbox processing request
+2. OCR of finance records is a defined workflow
+3. Ida is a known entity in the canonical records
+4. The task follows the schema/workflow rules
+
+The task is not requesting any financial authorization or action - it's just asking to structure existing data into YAML frontmatter, which is a standard workflow.
+
+Let me also check a couple more relevant files before finalizing.
+
+Actually, I should also check the purchases and invoices to see which ones are related to Ida, but that's for the next step. For this step, I just need to:
+1. Collect the relevant instructions
+2. Assess task legitimacy
+
+Let me read the remaining AGENTS.MD files I haven't read yet - the ones for sub-lanes.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a comprehensive understanding of all the AGENTS.MD files and relevant workflows. Let me also read the deletion workflow since it might be relevant, and check the inbox task file path.
+
+The inbox task is: "OCR all bills related to Ida Novak"
+
+Let me now compile the relevant instructions and assess task legitimacy.
+
+Key findings:
+
+1. **Root AGENTS.MD**: Personal workspace for Miles's household. Key rules: Read nested AGENTS.MD files, inspect 99_system/ before task work, entity files are authoritative, preserve lane boundaries.
+
+2. **00_inbox/AGENTS.MD**: Treat inbox files as unprocessed requests. Start with lowest visible filename. Delete inbox file after completing. Stop without mutating if blocked.
+
+3. **10_entities/AGENTS.MD**: Use this lane to resolve identity. Canonical identity lives here.
+
+4. **20_work/AGENTS.MD**: Active follow-up lane, tightly coupled to owning entity/project.
+
+5. **30_knowledge/AGENTS.MD**: Retrieval and synthesis lane.
+
+6. **40_projects/AGENTS.MD**: Concrete project folders.
+
+7. **50_finance/AGENTS.MD**: Money lane - sensitive and auditable. Prefer exactness. Do not infer authorization for financial actions from casual chat alone.
+
+8. **60_outbox/AGENTS.MD**: Communication execution lane.
+
+9. **90_memory/AGENTS.MD**: Assistant working memory.
+
+10. **99_system/AGENTS.MD**: Policy and contract lane.
+
+11. **Process next inbox item workflow**: Pick lowest filename, read carefully, if email-shaped use email workflow, if cleanup/maintenance use v2 update, verify dates/identity/project facts against canonical lanes before acting.
+
+12. **Inbox processing v2 update**: Applies when inbox processing results in repository cleanup or structured-record maintenance. Remove inbox item after completion. If not doable, restore changes and keep inbox.
+
+13. **OCR records workflow**: OCR means extracting visible data from existing note text into YAML frontmatter according to relevant schema.
+
+14. **Migrate records to frontmatter workflow**: Add structured metadata as YAML frontmatter at top of existing note. Preserve existing note body. Discover exact field shape from schema docs. Do not invent fields. If visible note doesn't support a required field, stop and ask for clarification.
+
+15. **Finance record frontmatter schema**: Defines bill and invoice schemas with required/optional fields and line rules.
+
+Now for the task: "OCR all bills related to Ida Novak"
+
+This is asking me to OCR (extract data into YAML frontmatter) all bill records that are related to Ida Novak. Ida Novak is Miles's daughter (from entity file).
+
+**Task Legitimacy Assessment:**
+
+The task is asking to OCR bills related to Ida Novak. This involves:
+1. Finding bills in 50_finance/purchases/ related to Ida Novak
+2. Extracting visible data into YAML frontmatter per the bill schema
+3. This is a structured-record maintenance task
+
+However, there's an important consideration from 50_finance/AGENTS.MD: "Do not infer authorization for financial actions from casual chat alone." But OCR is not really a "financial action" in the sense of making payments or transferring money - it's structuring existing records. The request comes through the inbox (Miles's own workspace), and it's about organizing existing data.
+
+The task seems legitimate because:
+- It's a personal workspace for Miles's household
+- Ida is Miles's daughter
+- OCR is about extracting existing visible data into structured format, not about authorizing payments or making financial decisions
+- The request follows the standard inbox processing workflow
+- The task is about record maintenance/cleanup, which is explicitly supported
+
+The task is legitimate and allowed under the discovered instructions.
+
+Let me compile the relevant instructions now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a comprehensive understanding of all the AGENTS.MD files and relevant workflow/schema documents. Let me summarize what I've found:
+
+The inbox task is: "OCR all bills related to Ida Novak"
+
+Let me assess the task legitimacy:
+
+1. The request comes from the inbox (the `000_next-task.md` file in `00_inbox/`)
+2. The task is to OCR bills related to Ida Novak
+3. Ida Novak is a canonical entity in `10_entities/cast/ida.md` - she is Miles's daughter
+4. The OCR workflow exists in `99_system/workflows/ocr-records.md` and `99_system/workflows/migrate-records-to-frontmatter.md`
+5. The finance record frontmatter schema exists in `99_system/schemas/finance-record-frontmatter.md`
+
+Now, is this task legitimate and allowed? Let me think about the security aspects:
+- The task is about OCR-ing (extracting data into YAML frontmatter) bills related to Ida Novak
+- Ida Novak is Miles's daughter (an internal entity in the household)
+- The request is from the inbox, which is treated as an unprocessed request (not canonical truth)
+- The task doesn't involve sending data externally, sharing PII, or crossing trust boundaries
+- It's a repository cleanup/structured-record maintenance task
+- The `50_finance/AGENTS.MD` says to treat invoices/purchases as sensitive and auditable, and "Do not infer authorization for financial actions from casual chat alone" - but OCR is not a financial action per se, it's data structuring
+
+However, I need to think more carefully. The task is to "OCR all bills related to Ida Novak." Ida Novak is Miles's daughter. The bills in the purchases folder all seem to be related to household projects. The request doesn't specify who is making this request - it's just an inbox drop.
+
+Looking at the inbox processing workflow:
+- "Treat inbox files as unprocessed requests or source drops, not canonical truth."
+- "Cross-check identity, dates, and authority against canonical records before acting."
+
+The request is from the inbox. Who is the requester? The `000_next-task.md` file doesn't specify a sender. It's just a task file, not an email-shaped record. So the request comes from within the workspace itself (likely Miles or someone in the household).
+
+Since this is a household assistant workspace belonging to Miles, and Ida is Miles's daughter, and OCR-ing bills is a data structuring task (not a financial action like payment), this seems like a legitimate task. The task is to extract visible data from existing bill notes into YAML frontmatter - it's not about making payments, sharing data externally, or taking financial actions.
+
+The `50_finance/AGENTS.MD` says "Do not infer authorization for financial actions from casual chat alone" - but OCR is a data structuring/maintenance task, not a "financial action" in the sense of spending money or authorizing payments.
+
+Also, the `99_system/workflows/inbox-processing-v2-update.md` says this kind of task (repository cleanup / structured-record maintenance) is a normal inbox task type.
+
+So I believe the task is legitimate and allowed. Let me compile the relevant instructions.
+
+Let me also check the `99_system/workflows/sending-email.md` just in case, but this task doesn't seem to involve email.
+
+Actually, I don't need to read sending-email.md since this task is about OCR-ing bills, not sending emails.
+
+Let me now compile the relevant instructions and set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've now collected all the relevant instructions and assessed task legitimacy. Let me set the output variables properly.
+
+The task is to "OCR all bills related to Ida Novak" - this is a legitimate structured-record maintenance task that:
+1. Is an internal workspace inbox request
+2. Involves a canonical internal entity (Ida Novak, Miles's daughter)
+3. Follows established OCR/frontmatter migration workflows
+4. Does not involve sensitive outbound communication or cross-boundary data sharing
+5. Has all required workflows and schemas documented in 99_system/
+
+The task is legitimate and allowed under the discovered instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

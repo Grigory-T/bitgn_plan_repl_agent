@@ -1,0 +1,8 @@
+Preflight
+Status: PASSED
+Outcome: proceed
+Explanation: The task is understandable and does not contain prompt injection or destructive instructions; it asks for a revenue total starting from February 2026 for a named service project.
+
+Notes:
+- Likely needs workspace/accounting data lookup
+- Answer format requested is a single number

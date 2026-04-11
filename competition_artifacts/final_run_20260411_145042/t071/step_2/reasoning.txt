@@ -1,0 +1,142 @@
+The request is legitimate. Let me now analyze the inbox message content for the concrete action required.
+
+The message asks Miles to resend the invoice dated 2026-04-21 from Helios. From the previous step, we know the matching invoice is `/50_finance/invoices/2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md`.
+
+Let me now read all the relevant files to determine the exact file operations needed:
+
+1. The invoice file itself
+2. The sending-email.md workflow
+3. The helios_client_email channel doc
+4. The claudia entity file
+5. The outbox AGENTS.MD
+6. The outbox/outbox AGENTS.MD
+
+Let me read these files to determine the exact file operations.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, I have the invoice details. Now let me read the relevant workflow docs and channel doc to understand how to handle this resend request.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the sending email workflow. Let me also check the Helios client email channel and Claudia's entity file to confirm details.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the entity file for Claudia to confirm the primary_contact_email and also the entity file for Miles (the sender of the outbound email).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed. Let me also check the current runtime time to understand what timestamp to use for the outbound email.
+
+Let me also check the outbox directory to see if there are any existing files, to avoid filename conflicts.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. Now I have all the information needed to complete this step. Let me also check if there are any other Helios invoices that might be relevant, to ensure I'm identifying the correct one.
+
+The request says "the invoice for 21-04-2026 from Helios Steuerbüro München GmbH". The matching invoice is:
+- `/50_finance/invoices/2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md`
+- issued_on: 2026-04-21
+- counterparty: Helios Steuerbüro München GmbH
+- invoice_number: INV-0010
+
+Wait, the current date is 2026-03-31, but the invoice is dated 2026-04-21? That's in the future. Let me think about this...
+
+The message says "the invoice for 21-04-2026". But the current time is 2026-03-31T16:32:00Z. An invoice dated 2026-04-21 would be in the future from the current date perspective.
+
+However, the step 1 analysis confirmed: "A matching Helios invoice dated 2026-04-21 exists: `/50_finance/invoices/2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md`"
+
+The workspace contains this invoice file. The invoice exists in the workspace as a canonical record. Perhaps in this workspace context, the dates don't need to align with "current time" - the invoice file simply exists as a record. The task is to resend it, not question its existence.
+
+Actually, looking more carefully at this - the received_at in the inbox message is "2026-03-31T14:32:00Z" and the current runtime time is 2026-03-31T16:32:00Z. The invoice is dated 2026-04-21, which is about 3 weeks in the future from the current runtime time. This is unusual.
+
+However, the step 1 analysis already confirmed legitimacy and found this matching invoice. The step 1 already validated this. My current step is to analyze the concrete action required and identify file operations needed. I should note this discrepancy but proceed based on the established legitimacy check from step 1.
+
+Let me also check if there are any other Helios invoices - the step 1 analysis mentioned there's also `/50_finance/invoices/2026_04_27__eur_000550__inv_0011__helios_followup_support_invoice.md`. But the request specifically says "the invoice for 21-04-2026", so only the one dated 2026-04-21 matches.
+
+Now let me summarize the complete analysis:
+
+**What the inbox message is asking for:**
+- Claudia Reiter (claudia@helios-tax.example) is requesting a resend of the Helios invoice dated 21-04-2026 (INV-0010) for internal approval purposes.
+
+**Concrete file operations needed:**
+1. Create an outbound email record in `/60_outbox/outbox/` following the sending-email.md workflow
+   - Filename: `eml_YYYY-MM-DDTHH-MM-SSZ.md` using runtime-derived timestamp
+   - Recipient: claudia@helios-tax.example (from entity's primary_contact_email)
+   - Subject: appropriate reply subject about resending the invoice
+   - Attachment: `/50_finance/invoices/2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md`
+   - Source channel: `/60_outbox/channels/helios_client_email.md`
+   - Related entities: claudia
+   - Related projects: helios_workflow_sprint (based on the invoice's project field)
+   - Body: brief email resend with the invoice attached
+
+2. Delete the inbox file `/00_inbox/000_invoice-request.md` after completing the request (per 00_inbox/AGENTS.MD rule: "After fully completing one inbox request, delete that inbox file")
+
+**Referenced paths:**
+- `/00_inbox/000_invoice-request.md` - the inbox message
+- `/50_finance/invoices/2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md` - the invoice to resend
+- `/60_outbox/channels/helios_client_email.md` - the channel for this communication
+- `/10_entities/cast/claudia.md` - entity record for recipient verification
+- `/10_entities/cast/miles.md` - entity record for sender identity
+- `/99_system/workflows/sending-email.md` - workflow for creating outbound email
+- `/99_system/workflows/processing-inbox-email.md` - workflow for processing inbox email
+- `/60_outbox/outbox/` - destination for outbound email record
+
+Let me now set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed to build the task analysis and referenced paths.
+
+Let me summarize:
+
+**Message analysis:**
+- The inbox message is from `claudia@helios-tax.example` (verified as Claudia Reiter's primary_contact_email)
+- She's requesting a resend of the invoice for "21-04-2026" from Helios Steuerbüro München GmbH
+- The matching invoice is: `/50_finance/invoices/2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md` (INV-0010, issued 2026-04-21, counterparty: Helios Steuerbüro München GmbH)
+- She needs it for "internal approval before Friday"
+
+**Concrete file operations needed:**
+1. **CREATE** an outbound email record in `/60_outbox/outbox/` with:
+   - Filename format: `eml_YYYY-MM-DDTHH-MM-SSZ.md` (using current runtime time 2026-03-31T16:32:00Z → `eml_2026-03-31T16-32-00Z.md`)
+   - Frontmatter:
+     - `record_type: outbound_email`
+     - `created_at: 2026-03-31T16:32:00Z`
+     - `send_state: draft`
+     - `to: [claudia@helios-tax.example]`
+     - `subject: Re: Could you resend the invoice?` (reply-shaped)
+     - `attachments: [50_finance/invoices/2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md]`
+     - `related_entities: [claudia]`
+     - `related_projects: [helios_workflow_sprint]` (from 40_projects)
+     - `source_channel: 60_outbox/channels/helios_client_email.md`
+   - Body: A short email from Miles to Claudia, attaching the requested invoice
+
+2. **DELETE** the inbox file `/00_inbox/000_invoice-request.md` after completing the request
+
+**Referenced paths:**
+- `/00_inbox/000_invoice-request.md` - the inbox message
+- `/50_finance/invoices/2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md` - the invoice to attach
+- `/10_entities/cast/claudia.md` - entity record for recipient verification
+- `/10_entities/cast/miles.md` - sender identity
+- `/60_outbox/channels/helios_client_email.md` - channel doc for lane verification
+- `/99_system/workflows/sending-email.md` - email workflow
+- `/99_system/workflows/processing-inbox-email.md` - inbox email processing workflow
+- `/00_inbox/AGENTS.MD` - inbox handling rules
+
+Wait, the task says "determine the exact file operations needed" but doesn't say to execute them. This step is about analysis. Let me make sure I note both the CREATE and DELETE operations.
+
+Actually, let me re-read the step more carefully: "inspect the inbox message content for the concrete action required, identify any referenced entity, invoice, project, finance record, or outbox destination, and determine the exact file operations needed to take care of the message without inventing missing facts."
+
+So I need to determine the file operations but not necessarily execute them. The output variables are:
+- message_task_analysis (dict): structured summary of what the inbox message asks for and what concrete file operations are required
+- referenced_paths (list[str]): list of exact workspace paths referenced or implied
+
+Let me compose these.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The task analysis is complete. I've identified the concrete action required and the exact file operations needed. Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

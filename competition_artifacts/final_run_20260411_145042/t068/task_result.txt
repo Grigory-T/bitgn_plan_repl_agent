@@ -1,0 +1,60 @@
+Task ID
+t068
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84x67u42ttjt6
+
+Task
+Work the oldest inbox message.
+
+BitGN Harness URL
+https://vm-03nmd84x67u42ttjt6.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+8m 7s
+
+Agent Result
+The oldest inbox message was identified and fully worked according to the discovered inbox and OCR instructions: the 6 finance records were processed into YAML frontmatter using only visible source data, the applicable finance files were updated, and the inbox file was deleted after completion. No remaining steps are indicated.
+
+Final Response
+Completed: processed the 6 finance records, updated the applicable finance files, and deleted the inbox item.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/00_inbox/AGENTS.MD
+/00_inbox/000_next-task.md
+/20_work/AGENTS.MD
+/20_work/tasks/AGENTS.MD
+/20_work/reminders/AGENTS.MD
+/10_entities/AGENTS.MD
+/10_entities/cast/AGENTS.MD
+/99_system/workflows/process-next-inbox-item.md
+/99_system/workflows/inbox-processing-v2-update.md
+/99_system/workflows/ocr-records.md
+/99_system/schemas/finance-record-frontmatter.md
+/99_system/schemas/bulk-processing-and-queueing-frontmatter.md
+/AGENTS.MD
+/50_finance/invoices/2026_02_14__eur_000890__inv_0004__northstar_design_partner_sprint.md
+/50_finance/invoices/2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+/50_finance/invoices/2026_04_27__eur_000550__inv_0011__helios_followup_support_invoice.md
+/50_finance/purchases/2025_12_05__eur_000044__bill__house_mesh_esp32_order.md
+/50_finance/purchases/2025_12_11__eur_000072__bill__toy_forge_pla_bundle.md
+/50_finance/purchases/2026_04_11__eur_000020__bill__studio_parts_magnet_and_felt.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84x67u42ttjt6
+
+Score
+0.00
+
+Details
+(none)

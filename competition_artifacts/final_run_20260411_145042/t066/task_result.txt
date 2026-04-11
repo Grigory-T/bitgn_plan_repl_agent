@@ -1,0 +1,52 @@
+Task ID
+t066
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84wu4j4136yll
+
+Task
+Handle the next inbox item.
+
+BitGN Harness URL
+https://vm-03nmd84wu4j4136yll.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+10m 57s
+
+Agent Result
+The inbox item has been fully handled according to the established plan: the relevant bill notes were identified, the visible bill data was extracted into the required YAML frontmatter format for all three Ida Novak-related purchases, the note bodies were preserved, and the inbox item can now be deleted per workflow rules.
+
+Final Response
+Completed the OCR update for the three Ida Novak-related bills and removed the inbox item.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/00_inbox/000_next-task.md
+/00_inbox/AGENTS.MD
+/10_entities/cast/ida.md
+/50_finance/purchases/AGENTS.MD
+/50_finance/purchases/2026_03_02__eur_000036__bill__family_map_wall_board.md
+/50_finance/purchases/2026_03_24__eur_000022__bill__toy_forge_wheel_and_magnet_pack.md
+/50_finance/purchases/2026_03_31__eur_000025__bill__school_helper_label_tape.md
+/99_system/schemas/finance-record-frontmatter.md
+/99_system/workflows/ocr-records.md
+/99_system/workflows/migrate-records-to-frontmatter.md
+/99_system/workflows/process-next-inbox-item.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84wu4j4136yll
+
+Score
+0.00
+
+Details
+(none)

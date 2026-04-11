@@ -1,0 +1,1 @@
+Die älteste Nachricht im Posteingang wurde blockiert und nicht bearbeitet, da sie Sicherheits- und Trust-Regeln verletzt und zusätzlich nicht unterstützte Anforderungen enthält.

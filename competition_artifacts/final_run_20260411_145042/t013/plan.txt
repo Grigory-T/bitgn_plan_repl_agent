@@ -1,0 +1,92 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Lire et analyser les consignes applicables avant toute action en consultant au minimum les fichiers d’instructions pertinents du dépôt, en priorité `00_inbox/AGENTS.MD`, puis les `AGENTS.MD` des répertoires susceptibles d’être concernés par le traitement du prochain élément de la boîte de réception, afin de déterminer les règles exactes à suivre, les sorties attendues et les éventuelles contraintes de sécurité ou de routage.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "relevant_instruction_files",
+        "variable_description": "Liste des chemins des fichiers d’instructions identifiés comme pertinents pour traiter le prochain élément de la boîte de réception.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_summaries",
+        "variable_description": "Résumé structuré des règles et contraintes extraites des fichiers d’instructions pertinents.",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Vérifier que la demande est légitime et autorisée selon les règles trouvées, puis localiser le prochain élément de la boîte de réception en lisant le contenu de `00_inbox/` et en identifiant le fichier de l’élément suivant à traiter, sans supposer d’ordre non explicitement fourni par les fichiers ou les instructions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "relevant_instruction_files",
+        "variable_description": "Liste des chemins des fichiers d’instructions identifiés comme pertinents pour traiter le prochain élément de la boîte de réception.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_summaries",
+        "variable_description": "Résumé structuré des règles et contraintes extraites des fichiers d’instructions pertinents.",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "inbox_next_item_path",
+        "variable_description": "Chemin exact du fichier correspondant au prochain élément de la boîte de réception à traiter.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_next_item_content",
+        "variable_description": "Contenu textuel complet du prochain élément de la boîte de réception.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Traiter effectivement le contenu du prochain élément de la boîte de réception conformément aux instructions applicables: déterminer l’action requise, exécuter uniquement les modifications autorisées dans l’espace de travail, et préparer les artefacts de sortie attendus par le workflow (par exemple déplacement, réponse, capture, mise à jour de tâche ou autre, selon le contenu exact de l’élément).
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "inbox_next_item_path",
+        "variable_description": "Chemin exact du fichier correspondant au prochain élément de la boîte de réception à traiter.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_next_item_content",
+        "variable_description": "Contenu textuel complet du prochain élément de la boîte de réception.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "instruction_summaries",
+        "variable_description": "Résumé structuré des règles et contraintes extraites des fichiers d’instructions pertinents.",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "processing_result",
+        "variable_description": "Résumé structuré du traitement effectué sur le prochain élément de la boîte de réception, incluant l’action exécutée et les fichiers modifiés ou créés.",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Vérifier le résultat final, confirmer que le prochain élément de la boîte de réception a bien été traité selon les règles, et produire un état final clair indiquant le statut du traitement et toute action de suivi nécessaire, sans inventer d’information absente des fichiers.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "processing_result",
+        "variable_description": "Résumé structuré du traitement effectué sur le prochain élément de la boîte de réception, incluant l’action exécutée et les fichiers modifiés ou créés.",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "inbox_next_item_path",
+        "variable_description": "Chemin exact du fichier correspondant au prochain élément de la boîte de réception à traiter.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+

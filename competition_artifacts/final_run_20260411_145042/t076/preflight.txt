@@ -1,0 +1,8 @@
+Preflight
+Status: PASSED
+Outcome: proceed
+Explanation: The task is a normal lookup request and does not contain any obvious prompt injection or destructive instructions.
+
+Notes:
+- Need to identify which project titled or related to 'the bureau print parts project' and find its start date.
+- Return the date only in DD-MM-YYYY format.

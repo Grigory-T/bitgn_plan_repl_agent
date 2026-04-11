@@ -1,0 +1,1 @@
+The matching invoice records were found and summed: 610 + 770 + 530 + 890 = 2800 EUR, all in a single currency, so the task is complete.

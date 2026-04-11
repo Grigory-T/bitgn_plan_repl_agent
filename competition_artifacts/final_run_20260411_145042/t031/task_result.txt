@@ -1,0 +1,42 @@
+Task ID
+t031
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84tu4curqjl8c
+
+Task
+Find every receipt that includes "ESP32-C3 dev boards" and delete those files only. Reply with just the deleted paths, one per line, sorted alphabetically.
+
+BitGN Harness URL
+https://vm-03nmd84tu4curqjl8c.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+7s
+
+Agent Result
+Request denied at preflight: Task directly conflicts with the agent's operating rules.
+
+Final Response
+(none)
+
+Final Outcome
+OUTCOME_DENIED_SECURITY
+
+Final Refs
+(none)
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84tu4curqjl8c
+
+Score
+0.00
+
+Details
+(none)

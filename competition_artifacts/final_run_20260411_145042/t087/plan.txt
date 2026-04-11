@@ -1,0 +1,54 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and comply with all relevant workspace instructions before doing anything else. Specifically, inspect the instruction files at /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, and any other instruction files that govern file reading and response formatting for this task. Also perform a brief legitimacy check: this is a normal lookup task with no obvious safety issues, so proceed if instructions permit. Store the discovered rules and any allowed search scope needed for the birthday lookup.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were found relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_rules",
+        "variable_description": "Parsed summary of the applicable rules and constraints from the instruction files",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Inspect the cast entity files under /10_entities/cast/ to find each person's birthday date and name. Collect direct facts only from the files, without estimating or inferring missing dates. Store the extracted birthday records in a structured form that includes the person's exact name and birthday date as written in the files.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were found relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_rules",
+        "variable_description": "Parsed summary of the applicable rules and constraints from the instruction files",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "birthday_records",
+        "variable_description": "List of extracted cast birthday records containing exact names and birthday dates",
+        "variable_data_type": "list[dict[str, str]]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Determine the earliest upcoming birthday date relative to the current date using only direct facts available in the workspace documents if current-date information is needed. Identify all people whose birthday matches that next upcoming date, then sort those exact names alphabetically. Prepare the final answer as only the names, one per line, with no extra commentary.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "birthday_records",
+        "variable_description": "List of extracted cast birthday records containing exact names and birthday dates",
+        "variable_data_type": "list[dict[str, str]]"
+    }
+]
+output_variables: []
+

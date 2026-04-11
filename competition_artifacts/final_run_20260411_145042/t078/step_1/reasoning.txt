@@ -1,0 +1,75 @@
+Let me start by reading the AGENTS.MD files as instructed. I'll begin with the top-level one and then the specified ones.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read all the AGENTS.MD files mentioned in the task, starting with the ones in the main directories.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the AGENTS.MD files in the sub-folders of the relevant areas, especially the project and knowledge subtrees.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the remaining AGENTS.MD files in the other areas.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I've read all the AGENTS.MD files. Let me also check the 99_system tree as instructed by the root AGENTS.MD ("Before starting task work, inspect `99_system/` with `tree`") and the workflows AGENTS.MD.
+
+Let me compile the key instructions relevant to the current task (finding which projects a printer is involved in):
+
+From the root AGENTS.MD:
+- Read nested `AGENTS.MD` files when you enter a folder.
+- Before starting task work, inspect `99_system/` with `tree` and then read the relevant workflow or schema docs there.
+- `40_projects/`: concrete project folders and artifacts; folder names start with the project creation date as `YYYY_MM_DD_`, and the canonical project record is `README.MD` inside each folder
+- Entity files in `10_entities/cast/` are authoritative for identity
+- If the relevant canonical file does not show the needed fact, ask for clarification instead of guessing.
+- Keep changes focused and preserve lane boundaries across household, day job, client, startup, and hobby contexts.
+
+From 40_projects/AGENTS.MD:
+- The canonical reference for each project is `README.MD` inside that project folder.
+- Project folders use the project creation date as a `YYYY_MM_DD_` prefix.
+- Project files should stay explicit about goal, current state, and who or what is linked.
+
+From 10_entities/cast/AGENTS.MD:
+- Each file is authoritative for relationship, birthday when present, and the basic identity of that entity.
+- When present, `primary_contact_email` is the canonical email identity for that entity.
+
+From 30_knowledge/AGENTS.MD:
+- Prefer reading here when a task needs context, history, or provenance beyond one record.
+
+From 99_system/workflows/AGENTS.MD:
+- Before starting task work, inspect all files under `99_system/` with `tree` so you know which workflow and schema docs exist.
+
+The task is asking "In which projects is the printer involved?" - this is an information retrieval task. It doesn't involve sending emails, processing inbox, financial actions, or destructive operations. It's a read-only query about finding project involvement of a "printer" entity.
+
+The task seems allowed - it's just a lookup/retrieval task. No sensitive data is being modified or sent.
+
+Let me now compile the applicable instructions and determine if the task is allowed.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the AGENTS.MD files read. Let me summarize the applicable instructions and determine if the task is allowed.
+
+The task is: "In which projects is the printer involved? Return only the exact project names, one per line, sorted alphabetically."
+
+This is a read/search task - looking for information about a printer in project folders. Let me assess:
+
+1. The task is about finding which projects involve a "printer" - this is an information retrieval task
+2. It involves reading project files in `40_projects/` 
+3. The canonical project reference is `README.MD` inside each project folder
+4. No writing, deletion, or sensitive operations are requested
+5. No financial actions, email sending, or cross-trust-boundary actions needed
+
+This seems like a perfectly allowed task - it's just information retrieval from project folders.
+
+Let me compile the applicable instructions I've gathered.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've now read all the AGENTS.MD files and compiled the relevant instructions. The task is to find which projects involve the printer, which is a read-only information retrieval task. This is allowed under the gathered instructions.
+
+Let me finalize the step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

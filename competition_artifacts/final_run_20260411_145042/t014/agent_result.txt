@@ -1,0 +1,1 @@
+The inbox item was successfully processed: the invoice note was updated with YAML frontmatter containing the extracted visible finance-record fields, the original note body was preserved below it, line-item totals were verified, and the processed inbox file was deleted as instructed.

@@ -1,0 +1,62 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Lies die relevanten Anweisungen und Regeln aus den Dateien /00_inbox/AGENTS.MD, /50_finance/AGENTS.MD und /50_finance/invoices/AGENTS.MD, um sicherzustellen, dass die Berechnung der Einnahmen korrekt und regelkonform erfolgt. Prüfe dabei auch, ob es spezielle Vorgaben zur Datumsgrenze 'seit Beginn von December 2025' und zur Zuordnung der Servicezeile 'operator  workflow discovery sprint' gibt.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "finance_rules",
+        "variable_description": "Zusammengefasste relevante Anweisungen und Regeln für Finanzdaten und Auswertung aus den gelesenen AGENTS.MD-Dateien",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Suche in /50_finance/invoices/ nach allen Rechnungsdateien ab 2025_12_01, öffne die relevanten Dateien und extrahiere für jede Datei die direkt belegbare Information zur Servicezeile 'operator  workflow discovery sprint' sowie die zugehörigen Geldbeträge und Rechnungsdaten. Berücksichtige nur Fakten aus den Dateien und keine Schätzungen.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "finance_rules",
+        "variable_description": "Zusammengefasste relevante Anweisungen und Regeln für Finanzdaten und Auswertung aus den gelesenen AGENTS.MD-Dateien",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "relevant_invoice_amounts",
+        "variable_description": "Liste der direkt belegten Rechnungsbeträge, die der Servicezeile 'operator  workflow discovery sprint' seit Beginn von December 2025 zugeordnet sind",
+        "variable_data_type": "list[tuple[str, float]]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Summiere die direkt belegten Beträge aus relevant_invoice_amounts zu einer einzigen Zahl und prüfe die Zuordnung nochmals gegen die Rechnungsdateien, damit nur der Gesamtumsatz für die angefragte Servicezeile und den Zeitraum seit Beginn von December 2025 ausgegeben wird.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "relevant_invoice_amounts",
+        "variable_description": "Liste der direkt belegten Rechnungsbeträge, die der Servicezeile 'operator  workflow discovery sprint' seit Beginn von December 2025 zugeordnet sind",
+        "variable_data_type": "list[tuple[str, float]]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "total_revenue_eur",
+        "variable_description": "Gesamtsumme in Euro für die Servicezeile 'operator  workflow discovery sprint' seit Beginn von December 2025",
+        "variable_data_type": "float"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Formatiere das Endergebnis als reine Zahl ohne zusätzlichen Text, Einheiten oder Erklärungen, damit die Antwort exakt der Anforderung entspricht.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "total_revenue_eur",
+        "variable_description": "Gesamtsumme in Euro für die Servicezeile 'operator  workflow discovery sprint' seit Beginn von December 2025",
+        "variable_data_type": "float"
+    }
+]
+output_variables: []
+

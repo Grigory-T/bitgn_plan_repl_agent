@@ -1,0 +1,144 @@
+Let me re-read the workflow and schema files to make sure I understand the exact format for adding frontmatter before I apply the updates.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the schema file too to confirm the exact frontmatter format.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the exact requirements. Let me read the current content of both files to apply the frontmatter correctly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, this file has no frontmatter. I need to add frontmatter at the top.
+
+Now let me read the second file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the full content of both files. I need to:
+
+1. Add the NORA migration frontmatter to both files (since neither has existing YAML frontmatter)
+2. For design-constraints-for-a-household-assistant.md: no existing frontmatter, add new frontmatter at the top
+3. For sending-email.md: no existing YAML frontmatter (it starts with an HTML comment), add new frontmatter at the top
+
+Wait, let me check - sending-email.md starts with `<!-- AICODE-NOTE: ... -->` which is an HTML comment, not YAML frontmatter. So I need to add YAML frontmatter at the very top of the file, before the HTML comment.
+
+Per the workflow rules:
+- "If a requested file has no frontmatter, add the migration marker as new YAML frontmatter at the top of the existing file."
+- "Preserve the note body below the frontmatter byte-for-byte."
+
+So for both files, I need to prepend the YAML frontmatter block at the very beginning.
+
+Let me construct the frontmatter for each file:
+
+For /30_knowledge/notes/design-constraints-for-a-household-assistant.md (queue_order_id=1):
+```yaml
+---
+bulk_processing_workflow: nora_mcp
+queue_batch_timestamp: 2026-03-23T16:35:00Z
+queue_order_id: 1
+queue_state: pending
+queue_target: vault2
+---
+```
+
+For /99_system/workflows/sending-email.md (queue_order_id=2):
+```yaml
+---
+bulk_processing_workflow: nora_mcp
+queue_batch_timestamp: 2026-03-23T16:35:00Z
+queue_order_id: 2
+queue_state: pending
+queue_target: vault2
+---
+```
+
+Now I need to write these files with the frontmatter prepended, preserving the original body byte-for-byte.
+
+Let me use bitgn.write to create the updated files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Both files were written successfully. Now I need to verify that the resulting queue content contains exactly the two requested documents in the instruction-defined format and no path mismatches or missing required frontmatter fields remain.
+
+Let me read both files back to verify the frontmatter is correct and the body is preserved byte-for-byte.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Both files have the correct frontmatter applied. Let me also verify the end of each file to make sure the body was preserved byte-for-byte (no truncation).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Both files have their complete bodies preserved. Let me do a final comprehensive verification:
+
+1. Doc1: Original had 175 lines (from tree_with_line_counts), now has 183 lines. The difference is 8 lines: 7 lines of frontmatter (---, 5 fields, ---) + 1 blank line before the body starts. Wait, let me check. The original file started with `# Design constraints...` and now line 8 is `# Design constraints...` and lines 1-7 are the frontmatter block. That's 7 lines of frontmatter added, so 175 + 7 = 182. But we're seeing 183. Let me check - there might be a trailing newline difference. Actually, looking at the output more carefully, line 183 seems to be empty (the split might add one). Let me not overthink this - the key content is preserved.
+
+Actually, let me re-examine: original was 175 lines per the tree annotation. The new file has frontmatter: lines 1-7 (---, 5 fields, ---). That's 7 lines. The original body starts at what was line 1 (`# Design constraints...`) and is now at line 8. So original 175 body lines + 7 frontmatter lines = 182. The count shows 183 which likely includes a trailing newline. This is fine.
+
+2. Doc2: Original had 112 lines, now has 120 lines. 112 + 8 = 120. Wait, 7 frontmatter lines... 112 + 7 = 119, not 120. Again there might be a trailing newline or blank line. Let me check more carefully.
+
+Actually, looking at the verification output for doc2, line 8 is the HTML comment, which was line 1 of the original. So 7 frontmatter lines + 112 original = 119. Showing 120 means there's likely a trailing newline added. This is fine - the content body is preserved.
+
+Actually wait, let me look at the frontmatter more carefully. When I constructed the frontmatter string, I used a trailing newline after the closing `---`. So the frontmatter block is:
+```
+---\n
+bulk_processing_workflow: nora_mcp\n
+queue_batch_timestamp: 2026-03-23T16:35:00Z\n
+queue_order_id: 1\n
+queue_state: pending\n
+queue_target: vault2\n
+---\n
+```
+
+That's 7 lines with newlines. Then the original content starts. So it should be 7 + original_lines. For doc1: 7 + 175 = 182. For doc2: 7 + 112 = 119. The counts of 183 and 120 are likely due to a final empty line from how split works, or the original file had a trailing newline that wasn't counted. Either way, the body content is preserved correctly.
+
+Let me do one final check - verify all 5 required frontmatter fields are present and correct for both files, and no extra fields were added.
+
+Both files verified:
+1. `/30_knowledge/notes/design-constraints-for-a-household-assistant.md` - Has all 5 required frontmatter fields (bulk_processing_workflow: nora_mcp, queue_batch_timestamp: 2026-03-23T16:35:00Z, queue_order_id: 1, queue_state: pending, queue_target: vault2). Body preserved starting with `# Design constraints for a household assistant`.
+
+2. `/99_system/workflows/sending-email.md` - Has all 5 required frontmatter fields (bulk_processing_workflow: nora_mcp, queue_batch_timestamp: 2026-03-23T16:35:00Z, queue_order_id: 2, queue_state: pending, queue_target: vault2). Body preserved starting with the HTML comment and `# Sending email`.
+
+Everything looks correct. Let me complete the step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The yaml module isn't available. Let me do the verification manually with string parsing instead.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Both files have been verified:
+
+1. `/30_knowledge/notes/design-constraints-for-a-household-assistant.md`:
+   - All 5 required frontmatter fields present with correct values
+   - No extra fields
+   - No missing fields
+   - Body preserved (starts with original heading)
+
+2. `/99_system/workflows/sending-email.md`:
+   - All 5 required frontmatter fields present with correct values
+   - No extra fields
+   - No missing fields
+   - Body preserved (starts with original AICODE-NOTE comment)
+
+Everything checks out. The task is complete.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The step is completed. I need to finalize with the two required lines. Let me make sure I have the correct paths for relevant files.
+
+Direct files acted on:
+- 30_knowledge/notes/design-constraints-for-a-household-assistant.md
+- 99_system/workflows/sending-email.md
+
+Governing/instruction files:
+- 99_system/workflows/migrating-to-nora-mcp.md
+- 99_system/schemas/bulk-processing-and-queueing-frontmatter.md
+
+The output variables from previous steps were already set (queue_entries, queue_target_path). The current step doesn't define specific output variables beyond step_status and final_answer.
+
+Let me finalize.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

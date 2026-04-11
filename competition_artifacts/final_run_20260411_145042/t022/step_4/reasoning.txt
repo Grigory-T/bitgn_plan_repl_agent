@@ -1,0 +1,63 @@
+Good, I have all the input variables. Now let me read the key reference files to make sure I construct the outbound email correctly, especially `sending-email.md` for the exact format requirements.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me get the current runtime time to use for the outbound email filename and frontmatter.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The current time is 2026-03-23T16:35:00Z, which matches the timestamp in the deliverable spec. 
+
+Now let me construct the outbound email file exactly per the sending-email.md schema and the deliverable spec. Let me verify each field:
+
+- record_type: outbound_email ✓
+- created_at: 2026-03-23T16:35:00Z ✓
+- send_state: draft ✓
+- to: [miles@novak.example] ✓
+- subject: Invoice bundle request ✓
+- attachments: ['50_finance/invoices/2025_12_11__eur_000520__inv_0006__helios_backfill_intake_audit.md'] ✓
+- related_entities: [entity.miles, entity.claudia] ✓
+- related_projects: [2026_04_23_helios_workflow_sprint] ✓
+- source_channel: 60_outbox/channels/helios_client_email.md ✓
+
+Now let me write the email body. The deliverable spec says:
+"Hi Miles,\n\nHere is the oldest invoice linked to Claudia Reiter (ops manager at Helios Steuerbüro München GmbH):\n\n- INV-0006 — Helios backfill intake audit, issued 2025-12-11, EUR 520\n\nThe full invoice is attached.\n\nBest,\nMiles"
+
+Let me construct the full file content and write it.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The yaml module is not available. I'll construct the YAML frontmatter manually as a string.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The content looks correct. Now let me create the outbound email file at `60_outbox/outbox/eml_2026-03-23T16-35-00Z.md`.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, the outbound email file was created. Now I need to verify it was written correctly, and then delete the inbox item.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The outbound email file has been created correctly. Now I need to delete the inbox file as per the process-next-inbox-item.md instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The inbox file has been successfully deleted. Now let me verify the deletion and check the inbox directory to confirm it's empty.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The inbox file has been successfully deleted. The inbox now only contains the AGENTS.MD file. The task is complete.
+
+Let me summarize the execution result.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I need to set the execution_result variable as required by the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The execution_result is now set. Let me also set the step_status and final_answer properly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

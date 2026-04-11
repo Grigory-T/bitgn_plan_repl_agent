@@ -1,0 +1,44 @@
+Good, I have the input variables. Now let me read each of the 4 target finance record files to gather the direct facts needed for OCR/frontmatter migration. Let me also re-read the schema to make sure I have the exact field requirements.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read all 4 target files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All four files have been read. Let me now compile the context_facts dictionary with all the observed data from each file.
+
+For each file, I need to extract:
+1. Whether it has existing frontmatter (none of them do - they only have text tables)
+2. The field values: record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, related_entity
+3. The line items: item, quantity, unit_eur, line_eur
+4. The note body that should be preserved
+
+Let me also verify the line_eur calculations:
+- File 1: 1*54=54 ✓, 1*12=12 ✓, total=66 ✓
+- File 2: 1*18=18 ✓, 1*11=11 ✓, total=29 ✓
+- File 3: 2*8=16 ✓, 1*6=6 ✓, total=22 ✓
+- File 4: 2*18=36 ✓, 1*14=14 ✓, total=50 ✓
+
+All line_eur values match quantity * unit_eur. All totals match sum of line_eur.
+
+Now let me build the context_facts dictionary.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All 4 target files have been inspected and the data extracted. All required schema fields are present in the visible note data, all line items validate (quantity * unit_eur = line_eur), and all totals match. The fifth path with the leading underscore was confirmed to not exist and is a duplicate reference to the fourth file. No missing data or unsupported fields were found, so no stopping condition is triggered.
+
+Let me set the output variables and complete the step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me make sure I have all the required output variables set correctly. The only required output variable is `context_facts` (dict), which I already set in a previous code block. Now I need to finalize with `step_status` and `final_answer`.
+
+Let me verify that `context_facts` is properly set and contains all the information needed.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, context_facts is properly set with all the required data. Now I can finalize the step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

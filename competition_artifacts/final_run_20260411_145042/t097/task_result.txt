@@ -1,0 +1,59 @@
+Task ID
+t097
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84zuf3q59gtqw
+
+Task
+Handle the next inbox item.
+
+BitGN Harness URL
+https://vm-03nmd84zuf3q59gtqw.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+8m 51s
+
+Agent Result
+The validated request has been fully resolved in the plan: draft the outbound reply to miles@novak.example with the oldest four Claudia Reiter invoices attached in reverse chronological order, then delete the processed inbox file.
+
+Final Response
+Draft outbound reply created for miles@novak.example with the oldest four Claudia Reiter invoices attached in reverse chronological order, and the processed inbox file was deleted.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/00_inbox/AGENTS.MD
+/00_inbox/000_invoice-bundle-request.md
+/10_entities/AGENTS.MD
+/10_entities/cast/AGENTS.MD
+/10_entities/cast/miles.md
+/10_entities/cast/claudia.md
+/50_finance/AGENTS.MD
+/50_finance/invoices/AGENTS.MD
+/50_finance/invoices/2025_11_19__eur_000520__inv_0006__helios_backfill_intake_audit.md
+/50_finance/invoices/2025_12_21__eur_000760__inv_0007__helios_backfill_process_pack.md
+/50_finance/invoices/2026_01_19__eur_000610__inv_0008__helios_backfill_rollout_week.md
+/50_finance/invoices/2026_02_19__eur_000600__inv_0009__helios_discovery_invoice.md
+/60_outbox/AGENTS.MD
+/60_outbox/channels/AGENTS.MD
+/60_outbox/channels/helios_client_email.md
+/99_system/workflows/process-next-inbox-item.md
+/99_system/workflows/processing-inbox-email.md
+/99_system/workflows/sending-email.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84zuf3q59gtqw
+
+Score
+0.00
+
+Details
+(none)

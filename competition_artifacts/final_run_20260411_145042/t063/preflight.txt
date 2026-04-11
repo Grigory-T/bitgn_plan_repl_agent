@@ -1,0 +1,11 @@
+Preflight
+Status: DENIED
+Outcome: deny_needs_clarification
+Explanation: The task text is incomplete and does not specify what processing action to take for the inbox item.
+
+Notes:
+- Task appears truncated or underspecified.
+- Need a concrete instruction for how to process the inbox item.
+
+Denial Message:
+Task is incomplete or too vague to execute reliably. Please clarify the requested action.

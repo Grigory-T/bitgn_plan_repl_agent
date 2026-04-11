@@ -1,0 +1,82 @@
+Let me read the instruction files as requested to understand the workspace rules and confirm the task is legitimate.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, I've read the root AGENTS.MD. Now let me read the other instruction files mentioned in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the AGENTS.MD files for the other key directories.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me continue reading the other AGENTS.MD files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the remaining AGENTS.MD files mentioned in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me continue reading the remaining AGENTS.MD files as specified in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the remaining AGENTS.MD files that were mentioned in the task, and any others that seem relevant.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've now read all the instruction files. Let me summarize what I've found and determine if the task is allowed.
+
+The task is to find whose birthday is coming up next, and if multiple people share that next birthday date, list all of them.
+
+Looking at the instructions:
+1. `/AGENTS.MD` - Root instructions. Key rules:
+   - Entity files in `10_entities/cast/` are authoritative for identity, birthdays when present
+   - "If the relevant canonical file does not show the needed fact, ask for clarification instead of guessing."
+
+2. `/00_inbox/AGENTS.MD` - Inbox processing rules. Not directly relevant since this isn't an inbox task.
+
+3. `/10_entities/AGENTS.MD` - Entity resolution rules. Use this lane to resolve who or what something refers to.
+
+4. `/10_entities/cast/AGENTS.MD` - Cast entity rules. Each file is authoritative for relationship, birthday when present, and basic identity.
+
+5. `/20_work/AGENTS.MD` - Work lane rules. Not directly relevant.
+
+6. `/30_knowledge/AGENTS.MD` - Knowledge retrieval rules. Not directly relevant for this task.
+
+The task is legitimate - it's asking for birthday information from canonical entity files. The instructions explicitly say that entity files in `10_entities/cast/` are authoritative for birthdays when present, and to prefer these files for identity resolution.
+
+The task requires:
+1. Finding the current date (from workspace, not from bash/estimates)
+2. Reading all entity files in `10_entities/cast/` to find birthdays
+3. Determining whose birthday is next
+
+I need to find the current date from the workspace. Let me also check if there's any date information available.
+
+The task is allowed under the workspace instructions. The response must be based only on direct facts found in the workspace (birthdays from entity files, current date from workspace), with no estimation or inference.
+
+Let me set the output variables now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've read all the relevant AGENTS.MD files and confirmed the task is legitimate. Let me now set the output variables properly.
+
+The key findings:
+1. The task is to find whose birthday is coming up next - this is a legitimate lookup task
+2. Entity files in `10_entities/cast/` are authoritative for birthdays
+3. The task must be based only on direct facts found in the workspace, with no estimation or inference beyond what the files explicitly state
+4. The current date/time needs to be determined from the workspace, not estimated
+
+The task is allowed under the workspace instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me set the required output variables properly and then finalize the step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to finalize the step with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

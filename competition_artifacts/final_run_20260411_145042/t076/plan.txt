@@ -1,0 +1,64 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and comply with the applicable instructions in the workspace by inspecting the relevant AGENTS.MD files, starting with /00_inbox/AGENTS.MD and then any higher-level instruction files that govern /40_projects and the target project area. Determine whether the request is legitimate and allowed under the instructions, and identify the exact project record or document that mentions the bureau print parts project start date. Store the discovered instruction text and any relevant path targets for use in later steps.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_texts",
+        "variable_description": "Relevant instruction content gathered from AGENTS.MD files and other governing instruction files",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "target_paths",
+        "variable_description": "Candidate filesystem paths that may contain the start date for the bureau print parts project",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Search the candidate project and related finance or knowledge documents for the exact phrase 'bureau print parts project' or closely matching references, then read the relevant file(s) directly to find the project start date as a direct fact. Capture the exact date string and the source path used to support the answer.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_texts",
+        "variable_description": "Relevant instruction content gathered from AGENTS.MD files and other governing instruction files",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "target_paths",
+        "variable_description": "Candidate filesystem paths that may contain the start date for the bureau print parts project",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "project_start_date_raw",
+        "variable_description": "The directly found project start date string from the source document",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "source_path",
+        "variable_description": "The exact filesystem path of the document that contains the start date",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Normalize the directly found project start date into the required output format DD-MM-YYYY only, without adding any extra text. If the source date is already in that format, preserve it exactly; otherwise, convert it strictly based on the file's explicit date components. Verify that the final formatted date is supported by the source document and prepare it as the sole response.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "project_start_date_raw",
+        "variable_description": "The directly found project start date string from the source document",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "source_path",
+        "variable_description": "The exact filesystem path of the document that contains the start date",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+

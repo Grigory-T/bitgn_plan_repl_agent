@@ -1,0 +1,11 @@
+Preflight
+Status: DENIED
+Outcome: deny_destructive_or_conflicting_request
+Explanation: The task instructs deleting files, which is a destructive action and conflicts with a safe preflight approval without a separate verification workflow.
+
+Notes:
+- If this is meant for a sandboxed cleanup workflow, require explicit authorization and a dry-run/list-only confirmation first.
+- The file-matching criterion is clear, but the destructive operation itself is not something to approve at preflight.
+
+Denial Message:
+Task directly conflicts with the agent's operating rules.

@@ -1,0 +1,281 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and analyze the relevant instruction files that govern inbox handling and workspace operations, starting with /00_inbox/AGENTS.MD, then any applicable AGENTS.MD files in parent or target directories that may affect handling the next inbox item, including /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD, /40_projects/AGENTS.MD, /50_finance/AGENTS.MD, /60_outbox/channels/AGENTS.MD, and any more specific instructions discovered while traversing toward the inbox item file /00_inbox/724_next-task.md. Capture the applicable rules, constraints, and required workflow for processing this inbox item.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to inbox handling",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Structured summary of the applicable instructions and constraints extracted from the relevant instruction files",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Open /00_inbox/724_next-task.md, inspect its contents, and determine the exact requested action for the next inbox item. Assess whether the request is legitimate and allowed under the gathered instructions and general workspace rules; if the item is unclear, contradictory, or disallowed, prepare to stop and request clarification or decline according to the instructions rather than अनुमानित or invented action.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to inbox handling",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Structured summary of the applicable instructions and constraints extracted from the relevant instruction files",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "inbox_item_path",
+        "variable_description": "Full path to the inbox item being processed",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_item_content",
+        "variable_description": "Raw text content of the inbox item",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_request",
+        "variable_description": "Directly extracted description of what the inbox item asks the agent to do",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_is_allowed",
+        "variable_description": "Boolean indicating whether the requested task is allowed and consistent with instructions",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: If the task is allowed, identify the destination work area and any other workspace files that must be updated to complete the request, based only on direct facts from the inbox item and relevant instructions. Plan the concrete file operations needed to handle the item exactly once, including creating, updating, moving, or linking files only where the instructions require it. If the task is not allowed or cannot be completed from direct facts, plan to record the limitation without inventing missing details.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Structured summary of the applicable instructions and constraints extracted from the relevant instruction files",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "inbox_item_path",
+        "variable_description": "Full path to the inbox item being processed",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_item_content",
+        "variable_description": "Raw text content of the inbox item",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_request",
+        "variable_description": "Directly extracted description of what the inbox item asks the agent to do",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_is_allowed",
+        "variable_description": "Boolean indicating whether the requested task is allowed and consistent with instructions",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "target_paths",
+        "variable_description": "List of workspace file paths that are expected to be created or updated to handle the inbox item",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "planned_actions",
+        "variable_description": "Ordered list of concrete actions to perform for the inbox item",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Execute the planned inbox-handling actions in the workspace using only direct facts and the gathered instructions. Then verify the results by checking that the expected files exist or were updated as intended, and that no instruction was violated. If the task was not allowed, perform only the minimal permitted handling specified by instructions, such as documenting the refusal or leaving the item untouched if required.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Structured summary of the applicable instructions and constraints extracted from the relevant instruction files",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_is_allowed",
+        "variable_description": "Boolean indicating whether the requested task is allowed and consistent with instructions",
+        "variable_data_type": "bool"
+    },
+    {
+        "variable_name": "target_paths",
+        "variable_description": "List of workspace file paths that are expected to be created or updated to handle the inbox item",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "planned_actions",
+        "variable_description": "Ordered list of concrete actions to perform for the inbox item",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+
+Replan after step 2:
+
+--------------------------------------------------------------------------------
+Step 3: Identify the exact four existing purchase records that must be OCR'd, confirm the fifth referenced record is missing/duplicate and therefore must not be invented, and derive the set of target file paths to update. Prepare a precise handling plan that includes OCR for the four real files only, plus a separate decision path for the missing fifth reference consistent with the inbox-processing workflow (e.g. note/flag rather than fabricate content).
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Extracted workspace and workflow rules from the instruction files",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "inbox_item_path",
+        "variable_description": "Path to the inbox task file",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_item_content",
+        "variable_description": "Raw content of the inbox task file",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_request",
+        "variable_description": "Natural-language summary of the requested inbox action",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_is_allowed",
+        "variable_description": "Whether the OCR request is permitted under the workspace rules",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "target_paths",
+        "variable_description": "List of existing workspace file paths that should be updated as part of the OCR task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "planned_actions",
+        "variable_description": "Ordered list of concrete file operations and validation checks to perform",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Execute the OCR/frontmatter updates for the four existing bill records in the target paths, preserving each note body and using only schema-supported YAML frontmatter fields. Do not create or alter a nonexistent fifth record. After editing, verify the updated files are valid and that the missing reference remains uncreated. If workflow requirements indicate that the inbox item should not be closed because of the duplicate/missing reference, preserve the inbox item for clarification; otherwise proceed only if the handling rules explicitly allow completion.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Extracted workspace and workflow rules from the instruction files",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_is_allowed",
+        "variable_description": "Whether the OCR request is permitted under the workspace rules",
+        "variable_data_type": "bool"
+    },
+    {
+        "variable_name": "target_paths",
+        "variable_description": "List of existing workspace file paths that should be updated as part of the OCR task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "planned_actions",
+        "variable_description": "Ordered list of concrete file operations and validation checks to perform",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+
+Plan validation warnings:
+⚠️ First step has input variables: instruction_notes, inbox_item_path, inbox_item_content, task_request, task_is_allowed. First step should not require inputs.
+⚠️ Step 2 requires input 'instruction_notes' (list[str]), but no previous step produces it.
+⚠️ Step 2 requires input 'task_is_allowed' (bool), but no previous step produces it.
+
+Replan after step 3:
+
+--------------------------------------------------------------------------------
+Step 4: OCR and update only the four existing purchase record files in target_paths by extracting visible data into schema-compliant YAML frontmatter, preserving each file's existing note body, and validating the frontmatter against the finance-record schema. Do not create or fabricate the missing fifth reference; treat it as a duplicate/erroneous reference and leave it uncreated. If any required visible data cannot be verified for one of the four real files, stop before making partial irreversible changes and prepare to keep the inbox item open for clarification; otherwise proceed with the four-file update only.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Extracted rules and workflow constraints for inbox handling and finance record OCR",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_is_allowed",
+        "variable_description": "Whether the inbox task is allowed under workspace rules",
+        "variable_data_type": "bool"
+    },
+    {
+        "variable_name": "target_paths",
+        "variable_description": "The four existing purchase record file paths to OCR and update",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "planned_actions",
+        "variable_description": "Previously derived action outline including the missing fifth reference handling",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "updated_files",
+        "variable_description": "The set of purchase record file paths successfully updated with OCR frontmatter",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "update_status",
+        "variable_description": "Summary status of the OCR/edit step, including whether all four files were updated successfully or whether clarification is still needed",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: If update_status indicates success for all required real files, remove the processed inbox item at inbox_item_path according to inbox-processing rules. If update_status indicates clarification is needed or the task could not be completed safely, do not delete the inbox item and instead leave the workspace in a state that preserves the pending request for follow-up. Return the final handling outcome, including whether the inbox file was deleted.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "updated_files",
+        "variable_description": "The set of purchase record file paths successfully updated with OCR frontmatter",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "update_status",
+        "variable_description": "Summary status of the OCR/edit step, including whether all four files were updated successfully or whether clarification is still needed",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_item_path",
+        "variable_description": "Path to the inbox item file that initiated this task",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "inbox_deleted",
+        "variable_description": "Whether the inbox file was deleted after successful processing",
+        "variable_data_type": "bool"
+    },
+    {
+        "variable_name": "final_task_status",
+        "variable_description": "Final disposition of the inbox task after attempting OCR and cleanup",
+        "variable_data_type": "str"
+    }
+]
+
+Plan validation warnings:
+⚠️ First step has input variables: instruction_notes, task_is_allowed, target_paths, planned_actions. First step should not require inputs.
+⚠️ Step 2 requires input 'inbox_item_path' (str), but no previous step produces it.
+

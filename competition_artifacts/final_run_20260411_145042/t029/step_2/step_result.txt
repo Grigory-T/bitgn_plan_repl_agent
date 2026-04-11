@@ -1,0 +1,10 @@
+Inspected the Jana entity file at /10_entities/cast/jana.md confirming Jana Vesela is identified as alias `jana` and entity reference `entity.jana`. Then inspected all 14 project README.MD files under /40_projects/ for status and linked_entities.
+
+Direct evidence findings:
+- Only 1 project has status 'planned': 2026_05_05_family_map_wall (linked_entities: entity.petra, entity.ida, entity.oskar, entity.badger — does NOT include entity.jana)
+- Only 1 project includes entity.jana in linked_entities: 2026_04_25_dockflow_exception_radar (status: 'active', NOT 'planned')
+- All other projects are 'active' (11) or 'simmering' (1) and do not include entity.jana.
+
+No projects are both PLANNED and involve Jana Vesela. The list is empty.
+
+Relevant files: /10_entities/cast/jana.md, /40_projects/2026_04_01_hearthline/README.MD, /40_projects/2026_04_01_house_mesh/README.MD, /40_projects/2026_04_01_northstar_ledger/README.MD, /40_projects/2026_04_25_dockflow_exception_radar/README.MD, /40_projects/2026_04_28_studio_parts_library/README.MD, /40_projects/2026_04_30_helios_workflow_sprint/README.MD, /40_projects/2026_05_02_black_library_evenings/README.MD, /40_projects/2026_05_02_harbor_body/README.MD, /40_projects/2026_05_02_toy_forge_saturdays/README.MD, /40_projects/2026_05_03_reading_spine/README.MD, /40_projects/2026_05_03_repair_ledger/README.MD, /40_projects/2026_05_03_school_helper_kit/README.MD, /40_projects/2026_05_05_family_map_wall/README.MD, /40_projects/2026_05_05_window_farm_notes/README.MD

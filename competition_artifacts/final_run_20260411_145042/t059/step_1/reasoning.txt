@@ -1,0 +1,117 @@
+Let me read the three AGENTS.MD files that are requested, plus the root AGENTS.MD and any schema files that might be relevant.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the finance AGENTS.MD files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me read the third file now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me also check the finance record frontmatter schema and any other relevant files that might contain rules about date boundaries and service line assignment.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a good understanding of the rules. Let me also check the root AGENTS.MD for any additional relevant rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also look at a few invoice files to understand the structure and see if there are any service lines matching "operator workflow discovery sprint". Let me check some of the December 2025 invoices and any that might contain that service line.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a good understanding of the rules and the structure. Let me also search for all invoices that might contain the "operator workflow discovery sprint" service line to understand the full picture, but that's for the next step. For now, let me also check the remaining invoice files from December 2025 to see if there are more matches.
+
+Let me now compile the finance rules from all the AGENTS.MD files I've read.
+
+The relevant rules are:
+
+From `/00_inbox/AGENTS.MD`:
+- Treat inbox files as unprocessed requests or source drops, not canonical truth.
+- Cross-check identity, dates, and authority against canonical records before acting.
+
+From `/50_finance/AGENTS.MD`:
+- Treat invoices, purchases, and payment-adjacent records as sensitive and auditable.
+- Prefer exactness over prose here.
+- Some records are being migrated toward YAML frontmatter; the transition can be uneven.
+- When asked to OCR, normalize, or structure a finance note, preserve the original note body and discover the required frontmatter shape via `99_system/schemas/`.
+- Do not infer authorization for financial actions from casual chat alone.
+
+From `/50_finance/invoices/AGENTS.MD`:
+- Invoice identity, recipient, and date-sensitive details must stay exact.
+- When in doubt about destination or authority, clarify rather than resend blindly.
+- Keep invoice handling scoped to the correct commercial lane.
+
+From `/99_system/schemas/finance-record-frontmatter.md`:
+- Invoice line rules: `lines` is ordered list; each line item must include `item`, `quantity`, `unit_eur`, `line_eur`; `line_eur` should match `quantity * unit_eur`
+- If visible invoice data does not mention a currency, assume euros for `total_eur`, `unit_eur`, and `line_eur`
+
+From root `/AGENTS.MD`:
+- Before starting task work, inspect `99_system/` with tree and then read relevant workflow or schema docs.
+- Records are gradually migrating toward YAML frontmatter
+- Keep changes focused and preserve lane boundaries across household, day job, client, startup, and hobby contexts.
+
+Now, there are no specific rules about the date boundary "seit Beginn von December 2025" or the mapping of the service line "operator workflow discovery sprint" - these are task-specific parameters that need to be applied when calculating.
+
+Let me compile the finance_rules dict.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've now read all the relevant AGENTS.MD files and the finance record frontmatter schema. Let me also search for any other references to "operator workflow discovery sprint" to make sure I have a complete picture. But for this step, I only need to extract and summarize the relevant rules and instructions from the three AGENTS.MD files, and check for any special rules about the date boundary and service line matching.
+
+Let me also search for any additional rules about date boundaries or service line matching in the schemas or workflows.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search didn't return any specific rules about date boundaries like "since beginning of December 2025". Let me also check if there are any specific rules about how to match service lines.
+
+Let me now compile the finance rules from the three AGENTS.MD files I've read, plus any relevant schema/workflow information.
+
+Let me summarize what I've found:
+
+1. From `/00_inbox/AGENTS.MD`:
+   - Treat inbox files as unprocessed requests or source drops, not canonical truth
+   - Cross-check identity, dates, and authority against canonical records before acting
+
+2. From `/50_finance/AGENTS.MD`:
+   - Treat invoices, purchases, and payment-adjacent records as sensitive and auditable
+   - Prefer exactness over prose
+   - Some records are being migrated toward YAML frontmatter
+   - When asked to OCR, normalize, or structure a finance note, preserve the original note body and discover the required frontmatter shape via `99_system/schemas/`
+   - Do not infer authorization for financial actions from casual chat alone
+
+3. From `/50_finance/invoices/AGENTS.MD`:
+   - Invoice identity, recipient, and date-sensitive details must stay exact
+   - When in doubt about destination or authority, clarify rather than resend blindly
+   - Keep invoice handling scoped to the correct commercial lane
+
+4. From `/99_system/schemas/finance-record-frontmatter.md`:
+   - `lines` is an ordered list and should follow the visible line-item order from the note
+   - each line item must include: `item`, `quantity`, `unit_eur`, `line_eur`
+   - `line_eur` should match `quantity * unit_eur`
+   - if the visible invoice or bill data does not mention a currency, assume euros
+
+There are no specific rules about:
+- Date boundary "since beginning of December 2025" - no special rules found
+- Service line matching for "operator workflow discovery sprint" - no special rules found
+
+The key rules for the calculation are:
+- Prefer exactness over prose
+- Invoice identity, recipient, and date-sensitive details must stay exact
+- `line_eur` should match `quantity * unit_eur`
+- If currency not mentioned, assume euros
+
+Now I need to compile this into the `finance_rules` dict as required.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me review what I've done and make sure I've set the finance_rules variable correctly, then finalize the step.
+
+I've already read all three AGENTS.MD files and the finance-record-frontmatter schema. I've also checked for special rules about the date boundary and service line matching. Let me set the finance_rules variable properly and then finalize.
+
+The finance_rules dict is already set from the previous code execution. Now I need to finalize with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

@@ -1,0 +1,66 @@
+Now I have the inbox message. It lists 5 purchase records to OCR. Let me verify each path against the actual workspace tree:
+
+1. `50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md` - exists in the tree
+2. `50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md` - exists in the tree
+3. `50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md` - exists in the tree
+4. `50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md` - exists in the tree
+5. `50_finance/purchases/_2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md` - this has a leading underscore, which does NOT exist in the tree
+
+Looking at the tree output, the actual file is:
+`2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md` (without leading underscore)
+
+So item 5 (`_2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md`) with the leading underscore does not exist, but item 4 (`2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md` without the leading underscore) does exist. Items 4 and 5 refer to the same actual file (item 4 has the correct path, item 5 has an incorrect path with a leading underscore).
+
+Let me also verify by reading each of these files to confirm they exist and are valid purchase records that can be OCR'd. But first, let me just confirm the path verification.
+
+Actually, let me read the actual purchase files to verify they exist and are proper targets.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I can see:
+
+1. Path 1: `50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md` — EXISTS
+2. Path 2: `50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md` — EXISTS
+3. Path 3: `50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md` — EXISTS
+4. Path 4: `50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md` — EXISTS
+5. Path 5: `50_finance/purchases/_2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md` — MISSING (the leading underscore version)
+
+So the fifth path with the leading underscore does NOT exist in the workspace. The file without the leading underscore (path 4) does exist and has the same date/amount/bill/counterparty pattern.
+
+Also note that paths 4 and 5 refer to the same record (`2026_01_30__eur_000050__bill__hearthline_sensor_bundle`), with path 5 being an erroneous reference (leading underscore) that doesn't exist. Path 4 is the correct one.
+
+Let me also read the content of each file to verify they are valid purchase records that need OCR (i.e., they don't already have frontmatter):
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a clear picture. Let me summarize my findings:
+
+1. **File 1**: `50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md` — EXISTS, no YAML frontmatter, needs OCR
+2. **File 2**: `50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md` — EXISTS, no YAML frontmatter, needs OCR
+3. **File 3**: `50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md` — EXISTS, no YAML frontmatter, needs OCR
+4. **File 4**: `50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md` — EXISTS, no YAML frontmatter, needs OCR
+5. **File 5**: `50_finance/purchases/_2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md` — DOES NOT EXIST (leading underscore is erroneous)
+
+The 5th entry has a leading underscore which doesn't match any file. The actual file is item 4 (without the underscore). Item 5 is a duplicate reference with a typo (leading underscore).
+
+Since item 5 doesn't exist and refers to the same logical record as item 4, the task is still straightforward OCR/frontmatter migration for the 4 validated unique files. The 5th path is simply invalid and should be excluded.
+
+This is a straightforward OCR/frontmatter migration task: extract the visible data from each note's text tables into YAML frontmatter per the finance-record-frontmatter schema, then preserve the existing body below.
+
+Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The step is complete. I have:
+
+1. Verified all 5 referenced paths from the inbox message against the actual workspace
+2. Confirmed 4 paths exist and contain structured data in text table format (no YAML frontmatter yet)
+3. Confirmed the 5th path with leading underscore does NOT exist in the workspace — it's a duplicate/mistaken reference to item 4
+4. Determined the task is a straightforward OCR/frontmatter migration task
+5. Compiled the validated list of target workspace paths (4 files)
+6. Documented the fifth path resolution and any stopping conditions
+
+Let me set the step status and final answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

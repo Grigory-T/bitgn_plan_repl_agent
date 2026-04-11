@@ -1,0 +1,1 @@
+The inbox task has been fully completed: both finance records were updated with OCR frontmatter, the original bodies were preserved, and the inbox item was deleted as required by the workflow.

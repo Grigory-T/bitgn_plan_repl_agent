@@ -1,0 +1,82 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and follow the relevant workspace instructions for finance records, especially /50_finance/AGENTS.MD and any higher-level AGENTS.MD files that govern reading invoice/purchase documents. Verify the task is legitimate and that the answer should be derived only from direct facts in workspace files. Identify where vendor payment records are stored and the exact path(s) that may mention Filamenthütte Wien.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "relevant_instruction_paths",
+        "variable_description": "List of instruction file paths that apply to the finance lookup task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "finance_search_roots",
+        "variable_description": "List of directory paths to search for payment records related to the vendor",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Search the finance workspace under the provided roots for direct mentions of Filamenthütte Wien, using exact text matching in filenames and file contents. Collect all matching document paths and any directly stated payment amounts tied to that vendor, without estimating or inferring from unrelated records.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "relevant_instruction_paths",
+        "variable_description": "List of instruction file paths that apply to the finance lookup task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "finance_search_roots",
+        "variable_description": "List of directory paths to search for payment records related to the vendor",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "filamenthutte_matches",
+        "variable_description": "List of matching finance document paths and any short direct evidence snippets or identifiers for Filamenthütte Wien",
+        "variable_data_type": "list[tuple[str, str]]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Open each matching document and extract the exact euro amount paid to Filamenthütte Wien from the direct record text. If multiple payments exist, record each exact amount separately and confirm whether the vendor name is the same entity in every record. Do not total anything unless the records directly support summation.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "filamenthutte_matches",
+        "variable_description": "List of matching finance document paths and any short direct evidence snippets or identifiers for Filamenthütte Wien",
+        "variable_data_type": "list[tuple[str, str]]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "filamenthutte_payments",
+        "variable_description": "List of exact payment amounts found in records for Filamenthütte Wien",
+        "variable_data_type": "list[float]"
+    },
+    {
+        "variable_name": "filamenthutte_payment_sources",
+        "variable_description": "List of source document paths corresponding to each extracted payment amount",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Compute the exact total paid to Filamenthütte Wien by summing only the directly extracted payment amounts from the matching records. Produce a single numeric total suitable for returning as number only, and ensure the result is grounded entirely in the source documents.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "filamenthutte_payments",
+        "variable_description": "List of exact payment amounts found in records for Filamenthütte Wien",
+        "variable_data_type": "list[float]"
+    },
+    {
+        "variable_name": "filamenthutte_payment_sources",
+        "variable_description": "List of source document paths corresponding to each extracted payment amount",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+

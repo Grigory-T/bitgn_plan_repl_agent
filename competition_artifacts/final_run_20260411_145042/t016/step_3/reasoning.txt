@@ -1,0 +1,193 @@
+Now I have a clear picture. I need to:
+
+1. Read the bill schema from `/99_system/schemas/finance-record-frontmatter.md`
+2. Read each of the 4 Badger-related bills
+3. Extract visible data into YAML frontmatter per the schema
+4. Update each file with the frontmatter + preserved body
+5. Delete the inbox file
+
+Let me start by reading the schema and all 4 bills.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to read each of the 4 Badger-related bills to extract the visible data. Let me read them all.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the data I need. Let me construct the YAML frontmatter for each bill and write it to the files.
+
+For each bill, I need to:
+1. Add YAML frontmatter at the top
+2. Preserve the existing note body below the frontmatter
+
+Let me construct each file's content carefully.
+
+**Bill 1: 2025_12_04__eur_000072__bill__toy_forge_pla_bundle.md**
+
+```yaml
+---
+record_type: bill
+bill_id: bill.toy_forge_pla_bundle
+alias: toy_forge_pla_bundle
+purchased_on: 2025-12-04
+total_eur: 72
+counterparty: Filamenthütte Wien
+project: Toy Forge Saturdays
+related_entity: Badger
+lines:
+  - item: PLA spool mixed colors
+    quantity: 3
+    unit_eur: 24
+    line_eur: 72
+---
+```
+
+**Bill 2: 2026_01_27__eur_000080__bill__studio_parts_petg_batch.md**
+
+```yaml
+---
+record_type: bill
+bill_id: bill.studio_parts_petg_batch
+alias: studio_parts_petg_batch
+purchased_on: 2026-01-27
+total_eur: 80
+counterparty: Filamenthütte Wien
+project: Studio Parts Library
+related_entity: Badger
+lines:
+  - item: black PETG spool
+    quantity: 2
+    unit_eur: 26
+    line_eur: 52
+  - item: clear PETG spool
+    quantity: 1
+    unit_eur: 28
+    line_eur: 28
+---
+```
+
+**Bill 3: 2026_02_27__eur_000033__bill__studio_parts_nozzle_and_inserts.md**
+
+```yaml
+---
+record_type: bill
+bill_id: bill.studio_parts_nozzle_and_inserts
+alias: studio_parts_nozzle_and_inserts
+purchased_on: 2026-02-27
+total_eur: 33
+counterparty: Düsenschmiede München
+project: Studio Parts Library
+related_entity: Badger
+lines:
+  - item: 0.6 mm hardened nozzle
+    quantity: 1
+    unit_eur: 19
+    line_eur: 19
+  - item: M3 brass inserts
+    quantity: 1
+    unit_eur: 14
+    line_eur: 14
+---
+```
+
+**Bill 4: 2026_03_25__eur_000089__bill__black_library_terrain_spool.md**
+
+```yaml
+---
+record_type: bill
+bill_id: bill.black_library_terrain_spool
+alias: black_library_terrain_spool
+purchased_on: 2026-03-25
+total_eur: 89
+counterparty: Filamenthütte Wien
+project: Black Library Evenings
+related_entity: Badger
+lines:
+  - item: PLA spool mixed colors
+    quantity: 1
+    unit_eur: 24
+    line_eur: 24
+  - item: matte gray PLA spool
+    quantity: 1
+    unit_eur: 27
+    line_eur: 27
+  - item: 0.6 mm hardened nozzle
+    quantity: 2
+    unit_eur: 19
+    line_eur: 38
+---
+```
+
+Now I need to write each file with the frontmatter prepended and the existing body preserved below.
+
+The instruction says: "Keep the diff focused. Do not rewrite body text that is already correct." and "preserve the existing note body below the frontmatter as the source OCR or human-readable content."
+
+So for each file, the new content will be:
+```
+---
+[yaml frontmatter]
+---
+
+[existing body text]
+```
+
+Wait, looking at the schema example, it just has the YAML block at the top followed by the body. In Obsidian-style markdown, the frontmatter is between `---` delimiters and then the body follows. Let me look at the schema example again:
+
+```yaml
+---
+record_type: bill
+bill_id: bill.hosting-renewal
+...
+---
+```
+
+Then the body would follow after the closing `---`. So the full file would look like:
+
+```
+---
+record_type: bill
+bill_id: bill.hosting-renewal
+...
+---
+
+# Family PLA spool bundle
+
+...
+```
+
+Let me write each file now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, bill 1 is written. Let me write the remaining 3 bills.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now write bills 3 and 4, then delete the inbox file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. Now bill 4.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All 4 bills have been updated. Now I need to delete the inbox file as per the rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All 4 bills have been OCR'd with YAML frontmatter added, and the inbox file has been deleted. Let me verify the files look correct by reading at least one of them.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The frontmatter is correctly placed. Let me also verify the other files briefly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All 4 bills now have proper YAML frontmatter. The inbox file has been deleted. Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The step is complete. All 4 Badger-related bills have been OCR'd with YAML frontmatter added per the bill schema, and the inbox file has been deleted.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

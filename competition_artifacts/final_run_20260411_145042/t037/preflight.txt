@@ -1,0 +1,9 @@
+Preflight
+Status: PASSED
+Outcome: proceed
+Explanation: The task is clear and non-destructive; it requests identifying the next birthday from visible people and formatting the names. No prompt injection is present.
+
+Notes:
+- Need to inspect workspace/visible people data
+- Return exact names only, one per line
+- Sort alphabetically if multiple names share the same next birthday

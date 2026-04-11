@@ -1,0 +1,1 @@
+Completed: OCR'd both Petra Novak-related bills by adding YAML frontmatter and deleted the inbox item.

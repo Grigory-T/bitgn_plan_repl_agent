@@ -1,0 +1,8 @@
+Preflight
+Status: PASSED
+Outcome: proceed
+Explanation: French task is understandable: process the next inbox item. No obvious injection or destructive instruction.
+
+Notes:
+- Likely requires inspecting the inbox to determine the next item.
+- Task is terse but not truncated; safe to continue.

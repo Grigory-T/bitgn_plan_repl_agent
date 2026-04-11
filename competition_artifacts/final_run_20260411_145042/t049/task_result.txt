@@ -1,0 +1,44 @@
+Task ID
+t049
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84vq7ejjf5mut
+
+Task
+What is the number of lines (return only number) of bill from 深圳市海云电子 issued around Dec 2, 2025-Dec 5
+
+BitGN Harness URL
+https://vm-03nmd84vq7ejjf5mut.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+3m 37s
+
+Agent Result
+The matching bill file was identified and its exact line count was determined as 33; the remaining step is just to return the integer.
+
+Final Response
+33
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+50_finance/purchases/2025_12_04__eur_000044__bill__house_mesh_esp32_order.md
+50_finance/purchases/AGENTS.MD
+50_finance/AGENTS.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84vq7ejjf5mut
+
+Score
+0.00
+
+Details
+(none)

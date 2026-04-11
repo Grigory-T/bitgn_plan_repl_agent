@@ -1,0 +1,12 @@
+Mapped the inbox message 'OCR all bills related to Ida Novak' to work category 'finance-record-handling' (structured-record maintenance / OCR / frontmatter migration of bill purchase records).
+
+Work category: finance-record-handling — The task requires extracting visible data from existing bill note text into YAML frontmatter per the bill schema in 99_system/schemas/finance-record-frontmatter.md, then deleting the inbox item upon completion. This is a repository cleanup / structured-record maintenance operation as defined in 99_system/workflows/inbox-processing-v2-update.md and 99_system/workflows/ocr-records.md.
+
+Target paths (5):
+1. /50_finance/purchases/2026_02_01__eur_000036__bill__family_map_wall_board.md — bill #1 related to Ida Novak, needs YAML frontmatter
+2. /50_finance/purchases/2026_02_23__eur_000022__bill__toy_forge_wheel_and_magnet_pack.md — bill #2 related to Ida Novak, needs YAML frontmatter
+3. /50_finance/purchases/2026_03_02__eur_000025__bill__school_helper_label_tape.md — bill #3 related to Ida Novak, needs YAML frontmatter
+4. /99_system/schemas/finance-record-frontmatter.md — schema defining required/optional frontmatter fields for bills
+5. /00_inbox/000_next-task.md — inbox item to delete after successful OCR completion
+
+Relevant files: /99_system/workflows/ocr-records.md, /99_system/workflows/migrate-records-to-frontmatter.md, /99_system/workflows/inbox-processing-v2-update.md, /50_finance/purchases/AGENTS.MD, /99_system/schemas/finance-record-frontmatter.md, /00_inbox/000_next-task.md, /50_finance/purchases/2026_02_01__eur_000036__bill__family_map_wall_board.md, /50_finance/purchases/2026_02_23__eur_000022__bill__toy_forge_wheel_and_magnet_pack.md, /50_finance/purchases/2026_03_02__eur_000025__bill__school_helper_label_tape.md

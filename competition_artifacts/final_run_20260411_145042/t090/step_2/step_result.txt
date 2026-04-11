@@ -1,0 +1,16 @@
+Opened and analyzed /00_inbox/724_next-task.md. The inbox item requests OCR of 5 purchase/bill finance records. 
+
+**Inbox item content**: A request to OCR 5 files:
+1. 50_finance/purchases/2026_03_02__eur_000025__bill__school_helper_label_tape.md
+2. 50_finance/purchases/2025_12_21__eur_000030__bill__northstar_domain_and_mail.md
+3. 50_finance/purchases/2026_03_13__eur_000020__bill__studio_parts_magnet_and_felt.md
+4. 50_finance/purchases/2026_03_11__eur_000029__bill__repair_ledger_filter_order.md
+5. 50_finance/purchases/_2026_03_11__eur_000029__bill__repair_ledger_filter_order.md (leading underscore - file does NOT exist in workspace)
+
+**Task legitimacy**: TRUE. OCR of finance purchase/bill records into YAML frontmatter is a standard, explicitly supported workflow per /99_system/workflows/ocr-records.md, /99_system/workflows/migrate-records-to-frontmatter.md, and /99_system/schemas/finance-record-frontmatter.md.
+
+**Key concern**: Item 5 references a file with a leading underscore (`_2026_03_11...`) that does not exist. The same file without the underscore does exist (item 4). Per instructions, if visible evidence does not support an action, stop and ask for clarification rather than guessing.
+
+**Required followup paths**: The 4 existing purchase files must be read in full to extract their data, plus the schema and workflow docs for correct frontmatter formatting.
+
+Refs: /00_inbox/724_next-task.md, /99_system/schemas/finance-record-frontmatter.md, /99_system/workflows/ocr-records.md, /99_system/workflows/migrate-records-to-frontmatter.md, /00_inbox/AGENTS.MD, /99_system/workflows/process-next-inbox-item.md, /50_finance/purchases/2026_03_02__eur_000025__bill__school_helper_label_tape.md, /50_finance/purchases/2025_12_21__eur_000030__bill__northstar_domain_and_mail.md, /50_finance/purchases/2026_03_13__eur_000020__bill__studio_parts_magnet_and_felt.md, /50_finance/purchases/2026_03_11__eur_000029__bill__repair_ledger_filter_order.md

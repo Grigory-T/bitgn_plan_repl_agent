@@ -1,0 +1,102 @@
+Let me read the instruction files starting with the ones mentioned in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the other AGENTS.MD files that are relevant.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the /10_entities/cast/AGENTS.MD file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the root AGENTS.MD and any other relevant AGENTS.MD files that might have rules about how to format outputs.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the 60_outbox AGENTS.MD since the task is about finding birthdays and outputting names, and there might be relevant formatting rules there.
+
+Let me also look at the household_calendar channel and other outbox files that might have rules about formatting output.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me also check the outbox subdirectory AGENTS.MD files and the 90_memory, 99_system AGENTS.MD files to make sure I haven't missed any relevant rules about formatting outputs or birthdays.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me check the 99_system workflows and schemas for any relevant rules about birthday reporting or output formatting.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me now look at a few of the cast entity files to understand their structure and how birthdays are stored.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. Now I understand the structure of cast entity files. They have a `birthday` field and a `kind` field. I need to find people (kind: `person`) and check their birthdays. Let me read a few more to understand the variety, and then I'll need to read all person files to find birthdays.
+
+But first, let me focus on the current step's requirements:
+1. Collect instruction_texts - the text contents of relevant instruction files
+2. Parse applicable_rules - summary of rules for finding and reporting birthdays
+
+I've already read the key AGENTS.MD files. Let me also check if there are any specific workflow docs about birthday-related tasks.
+
+Let me also check the root AGENTS.MD and 99_system/workflows for anything related to birthdays or person lookups.
+
+I think I have enough instruction files now. Let me compile:
+
+1. `/AGENTS.MD` - Root rules, including that entity files in `10_entities/cast/` are authoritative for identity and birthdays
+2. `/00_inbox/AGENTS.MD` - Inbox rules
+3. `/10_entities/AGENTS.MD` - Entity lane rules
+4. `/10_entities/cast/AGENTS.MD` - Cast-specific rules, including that birthdays are authoritative when present
+5. `/99_system/AGENTS.MD` - System lane rules
+6. `/99_system/workflows/AGENTS.MD` - Workflow rules
+
+The applicable rules for finding and reporting birthdays would be:
+- Entity files in `10_entities/cast/` are authoritative for identity, birthdays when present
+- Use `10_entities/cast/` lane to resolve who or what something refers to before acting
+- If a field is missing in the canonical file, treat it as unknown
+- Cast files hold canonical records for people, pets, and named systems
+- When present, birthday in cast files is authoritative
+- Only people (kind: person) would have birthdays to consider
+- If the relevant canonical file does not show the needed fact, ask for clarification instead of guessing
+- Cross-check identity, dates, and authority against canonical records before acting
+
+Now let me compile the instruction_texts and applicable_rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a good understanding of the instruction files. Let me also read the 50_finance and 40_projects AGENTS.MD for completeness, and check the household_calendar and household_signal channels which might have birthday-related information.
+
+Actually, let me also check the 20_work/reminders and 20_work/tasks AGENTS.MD, and the 30_knowledge sub-folder AGENTS.MD files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have read all the relevant AGENTS.MD files. Let me compile the instruction texts and applicable rules for finding and reporting birthdays.
+
+The key rules are:
+1. From `/AGENTS.MD`: Entity files in `10_entities/cast/` are authoritative for identity, `primary_contact_email` when present, and birthdays when present.
+2. From `/10_entities/cast/AGENTS.MD`: Each file is authoritative for relationship, birthday when present, and the basic identity of that entity. Prefer these files over chat context, memory summaries, or project mentions when resolving identity.
+3. From `/10_entities/AGENTS.MD`: Use this lane to resolve who or what something refers to before acting elsewhere. Canonical identity lives below this folder, not in inbox messages or memory notes.
+4. From `/00_inbox/AGENTS.MD`: Cross-check identity, dates, and authority against canonical records before acting.
+5. From `/AGENTS.MD`: If the relevant canonical file does not show the needed fact, ask for clarification instead of guessing.
+
+The birthday field format from the entity files I read:
+- `birthday: YYYY-MM-DD` format in the frontmatter-like structure
+- `important_dates` section also contains `birthday` entries
+
+The task says "Find the next birthday from the visible people" - so I need to find people (kind: person) and check their birthdays. The output format says "Return only the exact names, one per line, sorted alphabetically."
+
+Let me now compile the instruction_texts and applicable_rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me review what I've done. I've read all the relevant AGENTS.MD files and compiled the instruction_texts and applicable_rules. I need to make sure I set all the required output variables properly, then finalize with step_status and final_answer.
+
+Let me set the output variables in one block, then finalize in another.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to finalize the step by setting step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

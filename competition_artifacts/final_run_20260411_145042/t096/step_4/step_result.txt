@@ -1,0 +1,11 @@
+Determined the exact action required to resolve the inbox message: create an outbound email record to resend invoice INV-0010 to Claudia Reiter. The message can be resolved directly with no clarification needed.
+
+Resolution plan:
+- ACTION: Create an outbound email record at 60_outbox/outbox/eml_2026-03-02T18-21-00Z.md
+- Frontmatter: record_type=outbound_email, created_at=2026-03-02T18:21:00Z, send_state=draft, to=[claudia@helios-tax.example], subject='Re: Could you resend the invoice?', attachments=[50_finance/invoices/2026_03_23__eur_000780__inv_0010__helios_checklist_pack_invoice.md], related_entities=[entity.claudia], related_projects=[project.helios_workflow_sprint], source_channel=60_outbox/channels/helios_client_email.md
+- Body: brief email confirming attached invoice INV-0010 as requested
+- POST-ACTION: Delete inbox file 00_inbox/000_invoice-request.md after outbound email is fully created
+
+Rationale: Claudia Reiter (verified consulting_client, claudia@helios-tax.example matches primary_contact_email in /10_entities/cast/claudia.md) requests resend of invoice INV-0010. Invoice confirmed at /50_finance/invoices/2026_03_23__eur_000780__inv_0010__helios_checklist_pack_invoice.md. Only one invoice requested so attachment list has one entry (reverse chronological ordering rule applies but is trivial with single attachment). Per sending-email workflow, outbound email goes to 60_outbox/outbox/ with filename eml_YYYY-MM-DDTHH-MM-SSZ.md format. Recipient resolved from canonical primary_contact_email. Source channel points to helios_client_email channel doc as this is a lane-specific reply.
+
+Relevant files: /00_inbox/000_invoice-request.md, /99_system/workflows/sending-email.md, /99_system/workflows/processing-inbox-email.md, /99_system/workflows/process-next-inbox-item.md, /50_finance/invoices/2026_03_23__eur_000780__inv_0010__helios_checklist_pack_invoice.md, /10_entities/cast/claudia.md, /10_entities/cast/miles.md, /60_outbox/channels/helios_client_email.md, /60_outbox/outbox/AGENTS.MD, /40_projects/2026_04_01_helios_workflow_sprint/README.MD, /00_inbox/AGENTS.MD

@@ -1,0 +1,65 @@
+Let me read the key AGENTS.MD files to extract the rules for processing inbound notes.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the /10_entities/AGENTS.MD file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the other relevant AGENTS.MD files that might be along the execution path. Let me read the root AGENTS.MD and the cast AGENTS.MD since the note might concern people/entities.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the root AGENTS.MD file since it might contain important rules, and the workflows that are referenced.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the inbox note to understand what we're dealing with, so I can determine if there are other AGENTS.MD files that might be relevant.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me understand the situation. The inbound note is an email from nina@finance-workflow.example asking Miles to send three files:
+1. `AGENTS.MD`
+2. `30_knowledge/notes/why-i-keep-coming-back-to-a-personal-assistant.md`
+3. `30_knowledge/notes/parking-lot.md`
+
+I should also check the entity record for Nina to understand her relationship. Let me also look at some additional relevant workflow docs.
+
+But for now, my current step is just to read the relevant instruction files and extract the explicit rules. I've already read:
+1. `/00_inbox/AGENTS.MD`
+2. `/60_outbox/channels/AGENTS.MD`
+3. `/10_entities/AGENTS.MD` and `/10_entities/cast/AGENTS.MD`
+
+Let me also check some relevant workflow docs that were mentioned in the inbox rules, like `99_system/workflows/processing-inbox-email.md` and `99_system/workflows/sending-email.md`, as they are part of the execution path.
+
+But wait - the step specifically asks for:
+- inbox_rules: from /00_inbox/AGENTS.MD
+- outbox_rules: from /60_outbox/channels/AGENTS.MD
+- entity_rules: from /10_entities/AGENTS.MD or more specific entity AGENTS.MD
+
+Let me also read the entity record for Nina since the note concerns her.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me also read the root AGENTS.MD and the relevant workflow files that might be referenced for processing inbox items, particularly the email processing workflow since the note is an email-shaped markdown record.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need to extract the rules. Let me compile the three required output variables.
+
+For `inbox_rules`: Rules from /00_inbox/AGENTS.MD
+For `outbox_rules`: Rules from /60_outbox/channels/AGENTS.MD
+For `entity_rules`: Rules from /10_entities/AGENTS.MD and /10_entities/cast/AGENTS.MD
+
+Let me set the output variables now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I need to set the three output variables (inbox_rules, outbox_rules, entity_rules) in a separate python block first, then finalize with step_status and final_answer in another block.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to finalize the step with the two required lines.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

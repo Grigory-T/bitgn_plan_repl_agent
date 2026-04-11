@@ -1,0 +1,63 @@
+Now I need to find bills from Müller Bürobedarf around Mar 29, 2026 - Apr 1, 2026. The filename pattern is YYYY_MM_DD__eur_AAAAAA__bill__project_name.md, and the date in the filename is the purchased_on date.
+
+Looking at the file listing, the files with dates around Mar 29 - Apr 1, 2026 would be:
+- 2026_03_31__eur_000025__bill__school_helper_label_tape.md (Mar 31, 2026)
+- 2026_04_01__eur_000089__bill__black_library_terrain_spool.md (Apr 1, 2026)
+
+But the vendor name is in the file content (counterparty field), not in the filename. I need to read these files to check the counterparty.
+
+However, I should also consider files a bit before Mar 29 - maybe Mar 28 or Mar 29 itself. Looking at the files:
+- 2026_03_24__eur_000022__bill__toy_forge_wheel_and_magnet_pack.md (Mar 24 - a bit early)
+
+The task says "around Mar 29, 2026-Apr 1", so I should focus on Mar 29 through Apr 1. Let me read the files with dates in that range. The candidates based on filename dates would be:
+- 2026_03_31__eur_000025__bill__school_helper_label_tape.md
+- 2026_04_01__eur_000089__bill__black_library_terrain_spool.md
+
+There's no file with dates Mar 29 or Mar 30. Let me read these two files and check the counterparty field for "Müller Bürobedarf".
+
+Actually, I should be thorough and check a broader range. Let me read the files from around that period to check for the vendor name.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I found the matching bill. The file at `/50_finance/purchases/2026_03_31__eur_000025__bill__school_helper_label_tape.md` has:
+- counterparty: Müller Bürobedarf
+- purchased_on: 2026-03-31 (which is within the Mar 29 - Apr 1, 2026 window)
+
+This is the only candidate that matches both the vendor name and the date window. The other two files I checked have different counterparties.
+
+Let me also quickly verify there are no other files I might have missed. Let me search for "Müller" or "Bürobedarf" in the purchases directory to be thorough.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search confirms there is exactly one bill from Müller Bürobedarf in the purchases directory: `/50_finance/purchases/2026_03_31__eur_000025__bill__school_helper_label_tape.md`. This bill has `purchased_on: 2026-03-31`, which falls within the requested window of Mar 29, 2026 - Apr 1, 2026.
+
+Now let me set the candidate_bills output variable.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I found exactly one candidate bill from Müller Bürobedarf within the date window (Mar 29 - Apr 1, 2026). The bill is dated 2026-03-31, which falls within the requested window. Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me review the work done:
+
+1. I inspected the workspace tree to find purchase bill files
+2. I read the files with dates near the target window (Mar 29 - Apr 1, 2026)
+3. I searched for "Müller" and "Bürobedarf" across all purchase files
+4. Found exactly one matching bill: `/50_finance/purchases/2026_03_31__eur_000025__bill__school_helper_label_tape.md` with counterparty "Müller Bürobedarf" and purchased_on date 2026-03-31 (within the window)
+
+The candidate_bills variable is already set. Now I need to finalize with step_status and final_answer.
+
+Relevant files:
+- /50_finance/purchases/2026_03_31__eur_000025__bill__school_helper_label_tape.md (the matched bill)
+- /50_finance/purchases/AGENTS.MD (rules governing purchases)
+- /99_system/schemas/finance-record-frontmatter.md (schema for interpreting bill fields)
+- /50_finance/AGENTS.MD (finance rules)
+- /AGENTS.MD (root rules)
+
+Also files I read and inspected:
+- /50_finance/purchases/2026_03_24__eur_000022__bill__toy_forge_wheel_and_magnet_pack.md (read, not a match)
+- /50_finance/purchases/2026_04_01__eur_000089__bill__black_library_terrain_spool.md (read, not a match)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

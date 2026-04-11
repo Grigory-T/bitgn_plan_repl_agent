@@ -1,0 +1,94 @@
+Let me read the relevant AGENTS.MD files to extract the rules for finance document lookup and workspace usage.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the finance AGENTS.MD files and the schema/workflow docs.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the purchases AGENTS.MD file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me also read the schema file for finance records and the higher-level AGENTS.MD files to extract more concrete rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a good understanding of the finance-related AGENTS.MD files and the schema. Let me also read the invoices AGENTS.MD to be thorough, and check if there are any higher-level instructions I might have missed.
+
+Let me also look at the actual purchase files to understand the filename convention better, since the task involves finding a bill from "Müller Bürobedarf" issued around Mar 29, 2026-Apr 1.
+
+From the tree, the purchase files follow the pattern:
+`YYYY_MM_DD__eur_XXXXXX__bill__project_name.md`
+
+Looking at the dates around Mar 29 - Apr 1, 2026:
+- `2026_03_31__eur_000025__bill__school_helper_label_tape.md`
+- `2026_04_01__eur_000089__bill__black_library_terrain_spool.md`
+
+I need to read these files to see if any of them are from "Müller Bürobedarf". But for the current step, I just need to extract the rules and find the purchase path.
+
+Let me compile all the information I've gathered.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the 99_system/workflows for any relevant workflows related to finance records, and check one of the purchase bill files to understand the filename convention and content structure.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a good understanding of the finance rules and the purchase path. Let me also check if there are any other relevant AGENTS.MD files at higher levels that I might have missed. Let me also check the 99_system AGENTS.MD file.
+
+Actually, I've already read:
+1. `/AGENTS.MD` - top-level
+2. `/50_finance/AGENTS.MD` - finance area
+3. `/50_finance/purchases/AGENTS.MD` - purchases sub-area
+4. `/50_finance/invoices/AGENTS.MD` - invoices sub-area
+5. `/99_system/schemas/finance-record-frontmatter.md` - schema for finance records
+
+I've also seen sample bill files and understand the naming convention:
+- `YYYY_MM_DD__eur_XXXXXX__bill__project_name.md`
+- The date is `purchased_on`
+- The `counterparty` field contains the vendor name (e.g., "Müller Bürobedarf")
+
+The task asks about a bill from "Müller Bürobedarf" issued around Mar 29, 2026 - Apr 1. From my sample read, I can see that the bill dated 2026-03-31 has counterparty "Müller Bürobedarf". But for now, I need to focus on extracting the rules and the purchase path.
+
+Let me also read the 99_system/AGENTS.MD to see if there are additional rules.
+
+Actually, the current step is specifically about finding and reading the relevant instruction files, extracting concrete rules, and identifying the purchase path. Let me compile my findings.
+
+Key rules extracted:
+1. From `/AGENTS.MD`: Before starting task work, inspect `99_system/` with `tree` and then read relevant workflow or schema docs. Records are migrating toward YAML frontmatter. Keep changes focused and preserve lane boundaries.
+2. From `/50_finance/AGENTS.MD`: Treat invoices, purchases, and payment-adjacent records as sensitive and auditable. Prefer exactness over prose. Some records are being migrated toward YAML frontmatter. Do not infer authorization for financial actions from casual chat alone.
+3. From `/50_finance/purchases/AGENTS.MD`: Preserve distinction between household, business, and speculative spend. Keep changes reviewable and category-aware. Before deleting purchase records, read `99_system/workflows/deletion-and-wiping.md`. Financial convenience is not a reason to blur trust boundaries.
+4. From `/99_system/schemas/finance-record-frontmatter.md`: Bill schema with required fields (record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines). Bill naming convention: `YYYY_MM_DD__eur_XXXXXX__bill__project_name.md`. Date in filename matches `purchased_on`. Vendor name is in `counterparty` field. Line items follow ordered list structure.
+
+The purchase path is `/50_finance/purchases/`.
+
+Let me compile the finance_rules dict.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the relevant information. Let me compile the findings:
+
+1. **Finance rules from AGENTS.MD files:**
+   - Root `/AGENTS.MD`: Finance area is `50_finance/`, records are migrating toward YAML frontmatter, check `99_system/schemas/` for shape docs
+   - `/50_finance/AGENTS.MD`: Treat finance records as sensitive and auditable, prefer exactness, migrating toward YAML frontmatter, discover shape via `99_system/schemas/`, do not infer authorization from casual chat
+   - `/50_finance/purchases/AGENTS.MD`: Preserve distinction between household/business/speculative spend, keep changes reviewable and category-aware, before deleting read `99_system/workflows/deletion-and-wiping.md`, don't blur trust boundaries
+   - `/50_finance/invoices/AGENTS.MD`: Invoice identity, recipient, date-sensitive details must stay exact, clarify rather than resend blindly, keep scoped to correct commercial lane
+
+2. **Finance record frontmatter schema** from `/99_system/schemas/finance-record-frontmatter.md`:
+   - Bill schema with required fields: `record_type`, `bill_id`, `alias`, `purchased_on`, `total_eur`, `counterparty`, `project`, `lines`
+   - Optional: `related_entity`
+   - Line items have: `item`, `quantity`, `unit_eur`, `line_eur`
+   - If currency not mentioned, assume euros
+   - Bill filenames follow pattern: `YYYY_MM_DD__eur_AAAAAA__bill__project_name.md`
+
+3. **Purchase path**: `/50_finance/purchases/`
+
+Now let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have successfully extracted all the relevant rules and information. Let me now set the step as completed with the proper final answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

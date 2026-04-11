@@ -1,0 +1,82 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and comply with all relevant instruction files before searching for the printer's involvement. Start with /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD, /40_projects/AGENTS.MD, and any more specific AGENTS.MD files encountered in the relevant project and knowledge subtrees. Extract the exact rules for reading files, naming, and reporting results, and determine whether the task is allowed. Store the applicable instructions for later steps.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "applicable_instructions",
+        "variable_description": "A collection of relevant instruction summaries and constraints gathered from workspace AGENTS.MD files",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean indicating whether the task is permitted under the gathered instructions",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If task_allowed is false, stop and return no project names. If task_allowed is true, identify all direct mentions of the printer in project materials by searching relevant files under /40_projects and, if instructed by the gathered rules, related finance or knowledge files that may reference project names. Use only direct factual references, not inference, to determine which project README.MD files or other project-linked documents associate the printer with a project. Record candidate project file paths and supporting evidence snippets.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "applicable_instructions",
+        "variable_description": "A collection of relevant instruction summaries and constraints gathered from workspace AGENTS.MD files",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean indicating whether the task is permitted under the gathered instructions",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "printer_evidence",
+        "variable_description": "Direct evidence snippets and source paths showing printer involvement in specific projects",
+        "variable_data_type": "list[tuple[str, str]]"
+    },
+    {
+        "variable_name": "candidate_project_names",
+        "variable_description": "Exact project names extracted from files with printer evidence",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Validate each candidate project name against its source file path and evidence, deduplicate the names, and sort the exact project names alphabetically. Ensure the final list contains only project names that are directly supported by the evidence and excludes any non-project or ambiguous references.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "printer_evidence",
+        "variable_description": "Direct evidence snippets and source paths showing printer involvement in specific projects",
+        "variable_data_type": "list[tuple[str, str]]"
+    },
+    {
+        "variable_name": "candidate_project_names",
+        "variable_description": "Exact project names extracted from files with printer evidence",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "sorted_project_names",
+        "variable_description": "Alphabetically sorted list of exact project names involving the printer",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Format the final response as one exact project name per line, using only the names in sorted_project_names and nothing else.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "sorted_project_names",
+        "variable_description": "Alphabetically sorted list of exact project names involving the printer",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+

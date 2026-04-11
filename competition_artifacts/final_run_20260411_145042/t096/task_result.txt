@@ -1,0 +1,64 @@
+Task ID
+t096
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84zrxe8qjyhtr
+
+Task
+Take care of the next message in inbox.
+
+BitGN Harness URL
+https://vm-03nmd84zrxe8qjyhtr.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+9m 55s
+
+Agent Result
+The inbox request was resolved by creating the required outbound email draft to Claudia with the invoice attached, and the inbox item was deleted after completion. The remaining verification step confirms the action was completed in the correct workspace location and no unsupported facts were introduced.
+
+Final Response
+Done.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/00_inbox/AGENTS.MD
+/00_inbox/000_invoice-request.md
+/10_entities/AGENTS.MD
+/10_entities/cast/claudia.md
+/10_entities/cast/miles.md
+/20_work/AGENTS.MD
+/30_knowledge/AGENTS.MD
+/40_projects/AGENTS.MD
+/40_projects/2026_04_01_helios_workflow_sprint/README.MD
+/50_finance/AGENTS.MD
+/50_finance/invoices/AGENTS.MD
+/50_finance/invoices/2026_03_23__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+/60_outbox/AGENTS.MD
+/60_outbox/channels/AGENTS.MD
+/60_outbox/channels/helios_client_email.md
+/60_outbox/drafts/AGENTS.MD
+/60_outbox/outbox/AGENTS.MD
+/60_outbox/outbox/eml_2026-03-02T18-21-00Z.md
+/99_system/AGENTS.MD
+/99_system/workflows/AGENTS.MD
+/99_system/workflows/processing-inbox-email.md
+/99_system/workflows/sending-email.md
+/99_system/workflows/process-next-inbox-item.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84zrxe8qjyhtr
+
+Score
+0.00
+
+Details
+(none)

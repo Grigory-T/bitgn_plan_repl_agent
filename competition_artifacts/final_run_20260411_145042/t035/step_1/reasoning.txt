@@ -1,0 +1,72 @@
+Let me start by reading the instruction files that are relevant to processing inbox messages. I need to read:
+
+1. 00_inbox/AGENTS.MD - primary inbox processing instructions
+2. 20_work/AGENTS.MD - work area instructions
+3. 20_work/tasks/AGENTS.MD - tasks area instructions
+4. 30_knowledge/AGENTS.MD - knowledge area instructions
+5. 60_outbox/channels/AGENTS.MD - outbox channels instructions
+6. 99_system/workflows/process-next-inbox-item.md - workflow for processing next inbox item
+7. 99_system/workflows/processing-inbox-email.md - email processing workflow
+8. Root AGENTS.MD - root instructions
+
+Let me also check the next task file and other relevant files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me also read some additional relevant files that might be needed based on the next inbox item content (it mentions a bill and bank transfer, so I should check finance-related AGENTS.MD files and the outbox AGENTS.MD files).
+
+The next task is about a bill from 2026-03-06 for EUR 33, which looks like it relates to a purchase record in 50_finance/purchases/. Let me also read the relevant AGENTS.MD files for those areas, as well as the sending-email workflow since the task mentions communicating back.
+
+Also, I need to read the outbox AGENTS.MD and drafts AGENTS.MD since the next message might require writing to those areas.
+
+Let me read the additional files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have read all the relevant instruction files. Let me compile the complete list of instruction files and extract all rules related to processing the next inbox message.
+
+Let me also check the entities AGENTS.MD file and the 90_memory AGENTS.MD to be thorough.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the relevant instruction files read. Let me compile the complete list of instruction files and the rules/constraints extracted from them.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've read all the relevant instruction files and compiled the rules. Now I need to set the output variables and complete the step.
+
+Let me verify I have the key files. The next inbox item (374_next-task.md) asks about a bill from 2026-03-06 for EUR 33 from "Düsenschmiede München" - this is a finance/purchase-related request. So the instruction files I've read are appropriate.
+
+Let me also make sure I haven't missed any important AGENTS.MD files. Looking at the tree:
+- 30_knowledge/capture/AGENTS.MD [5]
+- 30_knowledge/notes/AGENTS.MD [5]
+- 30_knowledge/threads/AGENTS.MD [5]
+
+I should also check these since the task might involve moving knowledge. But the current step is just about reading and organizing rules, not processing the message yet. Let me also check 50_finance/invoices/AGENTS.MD since it was in the tree.
+
+Actually, looking more carefully, 50_finance/invoices/AGENTS.MD is listed in the tree. Let me read it and the 30_knowledge subfolder AGENTS.MD files for completeness.
+
+But wait - the current step says "至少包括 00_inbox/AGENTS.MD，以及与可能会被更新的目标区域相关的指令文件（例如 20_work/AGENTS.MD、20_work/tasks/AGENTS.MD、30_knowledge/AGENTS.MD、60_outbox/channels/AGENTS.MD，若下一条消息要求写入其他区域则同时读取对应目录下的 AGENTS.MD）"
+
+Since the next message is about a bill (finance), I should also include 50_finance/invoices/AGENTS.MD and the 30_knowledge subfolder AGENTS.MD files. Let me read them quickly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, I've now read all the relevant AGENTS.MD files and workflow files. Let me finalize the instruction_files list and instruction_rules list, adding the last few files and their rules.
+
+Let me compile the final comprehensive results.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've now read all the relevant instruction files and compiled a comprehensive list of rules. Let me finalize the output variables for the step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I need to set the output variables `instruction_files` and `instruction_rules` first, then set `step_status` and `final_answer`.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, I've set both required output variables. Now I need to finalize the step by setting `step_status` and `final_answer`.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

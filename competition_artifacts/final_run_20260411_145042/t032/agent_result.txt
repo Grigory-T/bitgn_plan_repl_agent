@@ -1,0 +1,1 @@
+The inbox request is not safely actionable: it requires comparing a real project against 'the attic rainwater rig,' which is not a canonical project and only appears as a non-committal idea in knowledge notes. Because the target to delete is unsupported and ambiguous, we must stop without mutating the workspace and ask the requester for clarification.

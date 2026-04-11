@@ -1,0 +1,44 @@
+Task ID
+t026
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84t4fcg299plh
+
+Task
+What is the start date of the project Northstar Ledger? Answer YYYY-MM-DD. Date only
+
+BitGN Harness URL
+https://vm-03nmd84t4fcg299plh.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+1m 26s
+
+Agent Result
+The project start date is directly evidenced by the canonical project folder name and governing instructions: /40_projects/2026_04_01_northstar_ledger/ indicates the creation/start date 2026-04-01. This satisfies the task requirement to answer with date only in YYYY-MM-DD format.
+
+Final Response
+2026-04-01
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/AGENTS.MD
+/40_projects/AGENTS.MD
+/40_projects/2026_04_01_northstar_ledger/README.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84t4fcg299plh
+
+Score
+0.00
+
+Details
+(none)

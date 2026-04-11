@@ -1,0 +1,108 @@
+Let me read the instruction files as requested to understand the rules and constraints for this task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Key rules from root AGENTS.MD:
+- Read nested AGENTS.MD files when entering a folder
+- Entity files in `10_entities/cast/` are authoritative for identity, `primary_contact_email` when present, and birthdays when present
+- If the relevant canonical file does not show the needed fact, ask for clarification instead of guessing
+- Before starting task work, inspect `99_system/` with tree and then read the relevant workflow or schema docs there
+
+Let me now read the other instruction files mentioned in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the other instruction files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me read the cast AGENTS.MD and also a couple of entity files to understand their structure for birthday information.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the 99_system AGENTS.MD and look at any other instruction files that might be relevant.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me also check a few more AGENTS.MD files and system docs to be thorough, since the root AGENTS.MD says to read nested AGENTS.MD files when entering a folder and to inspect 99_system/ before starting task work.
+
+Let me also check the context for current date/time.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Current date is 2026-03-02. Now I know the reference point for "next birthday." I need to read the entity files in `/10_entities/cast/` to find birthday information.
+
+Let me read a few entity files to understand their format and find birthday data.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the current date: 2026-03-02. I need to read all cast files to find birthdays and determine whose birthday comes next. Let me read all the cast files to gather birthday information.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I now have all the information needed. Let me summarize the key instructions and rules I've discovered:
+
+From `/AGENTS.MD` (root):
+- Entity files in `10_entities/cast/` are authoritative for identity, `primary_contact_email` when present, and birthdays when present.
+- If the relevant canonical file does not show the needed fact, ask for clarification instead of guessing.
+
+From `/10_entities/cast/AGENTS.MD`:
+- Each file is authoritative for relationship, birthday when present, and the basic identity of that entity.
+
+From `/00_inbox/AGENTS.MD`:
+- Cross-check identity, dates, and authority against canonical records before acting.
+
+Now I have all the cast files read. Let me compile the instruction files and task rules.
+
+Current date: 2026-03-02
+
+People with birthdays:
+- Miles: 1988-12-20
+- Bix (pet/dog): 2019-08-16
+- Claudia: 1981-09-02
+- Elena: 1984-05-26
+- Gregor: 1984-10-12
+- Hanna: 1982-10-17
+- Ida: 2017-11-10
+- Jana: 1990-08-11
+- Lukas: 1987-08-10
+- Nina: 1990-02-24
+- Omar: 1986-12-22
+- Oskar: 2021-05-02
+- Pepper (pet/hamster): 2024-04-13
+- Petra: 1988-04-04
+- Renate: 1962-02-21
+- Roman: 1985-02-13
+- Sara: 1987-08-07
+- Tobias: 1986-08-25
+
+For birthday lookup, I need to find whose next birthday is coming up from 2026-03-02. The birthday dates (month-day) after March 2:
+- Petra: 04-04
+- Oskar: 05-02
+- Elena: 05-26
+- Pepper: 04-13
+- Bix: 08-16
+- Jana: 08-11
+- Lukas: 08-10
+- Sara: 08-07
+- Tobias: 08-25
+- Gregor: 10-12
+- Hanna: 10-17
+- Ida: 11-10
+- Omar: 12-22
+- Miles: 12-20
+
+The next birthday is Petra on April 4. But wait - the task says "Whose birthday is coming up next?" - this is the global task, I shouldn't solve it now. The current step just asks me to read and comply with instructions, store rules, and note the search scope.
+
+Let me set the output variables properly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me set the required output variables properly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to set the final two variables: step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

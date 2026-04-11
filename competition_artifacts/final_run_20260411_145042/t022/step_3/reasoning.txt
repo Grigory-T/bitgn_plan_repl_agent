@@ -1,0 +1,120 @@
+Good, I have the input variables. Now I need to:
+
+1. Read the target invoice file (the oldest one: 50_finance/invoices/2025_12_11__eur_000520__inv_0006__helios_backfill_intake_audit.md)
+2. Read the sending-email.md workflow
+3. Read the channel file (60_outbox/channels/helios_client_email.md)
+4. Read the processing-inbox-email.md workflow
+5. Check existing outbox examples for format reference
+
+Let me read all these files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the sending-email.md workflow to understand the exact outbound email structure.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the channel file and the processing-inbox-email.md workflow for additional context.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the processing-inbox-email.md to understand how to handle the reply flow, and also check existing outbox examples.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the inbox file to understand the original request format:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me check the outbox AGENTS.MD and any existing outbox examples.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check if there are any existing outbox email examples that I can use as a reference.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No existing outbox examples. Let me also check the drafts folder and the finance record frontmatter schema for completeness.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No existing outbox or draft email examples. Let me also read the finance-record-frontmatter schema for completeness, and the finance invoices AGENTS.MD, then I can synthesize the deliverable spec.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need to construct the deliverable_spec. Let me also get the current runtime timestamp since the outbound email needs a timestamp-derived filename.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need to construct the deliverable spec. Let me also quickly check the 60_outbox/AGENTS.MD and drafts/AGENTS.MD for any additional rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need to construct the deliverable_spec. Let me summarize:
+
+**Deliverable structure:**
+
+1. **Create outbound email file** at `60_outbox/outbox/eml_2026-03-23T16-35-00Z.md`
+
+   **Frontmatter:**
+   ```yaml
+   ---
+   record_type: outbound_email
+   created_at: 2026-03-23T16:35:00Z
+   send_state: draft
+   to:
+     - miles@novak.example
+   subject: Invoice bundle request
+   attachments:
+     - 50_finance/invoices/2025_12_11__eur_000520__inv_0006__helios_backfill_intake_audit.md
+   related_entities:
+     - entity.miles
+     - entity.claudia
+   related_projects:
+     - 2026_04_23_helios_workflow_sprint
+   source_channel: 60_outbox/channels/helios_client_email.md
+   ---
+   ```
+
+   **Body:**
+   A short email stating the requested oldest invoice is attached.
+
+2. **Delete the inbox file** after the outbound email is created (per process-next-inbox-item.md).
+
+Wait - the current step is just about inspecting and deriving the deliverable specification. The actual execution (creating files, deleting) will be in the next step. Let me focus on outputting the deliverable_spec and execution_references.
+
+Let me also verify what the related_projects value should be. The invoice says "project: Helios Workflow Sprint". Looking at 40_projects, there's `2026_04_23_helios_workflow_sprint/`. So the project reference should be `2026_04_23_helios_workflow_sprint`.
+
+And for related_entities: Miles (entity.miles) and Claudia (entity.claudia), per the channel doc's participant format.
+
+Let me also think about the subject line. The inbox email subject was "Invoice bundle request". For the reply, it should probably reference the same subject. I'll keep it as "Invoice bundle request" or perhaps "Re: Invoice bundle request" - but sending-email.md doesn't specify "Re:" prefix convention. Let me just use "Invoice bundle request" as the subject to keep it concrete and appropriate.
+
+Actually, looking at sending-email.md's example, the subject was just "Follow-up" - so a concrete subject is fine. I'll use "Invoice bundle request" since it's a direct reply.
+
+Now let me think about the attachment ordering rule. The rule says "for invoice resends or invoice bundles, order attachments reverse chronologically by the visible invoice issue date unless the request explicitly asks for something else; newest-first is the default." But in this case, there's only 1 attachment (the oldest 1 invoice), so ordering doesn't matter.
+
+Let me finalize the deliverable_spec.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I now have all the information needed to complete this step. Let me summarize what was determined:
+
+1. **Target invoice file**: `50_finance/invoices/2025_12_11__eur_000520__inv_0006__helios_backfill_intake_audit.md` — INV-0006, issued 2025-12-11, EUR 520, counterparty Helios Steuerbüro München GmbH, project Helios Workflow Sprint, related entity Claudia Reiter
+
+2. **Outbound email structure** per `sending-email.md`:
+   - Path: `60_outbox/outbox/eml_2026-03-23T16-35-00Z.md` (filename uses runtime-derived UTC timestamp with `:` replaced by `-`)
+   - Frontmatter: record_type=outbound_email, created_at=2026-03-23T16:35:00Z, send_state=draft, to=[miles@novak.example], subject=Invoice bundle request, attachments=[path to invoice], related_entities, related_projects, source_channel
+   - Body: concise reply mentioning the invoice with the attachment
+
+3. **Attachment ordering**: Only 1 attachment (oldest 1 as requested), so reverse-chronological ordering rule from sending-email.md is moot
+
+4. **Inbox deletion**: After creating the outbound email, delete `00_inbox/000_invoice-bundle-request.md` per process-next-inbox-item.md
+
+5. **Channel**: helios_client_email — client-facing consulting delivery and clarifications, participants include entity.miles and entity.claudia
+
+6. **Recipient**: miles@novak.example (from primary_contact_email on miles.md, also matches inbox 'from' header)
+
+The deliverable_spec and execution_references are fully defined.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

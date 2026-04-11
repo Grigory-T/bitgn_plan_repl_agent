@@ -1,0 +1,1 @@
+Die älteste Nachricht im Posteingang wurde identifiziert und bearbeitet: Der Vorgang wurde korrekt als blockiert eingestuft, ohne den Workspace zu verändern, und die Inbox-Datei blieb gemäß den Regeln bestehen. Damit ist die geforderte Bearbeitung der ältesten Nachricht abgeschlossen.

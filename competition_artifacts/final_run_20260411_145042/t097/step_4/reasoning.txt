@@ -1,0 +1,57 @@
+Now I have all the input variables. Let me verify the key details by checking the sending-email.md workflow and the outbox structure to make sure the plan is complete and accurate before finalizing it.
+
+Let me read the sending-email.md to confirm the exact frontmatter format and any other requirements.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the runtime context to get the current timestamp, and verify the outbox folder structure.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The runtime context confirms the current time is 2026-03-02T18:21:00Z, which matches the timestamp used in the `required_workspace_actions`. Good.
+
+Now let me verify the outbox directory structure and the outbox AGENTS.MD to make sure I understand the exact requirements.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, so I have all the information needed to produce the execution-ready plan. Let me now construct the plan based on all verified variables and workspace rules.
+
+Since `proceed_with_processing` is True, I need to specify:
+1. CREATE outbound email at `60_outbox/outbox/eml_2026-03-02T18-21-00Z.md` with the correct frontmatter and body
+2. DELETE inbox file `00_inbox/000_invoice-bundle-request.md`
+
+Let me formulate the complete execution-ready plan.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All four invoice files exist and are confirmed. Now I need to formulate the execution-ready plan based on all the verified information. Let me structure this as the concrete plan.
+
+The plan should specify:
+1. CREATE the outbound email record at `60_outbox/outbox/eml_2026-03-02T18-21-00Z.md` with the exact frontmatter and body
+2. DELETE the inbox file at `00_inbox/000_invoice-bundle-request.md`
+
+Let me write this out clearly as the execution-ready plan.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, the inbox file is still there. Now I can produce the execution-ready plan. Let me compile all the information:
+
+1. **Processing is allowed** (proceed_with_processing = True)
+2. **Action 1: CREATE outbound email** at `60_outbox/outbox/eml_2026-03-02T18-21-00Z.md`
+   - Frontmatter with all required and optional fields
+   - Body text
+   - Attachments in reverse chronological order
+3. **Action 2: DELETE inbox file** at `00_inbox/000_invoice-bundle-request.md`
+
+Let me produce the complete execution-ready plan with all details, grounded in the verified variables and instruction sources.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The step asks me to produce the execution-ready plan. I've already done the analysis and produced the plan in my final_answer. Let me set the required output variables properly.
+
+Looking at the step requirements, there are no explicitly named output variables beyond step_status and final_answer. The task says "Produce the execution-ready remaining plan" - so the plan itself is the output, captured in final_answer.
+
+Let me finalize with the two required lines.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

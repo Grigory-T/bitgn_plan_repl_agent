@@ -1,0 +1,40 @@
+Now I need to open each of the 3 matching documents and extract the exact euro amount from the direct record text, confirming the vendor name is the same entity in every record.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me extract the exact amounts and confirm the counterparty name in each document:
+
+1. `50_finance/purchases/2025_11_12__eur_000072__bill__toy_forge_pla_bundle.md`:
+   - counterparty: Filamenthütte Wien
+   - total_eur: 72
+   - Line items total: 72 ✓
+
+2. `50_finance/purchases/2026_01_04__eur_000080__bill__studio_parts_petg_batch.md`:
+   - counterparty: Filamenthütte Wien
+   - total_eur: 80
+   - Line items total: 52 + 28 = 80 ✓
+
+3. `50_finance/purchases/2026_03_03__eur_000089__bill__black_library_terrain_spool.md`:
+   - counterparty: Filamenthütte Wien
+   - total_eur: 89
+   - Line items total: 24 + 27 + 38 = 89 ✓
+
+All three records have the same counterparty name: "Filamenthütte Wien". The exact payment amounts are 72, 80, and 89 EUR.
+
+Now I need to set the output variables:
+- filamenthutte_payments: [72.0, 80.0, 89.0]
+- filamenthutte_payment_sources: the corresponding document paths
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All three documents have been read and verified. Each confirms:
+1. Same counterparty: "Filamenthütte Wien" in all three records
+2. Exact amounts verified against line item totals:
+   - Doc 1: total_eur = 72 (3 × 24 = 72 ✓)
+   - Doc 2: total_eur = 80 (52 + 28 = 80 ✓)
+   - Doc 3: total_eur = 89 (24 + 27 + 38 = 89 ✓)
+
+Output variables are set correctly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

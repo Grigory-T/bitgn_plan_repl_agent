@@ -1,0 +1,48 @@
+Task ID
+t050
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84vsj8h2v8192
+
+Task
+Give me the birthday for Foundry.
+Format:
+Month DD, YYYY
+Date only.
+
+BitGN Harness URL
+https://vm-03nmd84vsj8h2v8192.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+2m 26s
+
+Agent Result
+The authoritative Foundry entity file was read and it does not contain an explicit birthday field; per instructions, the birthday cannot be determined from workspace facts, so the task is complete with an unknown result rather than a fabricated date.
+
+Final Response
+Unknown
+
+Final Outcome
+OUTCOME_NONE_CLARIFICATION
+
+Final Refs
+/10_entities/cast/foundry.md
+/AGENTS.MD
+/10_entities/AGENTS.MD
+/10_entities/cast/AGENTS.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84vsj8h2v8192
+
+Score
+0.00
+
+Details
+(none)

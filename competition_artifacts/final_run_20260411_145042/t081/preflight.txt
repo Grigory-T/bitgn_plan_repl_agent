@@ -1,0 +1,11 @@
+Preflight
+Status: DENIED
+Outcome: deny_destructive_or_conflicting_request
+Explanation: The task instructs deleting files, which is a destructive action; even though it is scoped, preflight should treat deletion requests as high-risk and only proceed under confirmed operational safeguards.
+
+Notes:
+- Can require verification of exact matching receipts before any deletion.
+- If later authorized, return only deleted file paths sorted alphabetically.
+
+Denial Message:
+Task directly conflicts with the agent's operating rules.

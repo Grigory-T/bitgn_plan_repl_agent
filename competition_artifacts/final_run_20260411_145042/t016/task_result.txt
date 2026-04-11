@@ -1,0 +1,54 @@
+Task ID
+t016
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84s7lgc5j058p
+
+Task
+Handle the next inbox item.
+
+BitGN Harness URL
+https://vm-03nmd84s7lgc5j058p.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+5m 56s
+
+Agent Result
+The inbox request was successfully completed: all four Badger-related bills were OCR'd into YAML frontmatter at their canonical purchase file paths, the original bodies were preserved, and the inbox item was deleted per processing rules.
+
+Final Response
+Completed: OCR’d all four Badger-related bills into YAML frontmatter at their canonical purchase file paths, preserved the original bodies, and deleted the inbox item.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/00_inbox/000_next-task.md
+/00_inbox/AGENTS.MD
+/10_entities/cast/badger.md
+/50_finance/AGENTS.MD
+/50_finance/purchases/AGENTS.MD
+/99_system/workflows/ocr-records.md
+/99_system/workflows/migrate-records-to-frontmatter.md
+/99_system/schemas/finance-record-frontmatter.md
+/99_system/workflows/process-next-inbox-item.md
+/50_finance/purchases/2025_12_04__eur_000072__bill__toy_forge_pla_bundle.md
+/50_finance/purchases/2026_01_27__eur_000080__bill__studio_parts_petg_batch.md
+/50_finance/purchases/2026_02_27__eur_000033__bill__studio_parts_nozzle_and_inserts.md
+/50_finance/purchases/2026_03_25__eur_000089__bill__black_library_terrain_spool.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84s7lgc5j058p
+
+Score
+0.00
+
+Details
+(none)

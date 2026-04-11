@@ -1,0 +1,36 @@
+Decision after step 1:
+{
+  "next_action": "replan_remaining_steps",
+  "abort_reason": null,
+  "reasons_for_replan_remaining_steps": "Step 1 surfaced a governing workflow/schema and also a likely source-path mismatch in the completed-step summary: one requested doc appears under /30_knowledge/notes, while the other was referenced as /99_system/workflows/sending-email.md. Before any queue update, the remaining steps should re-validate the exact target queue location and the exact source paths in the workspace so the queue entries use the correct canonical files and required frontmatter format.",
+  "task_completed_reason": null,
+  "task_continue_reason": null
+}
+
+Decision after step 2:
+{
+  "next_action": "continue",
+  "abort_reason": null,
+  "reasons_for_replan_remaining_steps": null,
+  "task_completed_reason": null,
+  "task_continue_reason": "The canonical source docs and queue target have been validated, and the task is allowed. Next step is to map each document into the required queue-entry representation using the validated frontmatter rules, which follows the original plan without any new governing constraints."
+}
+
+Decision after step 3:
+{
+  "next_action": "continue",
+  "abort_reason": null,
+  "reasons_for_replan_remaining_steps": null,
+  "task_completed_reason": null,
+  "task_continue_reason": "The canonical source documents, queue target (vault2), and exact queue-frontmatter rules have already been validated and the two queue entries were prepared in the correct batch order. The remaining step is the expected application and verification of that prepared queue update, which follows the original plan without introducing new constraints."
+}
+
+Decision after step 4:
+{
+  "next_action": "task_completed",
+  "abort_reason": null,
+  "reasons_for_replan_remaining_steps": null,
+  "task_completed_reason": "The two requested documents were successfully queued for migration to NORA with the required frontmatter, correct batch timestamp, ordering, target, and preserved bodies. Verification confirmed both files match the workflow requirements and no additional steps remain.",
+  "task_continue_reason": null
+}
+

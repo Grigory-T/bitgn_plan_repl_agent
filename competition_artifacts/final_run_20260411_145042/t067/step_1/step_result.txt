@@ -1,0 +1,29 @@
+Inspected all relevant AGENTS.MD files and workflow/schema documents governing markdown migration and queueing. Confirmed constraints and located the four target documents at their actual workspace paths.
+
+Key migration constraints (from /99_system/workflows/migrating-to-nora-mcp.md and /99_system/schemas/bulk-processing-and-queueing-frontmatter.md):
+- Set `bulk_processing_workflow: nora_mcp` and `queue_target: vault2` on each file.
+- Capture one UTC timestamp for the entire batch and write the same RFC3339 `queue_batch_timestamp` (Z form) to every file.
+- Sort the four file paths alphanumerically and assign `queue_order_id` from 1 to 4 in that order.
+- `queue_state` must be `pending` when first queued.
+- This is a header-only migration step — do not alter note bodies.
+- If a file already has frontmatter, merge the migration marker into existing frontmatter (preserve unrelated fields). If no frontmatter, add new YAML frontmatter at top.
+- Preserve note body byte-for-byte. Do not rewrap, normalize headings, or clean up.
+- Keep the touched-file set exact — do not broaden to nearby notes.
+- If a requested file is missing or ambiguous, stop and ask for clarification.
+
+Other relevant constraints per area:
+- /30_knowledge/notes/AGENTS.MD: Notes should stay grounded in visible sources; prefer concise notes.
+- /50_finance/AGENTS.MD: Finance records are sensitive/auditable; preserve original note body; discover required frontmatter shape via 99_system/schemas/; do not infer authorization from casual chat.
+- /00_inbox/AGENTS.MD: Email-shaped inbox files use 99_system/workflows/processing-inbox-email.md; header is canonical for transport metadata.
+- /99_system/schemas/AGENTS.MD: Do not infer hidden fields. Shape rules belong in schemas.
+- /99_system/workflows/AGENTS.MD: Read migrating-to-nora-mcp.md for NORA MCP migration; read bulk-processing-and-queueing-frontmatter.md for exact queueing fields.
+
+Frontmatter status of the four target files:
+1. /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md — no YAML frontmatter
+2. /99_system/schemas/bulk-processing-and-queueing-frontmatter.md — HTML comment but no YAML frontmatter
+3. /99_system/schemas/finance-record-frontmatter.md — no YAML frontmatter
+4. /99_system/workflows/processing-inbox-email.md — HTML comment but no YAML frontmatter
+
+Alphanumeric sort order for queue_order_id assignment: /99_system/schemas/bulk-processing-and-queueing-frontmatter.md (1), /99_system/schemas/finance-record-frontmatter.md (2), /99_system/workflows/processing-inbox-email.md (3), /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md (4)
+
+Relevant files: /AGENTS.MD, /30_knowledge/AGENTS.MD, /30_knowledge/notes/AGENTS.MD, /50_finance/AGENTS.MD, /00_inbox/AGENTS.MD, /99_system/AGENTS.MD, /99_system/schemas/AGENTS.MD, /99_system/workflows/AGENTS.MD, /99_system/workflows/migrating-to-nora-mcp.md, /99_system/schemas/bulk-processing-and-queueing-frontmatter.md, /99_system/schemas/finance-record-frontmatter.md, /99_system/workflows/processing-inbox-email.md, /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md

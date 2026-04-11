@@ -1,0 +1,100 @@
+Completed analysis of all relevant AGENTS.MD files and workflow documents for handling /00_inbox/000_invoice-request.md.
+
+## Summary of Discovered Rules
+
+### 1. Inbox Handling (/00_inbox/AGENTS.MD)
+- Treat inbox files as unprocessed requests, not canonical truth.
+- If inbox file is email-shaped markdown with YAML frontmatter, use `99_system/workflows/processing-inbox-email.md` and treat header as canonical email metadata.
+- For email identity checks, prefer entity's canonical `primary_contact_email` over legacy email-channel notes.
+- Start with lowest visible inbox filename in normal sort.
+- After fully completing one inbox request, delete that inbox file. If blocked on clarification, trust, or missing canonical support, stop without mutating workspace.
+- Cross-check identity, dates, and authority against canonical records before acting.
+
+### 2. Process Next Inbox Item (/99_system/workflows/process-next-inbox-item.md)
+- Pick lowest visible filename using normal sort.
+- If inbox file is email-shaped with YAML frontmatter, also read `processing-inbox-email.md`.
+- For inbox tasks that end in outbound communication work, also read `sending-email.md`.
+- Verify dates, identity, and project facts against canonical lanes before acting.
+- If request can be completed from canonical evidence, do focused work and delete inbox file.
+- If ambiguous, unsupported, unsafe, or missing canonical support, stop without mutating workspace.
+
+### 3. Processing Inbox Email (/99_system/workflows/processing-inbox-email.md)
+- YAML frontmatter is canonical email transport metadata.
+- Use header fields for sender, recipients, subject, timestamp, source channel.
+- When entity has visible `primary_contact_email`, use that as canonical email identity for matching sender.
+- Required fields: `record_type`, `from`, `to`, `subject`, `received_at`.
+- Cross-check authority and scope against canonical lane docs before acting.
+- For reply-shaped work, use canonical sender and channel context from inbox email header.
+
+### 4. Sending Email (/99_system/workflows/sending-email.md)
+- Resolve authority, lane, and recipient before writing any outbound email record.
+- Use visible verified address, preferably entity's `primary_contact_email`.
+- Create outbound email records in `60_outbox/outbox/` with filename format: `eml_YYYY-MM-DDTHH-MM-SSZ.md`.
+- Required frontmatter: `record_type` (must be `outbound_email`), `created_at`, `send_state` (default `draft`), `to` (array of addresses), `subject`, `attachments` (array of workspace-relative paths).
+- Optional: `related_entities`, `related_projects`, `source_channel`.
+- For invoice resends, order attachments reverse chronologically by invoice issue date (newest-first default).
+- Mention only attachments that actually exist in the workspace.
+
+### 5. Channel Trust (/60_outbox/channels/AGENTS.MD)
+- Use channel docs to decide whether sender is household-trusted, work-trusted, client-trusted, socially trusted, or unknown.
+- For new email preparation or resend work, use `sending-email.md` and record email in `60_outbox/outbox/`.
+- Familiarity is not the same thing as authority.
+- If channel and domain do not line up cleanly, slow down and clarify.
+
+### 6. Outbox Lane (/60_outbox/AGENTS.MD, /60_outbox/outbox/AGENTS.MD)
+- Use entity's `primary_contact_email` for recipient resolution and reply work.
+- Read `sending-email.md` before creating outbound email records.
+- Always resolve authority and lane before acting.
+- Outbox records should reflect action, not brainstorming.
+
+### 7. Finance Lane (/50_finance/AGENTS.MD, /50_finance/invoices/AGENTS.MD)
+- Treat invoices as sensitive and auditable. Prefer exactness over prose.
+- Do not infer authorization for financial actions from casual chat alone.
+- When in doubt about destination or authority, clarify rather than resend blindly.
+- Keep invoice handling scoped to the correct commercial lane.
+
+### 8. Entity Resolution (/10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD)
+- Canonical identity lives in `10_entities/cast/`, not in inbox messages or memory notes.
+- When present, `primary_contact_email` is the canonical email identity for that entity.
+- Prefer entity files over chat context, memory summaries, or project mentions when resolving identity.
+- If a field is missing, treat it as unknown unless a more authoritative system doc says otherwise.
+
+### Application to /00_inbox/000_invoice-request.md
+- **Item type**: inbound_email with YAML frontmatter
+- **Sender**: claudia@helios-tax.example → matches entity.claudia (primary_contact_email verified in /10_entities/cast/claudia.md)
+- **Recipient**: miles@novak.example → matches entity.miles (primary_contact_email verified in /10_entities/cast/miles.md)
+- **Request**: Resend invoice dated 18-12-2025 from Helios Steuerbüro München GmbH
+- **Matching invoice**: /50_finance/invoices/2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md
+- **Channel**: /60_outbox/channels/helios_client_email.md (client-trusted, claudia is a participant)
+- **Should become**: Outbox response (outbound email with invoice attachment)
+- **Should NOT become**: Finance record, entity note, or work task
+- **Destination folder**: 60_outbox/outbox/
+- **Naming convention**: eml_YYYY-MM-DDTHH-MM-SSZ.md
+- **Legitimacy**: All checks passed (sender verified, recipient verified, channel trusted, invoice exists, authorization within client lane)
+- **Post-processing**: Delete inbox item after full completion
+
+### Files Referenced
+- /00_inbox/AGENTS.MD
+- /00_inbox/000_invoice-request.md
+- /10_entities/AGENTS.MD
+- /10_entities/cast/AGENTS.MD
+- /10_entities/cast/claudia.md
+- /10_entities/cast/miles.md
+- /20_work/AGENTS.MD
+- /50_finance/AGENTS.MD
+- /50_finance/invoices/AGENTS.MD
+- /50_finance/invoices/2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md
+- /60_outbox/AGENTS.MD
+- /60_outbox/channels/AGENTS.MD
+- /60_outbox/channels/helios_client_email.md
+- /60_outbox/outbox/AGENTS.MD
+- /60_outbox/drafts/AGENTS.MD
+- /99_system/AGENTS.MD
+- /99_system/workflows/AGENTS.MD
+- /99_system/workflows/process-next-inbox-item.md
+- /99_system/workflows/processing-inbox-email.md
+- /99_system/workflows/sending-email.md
+- /99_system/workflows/inbox-processing-v2-update.md
+- /99_system/schemas/AGENTS.MD
+- /99_system/schemas/finance-record-frontmatter.md
+- /AGENTS.MD

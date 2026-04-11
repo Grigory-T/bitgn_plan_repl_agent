@@ -1,0 +1,87 @@
+The task is allowed. Now I need to identify all direct mentions of the printer in project materials. Let me search for "printer" in the relevant directories: /40_projects, and potentially /50_finance and /30_knowledge.
+
+Let me also first check the entity files to understand what "the printer" refers to - it might be a named system in 10_entities/cast/.
+
+Let me search for "printer" across the workspace first, then read the relevant project README.MD files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have found several mentions of "printer" across the workspace. Let me also search for "Badger" (the named printer entity) in project files, since the printer is canonically named "Badger" according to the entity file.
+
+Let me also read the specific project README.MD files that mention "printer" to confirm the project names and get the exact evidence snippets.
+
+The project README.MD files that directly mention "printer" are:
+1. `/40_projects/2026_03_29_studio_parts_library/README.MD` - line 19
+2. `/40_projects/2026_04_03_toy_forge_saturdays/README.MD` - lines 11 and 18
+
+Let me also search for "Badger" in project files to see if the printer is referenced by name.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+So "Badger" (the printer) is directly mentioned in:
+1. `40_projects/2026_03_29_studio_parts_library/README.MD` - line 17: `entity.badger`
+2. `40_projects/2026_04_03_black_library_evenings/README.MD` - line 15: `entity.badger`
+3. `40_projects/2026_04_03_toy_forge_saturdays/README.MD` - line 16: `entity.badger`
+4. `40_projects/2026_04_06_family_map_wall/README.MD` - line 17: `entity.badger`
+
+And the word "printer" is directly mentioned in:
+1. `40_projects/2026_03_29_studio_parts_library/README.MD` - line 19
+2. `40_projects/2026_04_03_toy_forge_saturdays/README.MD` - lines 11 and 18
+
+So combining both "Badger" and "printer" mentions, the projects with direct evidence are:
+1. `2026_03_29_studio_parts_library` - entity.badger reference + "printer-adjacent" mention
+2. `2026_04_03_black_library_evenings` - entity.badger reference
+3. `40_projects/2026_04_03_toy_forge_saturdays` - entity.badger reference + "printer" mentions
+4. `40_projects/2026_04_06_family_map_wall` - entity.badger reference
+
+Let me also read the full README.MD files for these four projects to capture the complete evidence snippets, and also verify if any other project READMEs mention the printer/Badger that I might have missed.
+
+Actually, let me also search for "3D" as the printer might be referred to as a "3D printer":
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No additional "3D" matches in projects beyond what we already found. Let me also check the "printer" matches in projects more carefully, and look at the README.MD files that reference Badger to confirm the project names.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the evidence I need. Let me compile the results:
+
+1. **Studio Parts Library** (`/40_projects/2026_03_29_studio_parts_library/README.MD`) - has `entity.badger` in linked_entities, and mentions "printer-adjacent aspiration"
+
+2. **Black Library Evenings** (`/40_projects/2026_04_03_black_library_evenings/README.MD`) - has `entity.badger` in linked_entities
+
+3. **Toy Forge Saturdays** (`/40_projects/2026_04_03_toy_forge_saturdays/README.MD`) - has `entity.badger` in linked_entities, and mentions "the printer" in goal and summary
+
+4. **Family Map Wall** (`/40_projects/2026_04_06_family_map_wall/README.MD`) - has `entity.badger` in linked_entities
+
+Now, what are the "exact project names"? According to 40_projects/AGENTS.MD: "The canonical reference for each project is README.MD inside that project folder." and "Project folders use the project creation date as a YYYY_MM_DD_ prefix."
+
+The task asks for "exact project names". The project folder names are:
+- 2026_03_29_studio_parts_library
+- 2026_04_03_black_library_evenings
+- 2026_04_03_toy_forge_saturdays
+- 2026_04_06_family_map_wall
+
+But the README.MD files have titles like "# Studio Parts Library", "# Black Library Evenings", etc.
+
+The aliases in the README.MD files are: `studio_parts_library`, `black_library_evenings`, `toy_forge_saturdays`, `family_map_wall`
+
+I think the "exact project names" refer to the folder names since those are the canonical identifiers. Let me report the folder names as the project names since that's what 40_projects/AGENTS.MD says - "Project folders use the project creation date as a YYYY_MM_DD_ prefix" and these are the canonical references.
+
+Actually, looking at the global task: "Return only the exact project names, one per line, sorted alphabetically." This will be done in a later step. For this step, I need to output `candidate_project_names` and `printer_evidence`.
+
+For candidate_project_names, I should use the folder names (since those are the canonical project identifiers per the instructions).
+
+Let me compile the evidence and project names.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have gathered all the direct evidence of printer (Badger) involvement in projects. The evidence is based on:
+1. The printer's canonical entity is "badger" (confirmed from `/10_entities/cast/badger.md` where relationship is `printer`)
+2. Four project README.MD files directly reference `entity.badger` in their linked_entities
+3. Two of those projects also explicitly mention "printer" in their text
+
+Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

@@ -1,0 +1,100 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Prüfe zuerst die relevanten Anweisungen und Regeln, indem die Dateien /00_inbox/AGENTS.MD, /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD und /60_outbox/channels/AGENTS.MD gelesen und auf Vorgaben für das Bearbeiten von Nachrichten, Priorisierung, erlaubte Aktionen und Dokumentationspflichten analysiert werden. Zusätzlich die Sicherheits- und Zulässigkeitsfrage bewerten: Das Task-Ziel "Bearbeite die alteste Nachricht im Posteingang" ist nur dann auszuführen, wenn die gefundenen Regeln dies erlauben und keine Hinweise auf Sperren, Freigaben oder Sonderbehandlungen bestehen.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "Liste der geprüften Instruktionsdateipfade im Workspace.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Zusammenfassung der aus den Instruktionsdateien extrahierten verbindlichen Regeln für das Bearbeiten des Posteingangs.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolescher Wert, ob die Bearbeitung der ältesten Nachricht gemäß den Regeln zulässig ist.",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Wenn die Aufgabe zulässig ist, den Posteingang im Workspace anhand der relevanten Inbox-Dateien und zugehörigen Nachrichten oder Thread-Dokumente durchsuchen, die älteste Nachricht ausschließlich anhand direkter Fakten bestimmen und die genaue Datei bzw. Nachricht identifizieren. Dabei keine Schätzung verwenden; falls die älteste Nachricht nicht eindeutig ermittelbar ist, den Prozess abbrechen und die Unklarheit dokumentieren.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Zusammenfassung der aus den Instruktionsdateien extrahierten verbindlichen Regeln für das Bearbeiten des Posteingangs.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolescher Wert, ob die Bearbeitung der ältesten Nachricht gemäß den Regeln zulässig ist.",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "oldest_message_path",
+        "variable_description": "Exakter Workspace-Pfad zur ältesten Nachricht im Posteingang, sofern eindeutig ermittelt.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "oldest_message_summary",
+        "variable_description": "Kurze faktische Zusammenfassung der identifizierten ältesten Nachricht.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Bearbeite die identifizierte älteste Nachricht strikt gemäß den gefundenen Anweisungen, Regeln und dem vorgesehenen Arbeitsablauf. Die Bearbeitung soll nur die konkret erlaubten Änderungen vornehmen, die für die Nachricht vorgesehen sind, und dabei den betreffenden Workspace-Pfad direkt verwenden.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "oldest_message_path",
+        "variable_description": "Exakter Workspace-Pfad zur ältesten Nachricht im Posteingang, sofern eindeutig ermittelt.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "oldest_message_summary",
+        "variable_description": "Kurze faktische Zusammenfassung der identifizierten ältesten Nachricht.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Zusammenfassung der aus den Instruktionsdateien extrahierten verbindlichen Regeln für das Bearbeiten des Posteingangs.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "edit_result",
+        "variable_description": "Beschreibung des durchgeführten Bearbeitungsergebnisses für die älteste Nachricht.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Validiere abschließend, dass die Bearbeitung vollständig mit den Instruktionen übereinstimmt, dass nur die beabsichtigte Nachricht verändert wurde und dass das Ergebnis im Workspace konsistent ist. Falls die Instruktionen eine Rückmeldung oder Dokumentation verlangen, diese in den dafür vorgesehenen Dateien oder Kanälen erstellen; andernfalls nur den Abschlusszustand festhalten.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "edit_result",
+        "variable_description": "Beschreibung des durchgeführten Bearbeitungsergebnisses für die älteste Nachricht.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Zusammenfassung der aus den Instruktionsdateien extrahierten verbindlichen Regeln für das Bearbeiten des Posteingangs.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+
+Plan validation warnings:
+⚠️ Step 1 outputs 'instruction_files' (list[str]), but it's not used by any subsequent step.
+

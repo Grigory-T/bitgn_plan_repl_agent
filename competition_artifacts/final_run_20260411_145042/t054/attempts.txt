@@ -1,0 +1,5 @@
+Attempt 1
+Event: start_trial
+Details:
+trial_id=vm-03nmd84w0zsag82flv
+harness_url=https://vm-03nmd84w0zsag82flv.eu.bitgn.com

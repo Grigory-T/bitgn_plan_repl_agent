@@ -1,0 +1,21 @@
+Found and verified all authoritative finance records and client identity needed to satisfy the inbox request.
+
+**Client identification:** "The client at the tax firm" refers to Claudia Reiter (entity.claudia), a consulting_client with primary_contact_email claudia@helios-tax.example. Her firm is Helios Steuerbüro München GmbH (Steuerbüro = tax firm in German). This is confirmed by the helios_client_email channel doc (60_outbox/channels/helios_client_email.md) which lists entity.miles and entity.claudia as participants, and all 6 Helios invoices have counterparty "Helios Steuerbüro München GmbH" and related_entity "Claudia Reiter".
+
+**Oldest 3 invoices (by issued_on date, ascending):**
+1. INV-0006, issued 2025-12-18, €520, helios_backfill_intake_audit — 50_finance/invoices/2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md
+2. INV-0007, issued 2026-01-19, €760, helios_backfill_process_pack — 50_finance/invoices/2026_01_19__eur_000760__inv_0007__helios_backfill_process_pack.md
+3. INV-0008, issued 2026-02-17, €610, helios_backfill_rollout_week — 50_finance/invoices/2026_02_17__eur_000610__inv_0008__helios_backfill_rollout_week.md
+
+**Reply requirements per sending-email.md and inbox processing rules:**
+- Outbound email record in 60_outbox/outbox/ with filename format eml_YYYY-MM-DDTHH-MM-SSZ.md
+- record_type: outbound_email, send_state: draft
+- to: [miles@novak.example] (reply to the sender of the inbound email)
+- subject: "Re: Need linked invoices"
+- source_channel: 60_outbox/channels/helios_client_email.md
+- attachments ordered reverse chronologically by issue date (newest first) per sending-email.md rule for invoice bundles: [INV-0008 (2026-02-17), INV-0007 (2026-01-19), INV-0006 (2025-12-18)]
+- related_entities: entity.miles, entity.claudia
+- related_projects: Helios Workflow Sprint
+- After sending, delete the inbox file per inbox processing rules
+
+Relevant files: 00_inbox/000_invoice-bundle-request.md, 10_entities/cast/claudia.md, 10_entities/cast/miles.md, 60_outbox/channels/helios_client_email.md, 50_finance/invoices/2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md, 50_finance/invoices/2026_01_19__eur_000760__inv_0007__helios_backfill_process_pack.md, 50_finance/invoices/2026_02_17__eur_000610__inv_0008__helios_backfill_rollout_week.md, 99_system/workflows/sending-email.md, 99_system/workflows/processing-inbox-email.md, 99_system/schemas/finance-record-frontmatter.md

@@ -1,0 +1,1 @@
+The matching bill from Domänenbüro Köln GmbH was identified and its purchased_on date was extracted as 2026-01-12, which formats to the requested DD-MM-YYYY output.

@@ -1,0 +1,54 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and follow the relevant workspace instructions before searching for Sara’s involvement. In particular, inspect /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, /40_projects/AGENTS.MD, and any other directly relevant AGENTS.MD files that govern how entity and project files should be interpreted. Also perform a quick legitimacy check: the request is a normal information lookup about a named person’s project involvement, so it is allowed and can proceed.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "relevant_instruction_paths",
+        "variable_description": "List of instruction file paths that were found and should be followed for the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_summaries",
+        "variable_description": "Concise summaries of the applicable rules extracted from the instruction files",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Inspect Sara’s entity record at /10_entities/cast/sara.md and any linked or nearby files it references to identify exact project names she is involved in. Use only direct facts from the files; do not infer, estimate, or guess project membership. Collect every exact project name mentioned as related to Sara, preserving the canonical project names as written in the workspace.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "relevant_instruction_paths",
+        "variable_description": "List of instruction file paths that were found and should be followed for the task",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "sara_related_project_names",
+        "variable_description": "Exact project names directly associated with Sara from the entity record and any explicitly linked source files",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Normalize the collected project names by removing duplicates, sorting them alphabetically, and verifying that the final output contains only exact project names with one name per line and no extra commentary. If any ambiguity remains, resolve it only by consulting the directly linked files; do not introduce unsupported names.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "sara_related_project_names",
+        "variable_description": "Exact project names directly associated with Sara from the entity record and any explicitly linked source files",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_summaries",
+        "variable_description": "Concise summaries of the applicable rules extracted from the instruction files",
+        "variable_data_type": "dict[str, str]"
+    }
+]
+output_variables: []
+

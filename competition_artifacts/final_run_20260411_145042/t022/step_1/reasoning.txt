@@ -1,0 +1,18 @@
+Let me read the relevant AGENTS.MD files and the inbox item to understand the workflow rules and constraints.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I need to restructure my `relevant_instructions` dict to be more accurate and based on the actual content of the files I read. Let me re-read the key files to make sure I have the exact wording and then compile the dict properly.
+
+Let me re-read the critical files to ensure accuracy.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the content re-read and verified. Let me construct the accurate `relevant_instructions` dict based on the verbatim content of these files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, the `relevant_instructions` dict has been set. Now I need to finalize the step by setting `step_status` and `final_answer`.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

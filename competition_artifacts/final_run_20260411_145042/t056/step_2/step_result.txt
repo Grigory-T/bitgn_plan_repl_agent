@@ -1,0 +1,7 @@
+Identified 2 receipt note files containing the exact phrase '0.6 mm hardened nozzle' under /50_finance/purchases/, sorted alphabetically:
+1. 50_finance/purchases/2026_03_05__eur_000033__bill__studio_parts_nozzle_and_inserts.md
+2. 50_finance/purchases/2026_04_01__eur_000089__bill__black_library_terrain_spool.md
+
+Search was focused on the receipt-note area and matched only files with the exact phrase, per the deletion-and-wiping workflow rule to confirm the exact target set and not widen scope.
+
+Relevant files: 50_finance/purchases/2026_03_05__eur_000033__bill__studio_parts_nozzle_and_inserts.md, 50_finance/purchases/2026_04_01__eur_000089__bill__black_library_terrain_spool.md, 99_system/workflows/deletion-and-wiping.md, 50_finance/AGENTS.MD, 50_finance/purchases/AGENTS.MD

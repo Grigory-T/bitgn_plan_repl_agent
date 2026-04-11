@@ -1,0 +1,83 @@
+Now I need to determine the execution path. The task is to OCR two finance records - this means extracting data from their note bodies into YAML frontmatter. Let me read the OCR workflow and the schema to understand the exact execution path.
+
+From the previous steps, I already know:
+1. The task is legitimate, allowed, and sufficiently specified
+2. Two target files need frontmatter added
+3. Schema reference: 99_system/schemas/finance-record-frontmatter.md
+4. Workflow reference: 99_system/workflows/ocr-records.md
+
+Let me read the OCR workflow and schema to confirm the exact execution path and what files need to be inspected/modified.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the finance-record-frontmatter schema and the two target files to understand exactly what needs to be done.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a clear picture. The task is to OCR two finance records by extracting visible data from their note bodies into YAML frontmatter per the finance-record-frontmatter schema.
+
+The execution path is clear:
+- **Path**: Execute (carry out the OCR work directly on the two target files)
+- **Target files to modify**: The two finance record files
+- **Reference files to inspect**: The schema file and the two target files (to read their current content before modifying)
+
+Let me also quickly check the current content of both target files to understand what data needs to be extracted, and the inbox processing workflow to understand post-completion steps.
+
+Actually, for this step I just need to define the execution path and target paths. The actual reading and modification happens in the next step. So let me define:
+
+execution_path = {
+    'action': 'execute',
+    'description': 'Carry out OCR workflow on two finance records: extract visible data from note bodies into YAML frontmatter per finance-record-frontmatter.md schema, preserving original note bodies below the frontmatter.',
+    'post_completion': 'Delete /00_inbox/000_next-task.md per inbox processing v2 rules (remove inbox item after completing structured data extraction)'
+}
+
+target_paths = [
+    '50_finance/invoices/2026_01_12__eur_000760__inv_0007__helios_backfill_process_pack.md',
+    '50_finance/purchases/2026_02_07__eur_000105__bill__house_mesh_juniper_ssd.md',
+    '99_system/schemas/finance-record-frontmatter.md',
+    '00_inbox/000_next-task.md'
+]
+
+The schema file is needed as reference, and the inbox file will need to be deleted after completion.
+
+Let me verify this is right and set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, this file has no YAML frontmatter yet. Let me also check the bill file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Both target files exist, have no YAML frontmatter yet, and contain all required data in their note bodies. The task is clear and legitimate: add YAML frontmatter to each file per the finance-record-frontmatter schema, preserving the existing note body below.
+
+The execution path is:
+1. Read the two target finance record files (already done)
+2. Read the schema (already done)
+3. Add YAML frontmatter to each file per the schema
+4. After completion, delete the inbox file per inbox-processing-v2 rules
+
+So the execution path is "execute" — carry out the OCR workflow on the two target files.
+
+The target paths for the next step are:
+- 50_finance/invoices/2026_01_12__eur_000760__inv_0007__helios_backfill_process_pack.md (modify - add frontmatter)
+- 50_finance/purchases/2026_02_07__eur_000105__bill__house_mesh_juniper_ssd.md (modify - add frontmatter)
+- 00_inbox/000_next-task.md (delete after completion)
+
+I should also note the schema and workflow files as references.
+
+Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me make sure I've set all the required output variables properly. The required output variables are:
+- execution_path (dict)
+- target_paths (list[str])
+
+I've already set these in the previous code block. Let me verify and then finalize with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, the output variables are set. Now I need to finalize with step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

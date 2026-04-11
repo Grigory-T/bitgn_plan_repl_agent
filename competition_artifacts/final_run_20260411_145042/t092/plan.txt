@@ -1,0 +1,173 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and analyze the relevant instruction files before any action: /00_inbox/AGENTS.MD, /30_knowledge/AGENTS.MD, /30_knowledge/notes/AGENTS.MD, and any other directly relevant AGENTS.MD files governing the source and target locations for the requested docs. Confirm the task is allowed and identify the exact migration/queueing procedure for moving or staging documents into my NORA without inventing any missing rules. Also identify the exact source paths and any destination/queue path or naming convention required by the instructions.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "List of instruction file paths that were read and are relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "migration_rules",
+        "variable_description": "Directly observed rules and procedures for queueing documents for migration to NORA",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "target_queue_path",
+        "variable_description": "The exact filesystem path where docs must be queued for migration, if specified by instructions",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Verify the five requested documents exist at their exact paths in the workspace tree and resolve any ambiguity by mapping each filename to its full path. The requested documents are: /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md, /30_knowledge/notes/bulk-processing-and-queueing-frontmatter.md, /30_knowledge/notes/why-i-keep-coming-back-to-a-personal-assistant.md, /30_knowledge/notes/design-constraints-for-a-household-assistant.md, and /30_knowledge/notes/sending-email.md. Record only direct facts from the workspace.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "List of instruction file paths that were read and are relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "migration_rules",
+        "variable_description": "Directly observed rules and procedures for queueing documents for migration to NORA",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "target_queue_path",
+        "variable_description": "The exact filesystem path where docs must be queued for migration, if specified by instructions",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "docs_to_queue",
+        "variable_description": "List of exact full paths for the requested documents that were verified to exist",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Create the migration queue entries exactly as required by the instructions, using only the verified document paths and the specified queue location. If the instructions require a manifest, list, note, frontmatter update, or staging file, prepare that artifact with the five documents queued in the required format and stored at the exact target queue path. Do not perform any extra edits beyond what the instructions require.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "docs_to_queue",
+        "variable_description": "List of exact full paths for the requested documents that were verified to exist",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "migration_rules",
+        "variable_description": "Directly observed rules and procedures for queueing documents for migration to NORA",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "target_queue_path",
+        "variable_description": "The exact filesystem path where docs must be queued for migration, if specified by instructions",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "queue_artifact_path",
+        "variable_description": "Exact path to the created or updated queue artifact that stages the documents for migration",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Perform a final validation pass on the queue artifact to confirm it contains all five requested documents, uses the correct paths and format, and conforms to the discovered instructions for NORA migration queueing. If validation fails, record the issue directly from the file contents and do not guess a fix.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "queue_artifact_path",
+        "variable_description": "Exact path to the created or updated queue artifact that stages the documents for migration",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+
+Replan after step 1:
+
+--------------------------------------------------------------------------------
+Step 2: Verify the exact workspace locations of the five requested documents against the original task text, resolve the path discrepancy found in the completed analysis, and produce a confirmed list of only the valid documents to queue. Exclude any file that is not one of the requested docs, even if it appeared in prior analysis, and record the verified full paths for the five intended documents only.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "Paths to the governing instruction files already read in the completed step",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "migration_rules",
+        "variable_description": "Confirmed migration and queueing rules extracted from the instruction files",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "target_queue_path",
+        "variable_description": "Exact queue/staging path or naming convention discovered from the instructions",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "verified_docs_to_queue",
+        "variable_description": "Confirmed full workspace paths for the five requested documents, limited to actual requested docs only",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Using only the verified document paths and the discovered migration rules, create the required NORA queue artifact in the exact target queue location. Apply the prescribed queueing format only, and ensure the artifact stages exactly the five confirmed documents with no extra files or edits beyond what the instructions require.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "verified_docs_to_queue",
+        "variable_description": "Confirmed full workspace paths for the five requested documents, limited to actual requested docs only",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "migration_rules",
+        "variable_description": "Confirmed migration and queueing rules extracted from the instruction files",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "target_queue_path",
+        "variable_description": "Exact queue/staging path or naming convention discovered from the instructions",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "queue_artifact_path",
+        "variable_description": "Path to the created queue artifact containing the confirmed document list",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Perform a final validation pass on the queue artifact by reading its contents and confirming it includes all five verified documents, the correct paths, and the required migration format. If any discrepancy remains, capture the exact issue from the artifact contents rather than guessing a fix.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "queue_artifact_path",
+        "variable_description": "Path to the created queue artifact containing the confirmed document list",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "validation_result",
+        "variable_description": "Outcome of validating the queue artifact, including any exact discrepancy if found",
+        "variable_data_type": "str"
+    }
+]
+
+Plan validation warnings:
+⚠️ First step has input variables: instruction_paths, migration_rules, target_queue_path. First step should not require inputs.
+⚠️ Step 2 requires input 'migration_rules' (list[str]), but no previous step produces it.
+⚠️ Step 2 requires input 'target_queue_path' (str), but no previous step produces it.
+

@@ -1,0 +1,9 @@
+Successfully applied the NORA migration queue frontmatter to both requested documents and verified the results:
+
+1. `30_knowledge/notes/design-constraints-for-a-household-assistant.md` — Added new YAML frontmatter with: bulk_processing_workflow=nora_mcp, queue_batch_timestamp=2026-03-23T16:35:00Z, queue_order_id=1, queue_state=pending, queue_target=vault2. Body preserved intact starting with '# Design constraints for a household assistant'.
+
+2. `99_system/workflows/sending-email.md` — Added new YAML frontmatter with: bulk_processing_workflow=nora_mcp, queue_batch_timestamp=2026-03-23T16:35:00Z, queue_order_id=2, queue_state=pending, queue_target=vault2. Body preserved intact starting with the AICODE-NOTE comment.
+
+Verification confirmed: both files have exactly the 5 required frontmatter fields (bulk_processing_workflow, queue_batch_timestamp, queue_order_id, queue_state, queue_target), no extra fields, no missing fields, correct alphanumeric ordering (design-constraints path sorts before sending-email path → order_id 1 and 2), same batch timestamp, and body content preserved byte-for-byte.
+
+Relevant files: 30_knowledge/notes/design-constraints-for-a-household-assistant.md, 99_system/workflows/sending-email.md, 99_system/workflows/migrating-to-nora-mcp.md, 99_system/schemas/bulk-processing-and-queueing-frontmatter.md

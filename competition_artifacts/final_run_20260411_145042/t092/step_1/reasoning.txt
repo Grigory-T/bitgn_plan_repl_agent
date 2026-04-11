@@ -1,0 +1,254 @@
+Let me read the AGENTS.MD files that were explicitly mentioned, plus the root AGENTS.MD and any other relevant ones. Let me start with the ones specified in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the other AGENTS.MD files that are relevant.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the other AGENTS.MD files mentioned in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me read more relevant AGENTS.MD files, especially the root one and the 99_system one, as well as the migration workflow files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The key workflow doc is `migrating-to-nora-mcp.md` - it says "Read `migrating-to-nora-mcp.md` when a task asks you to mark existing notes for later migration into NORA MCP or vault2." This is exactly what we need. Let me read it, plus the bulk-processing schema.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a clear picture of the migration/queueing procedure. Let me also check the specific files that are to be migrated to understand their current state and verify their existence.
+
+The docs to be migrated are:
+1. what-i-want-help-with-and-what-stays-mine.md
+2. bulk-processing-and-queueing-frontmatter.md
+3. why-i-keep-coming-back-to-a-personal-assistant.md
+4. design-constraints-for-a-household-assistant.md
+5. sending-email.md
+
+Let me locate them in the workspace:
+1. `30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md` [193]
+2. `99_system/schemas/bulk-processing-and-queueing-frontmatter.md` [63]
+3. `30_knowledge/notes/why-i-keep-coming-back-to-a-personal-assistant.md` [78]
+4. `30_knowledge/notes/design-constraints-for-a-household-assistant.md` [175]
+5. `99_system/workflows/sending-email.md` [112]
+
+Let me verify these paths exist and read the first few lines of each to check for existing frontmatter.
+
+But wait - the current step only asks me to:
+1. Read and analyze the relevant instruction files before any action
+2. Confirm the task is allowed
+3. Identify the exact migration/queueing procedure
+4. Identify the exact source paths and any destination/queue path or naming convention
+
+It does NOT ask me to actually perform the migration. Let me summarize what I've found.
+
+Now let me identify the exact source paths. I need to find the exact paths for all 5 files. Let me search for them.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the exact source paths. Let me also quickly check the first few lines of each doc to understand whether they have existing YAML frontmatter, as the workflow requires me to know this for the next step.
+
+But wait - the current step only asks me to:
+1. Read and analyze the relevant instruction files
+2. Confirm the task is allowed
+3. Identify the exact migration/queueing procedure
+4. Identify the exact source paths and any destination/queue path or naming convention
+
+Let me summarize what I've found:
+
+**Instruction files read:**
+- `/AGENTS.MD` (root)
+- `/00_inbox/AGENTS.MD`
+- `/30_knowledge/AGENTS.MD`
+- `/30_knowledge/notes/AGENTS.MD`
+- `/99_system/AGENTS.MD`
+- `/99_system/schemas/AGENTS.MD`
+- `/99_system/workflows/AGENTS.MD`
+- `/99_system/workflows/migrating-to-nora-mcp.md`
+- `/99_system/schemas/bulk-processing-and-queueing-frontmatter.md`
+
+**Task confirmation:**
+The task asks to "queue up these docs for migration to my NORA". The workflow `migrating-to-nora-mcp.md` explicitly governs this: "Use this workflow when a task asks you to mark existing notes for later migration into the NORA MCP vault." So the task is allowed.
+
+**Migration/Queueing procedure:**
+From `migrating-to-nora-mcp.md`:
+1. Discover the exact migration marker shape under `../schemas/` (which is `bulk-processing-and-queueing-frontmatter.md`)
+2. Set `bulk_processing_workflow: nora_mcp`
+3. Set `queue_target: vault2`
+4. Treat the requested file set as one migration batch
+5. Capture current UTC timestamp once for the batch, write same RFC3339 `queue_batch_timestamp` to every touched file (Z form like `2026-04-10T14:37:12Z`)
+6. Sort requested file paths alphanumerically and assign `queue_order_id` from 1 through N
+7. Header-only migration step (unless task explicitly asks for body cleanup)
+8. Inspect only enough of each file to determine if YAML frontmatter exists and if NORA MCP marker is already present/correct
+9. If correct marker already exists, leave unchanged
+10. If frontmatter exists, merge migration marker into existing frontmatter
+11. If no frontmatter, add as new YAML frontmatter at top
+12. Preserve note body byte-for-byte
+13. Keep touched-file set exact - don't broaden
+14. If one requested file is missing or ambiguous, stop and ask
+
+From `bulk-processing-and-queueing-frontmatter.md`:
+- Required fields: `bulk_processing_workflow`, `queue_batch_timestamp`, `queue_order_id`, `queue_state`, `queue_target`
+- `queue_state` must be `pending` when first queued
+- Field order not semantically important but keep diff small
+- Preserve unrelated existing frontmatter fields
+- Don't add extra migration fields unless task/schema requires
+
+**Exact source paths (sorted alphanumerically for queue_order_id):**
+1. `30_knowledge/notes/design-constraints-for-a-household-assistant.md`
+2. `30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md`
+3. `30_knowledge/notes/why-i-keep-coming-back-to-a-personal-assistant.md`
+4. `99_system/schemas/bulk-processing-and-queueing-frontmatter.md`
+5. `99_system/workflows/sending-email.md`
+
+**Target queue path:**
+The migration is a header-only operation - the docs stay in place and are marked with frontmatter for later processing. There is no separate "queue directory" - the queueing is done by adding YAML frontmatter markers to the existing files. The `queue_target` is `vault2`. There's no separate destination filesystem path; the queueing is metadata-only.
+
+Wait, let me re-read the task more carefully. The task says "Queue up these docs for migration to my NORA". Looking at the workflow, NORA MCP is the migration target. The procedure is to add frontmatter markers to the files in place - there's no move/copy to a separate queue directory.
+
+So the "target queue path" is not a separate directory. The queueing is done in-place by adding YAML frontmatter to the source files. The `queue_target` value is `vault2`.
+
+Actually, I need to check - is there a `10_entities/cast/nora.md` that might be relevant? Let me also check if there's a specific NORA entity or something that defines what NORA is, since the task says "my NORA".
+
+But for the current step, I think I have all the information needed. Let me compile my findings.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a complete picture. Let me also read the existing frontmatter of the five files to understand their current state, but that's not required for the current step. The current step is about reading and analyzing instruction files, confirming the task is allowed, and identifying the migration/queueing procedure and paths.
+
+Let me summarize what I've found:
+
+1. **Instruction files read and relevant:**
+   - `/AGENTS.MD` (root)
+   - `/00_inbox/AGENTS.MD`
+   - `/30_knowledge/AGENTS.MD`
+   - `/30_knowledge/notes/AGENTS.MD`
+   - `/99_system/AGENTS.MD`
+   - `/99_system/schemas/AGENTS.MD`
+   - `/99_system/workflows/AGENTS.MD`
+   - `/99_system/workflows/migrating-to-nora-mcp.md`
+   - `/99_system/schemas/bulk-processing-and-queueing-frontmatter.md`
+
+2. **Migration rules (directly observed):**
+   From `/99_system/workflows/migrating-to-nora-mcp.md`:
+   - Use this workflow when a task asks you to mark existing notes for later migration into the NORA MCP vault
+   - Discover the exact migration marker shape under `../schemas/` before editing
+   - Read `../schemas/bulk-processing-and-queueing-frontmatter.md` for the exact required fields
+   - For this workflow, set:
+     - `bulk_processing_workflow: nora_mcp`
+     - `queue_target: vault2`
+   - Treat the requested file set as one migration batch, even if it contains only one file:
+     - capture the current UTC timestamp once for the batch and write that same RFC3339 `queue_batch_timestamp` to every touched file, using the `Z` form like `2026-04-10T14:37:12Z`
+     - sort the requested file paths alphanumerically and assign `queue_order_id` from `1` through `N` in that order
+   - Treat this as a header-only migration step unless the task explicitly asks for body cleanup too
+   - Inspect only enough of each requested file to determine whether YAML frontmatter already exists and whether the NORA MCP marker is already present and correct
+   - If a requested file already carries the correct marker, leave it unchanged
+   - If a requested file has frontmatter, merge the migration marker into the existing frontmatter instead of replacing unrelated fields
+   - If a requested file has no frontmatter, add the migration marker as new YAML frontmatter at the top of the existing file
+   - Preserve the note body below the frontmatter byte-for-byte
+   - Keep the touched-file set exact. Do not broaden the migration to nearby notes that were not named in the task
+   - If one requested file is missing or ambiguous, stop and ask for clarification
+
+   From `/99_system/schemas/bulk-processing-and-queueing-frontmatter.md`:
+   - Required fields: `bulk_processing_workflow`, `queue_batch_timestamp`, `queue_order_id`, `queue_state`, `queue_target`
+   - `queue_state` must be `pending` when first placed into the queue
+   - `queue_order_id` must be the note's integer position after sorting the batch's file paths alphanumerically
+   - Preserve unrelated existing frontmatter fields
+   - Do not add extra migration fields unless explicitly required
+
+3. **Target queue path:** The migration procedure is NOT about moving files to a new filesystem path. It's about adding YAML frontmatter markers to the existing files in place. There's no separate "queue directory" - the queuing is done by adding frontmatter markers to the source files themselves. The `queue_target` is `vault2` (the NORA MCP destination).
+
+Wait, but the output variable asks for `target_queue_path (str): The exact filesystem path where docs must be queued for migration, if specified by instructions`. Since the instructions don't specify moving files to a different path, but rather adding frontmatter markers to existing files, I should note that there's no separate queue path - files stay in place and are marked with frontmatter. But I should express this clearly.
+
+Actually, looking more carefully - the procedure is to add frontmatter markers to the source files in place. There's no separate "queue path" where files need to be moved. The queueing is conceptual (via frontmatter markers), not physical (via file movement). So the target_queue_path might be N/A or I should state that files remain in their source locations and are marked in-place.
+
+Let me also confirm the sorted order of the source paths:
+
+The five files sorted alphanumerically:
+1. `30_knowledge/notes/design-constraints-for-a-household-assistant.md`
+2. `30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md`
+3. `30_knowledge/notes/why-i-keep-coming-back-to-a-personal-assistant.md`
+4. `99_system/schemas/bulk-processing-and-queueing-frontmatter.md`
+5. `99_system/workflows/sending-email.md`
+
+So queue_order_id would be 1-5 in that order.
+
+Now let me compile my findings.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed. Let me compile the findings:
+
+**Instruction files read and relevant:**
+1. `/00_inbox/AGENTS.MD` - governs inbox processing
+2. `/30_knowledge/AGENTS.MD` - governs knowledge lane
+3. `/30_knowledge/notes/AGENTS.MD` - governs notes subfolder
+4. `/AGENTS.MD` (root) - general workspace rules, including migration guidance
+5. `/99_system/AGENTS.MD` - system lane rules
+6. `/99_system/schemas/AGENTS.MD` - schema lane rules
+7. `/99_system/workflows/AGENTS.MD` - workflow lane rules, explicitly says "Read `migrating-to-nora-mcp.md` when a task asks you to mark existing notes for later migration into NORA MCP or vault2."
+8. `/99_system/workflows/migrating-to-nora-mcp.md` - the main workflow for migrating to NORA MCP
+9. `/99_system/schemas/bulk-processing-and-queueing-frontmatter.md` - the schema for the queueing frontmatter marker
+
+**Migration rules and procedures:**
+
+From `/99_system/workflows/migrating-to-nora-mcp.md`:
+1. Discover the exact migration marker shape under `../schemas/` before editing.
+2. Read `../schemas/bulk-processing-and-queueing-frontmatter.md` for the exact required fields.
+3. Set `bulk_processing_workflow: nora_mcp`
+4. Set `queue_target: vault2`
+5. Treat the requested file set as one migration batch.
+6. Capture the current UTC timestamp once for the batch and write that same RFC3339 `queue_batch_timestamp` to every touched file, using the `Z` form like `2026-04-10T14:37:12Z`
+7. Sort the requested file paths alphanumerically and assign `queue_order_id` from `1` through `N` in that order
+8. Treat this as a header-only migration step unless the task explicitly asks for body cleanup too.
+9. Inspect only enough of each requested file to determine whether YAML frontmatter already exists and whether the NORA MCP marker is already present and correct.
+10. If a requested file already carries the correct marker, leave it unchanged.
+11. If a requested file has frontmatter, merge the migration marker into the existing frontmatter instead of replacing unrelated fields.
+12. If a requested file has no frontmatter, add the migration marker as new YAML frontmatter at the top of the existing file.
+13. Preserve the note body below the frontmatter byte-for-byte.
+14. Keep the touched-file set exact. Do not broaden the migration to nearby notes that were not named in the task.
+15. If one requested file is missing or ambiguous, stop and ask for clarification instead of inventing partial migration state.
+
+From `/99_system/schemas/bulk-processing-and-queueing-frontmatter.md`:
+- Required fields: `bulk_processing_workflow`, `queue_batch_timestamp`, `queue_order_id`, `queue_state`, `queue_target`
+- `queue_state` must be `pending` when a note is first placed into the queue
+- `queue_order_id` is computed after sorting the batch's file paths alphanumerically
+- Preserve unrelated existing frontmatter fields
+- Do not add extra migration fields unless the task or another schema explicitly requires them
+
+**Target queue path:**
+The workflow does NOT specify moving files to a separate queue path/directory. Instead, the queueing is done by adding YAML frontmatter markers to the files in their current locations. The "queue" is virtual - implemented through frontmatter metadata on the files themselves. There is no separate staging directory mentioned.
+
+So `target_queue_path` is essentially the files themselves - there is no separate queue directory. The migration is a header-only operation that marks files in-place.
+
+Wait, but the question asks for "The exact filesystem path where docs must be queued for migration, if specified by instructions". The instructions don't specify moving files to a different location - the queueing is done in-place by adding frontmatter. So the target is the files' current locations, not a separate queue path. I should report this as the fact that there is no separate queue path - files are queued in-place via frontmatter markers.
+
+Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me review what I've found and make sure all output variables are correctly set before finalizing.
+
+The task asked me to:
+1. Read and analyze relevant instruction files
+2. Confirm the task is allowed
+3. Identify the exact migration/queueing procedure
+4. Identify exact source paths and destination/queue path
+
+I've done all of this. Let me set the output variables properly.
+
+Key findings:
+- instruction_paths: The AGENTS.MD files and the two key workflow/schema docs
+- migration_rules: The rules from migrating-to-nora-mcp.md and bulk-processing-and-queueing-frontmatter.md
+- target_queue_path: There is no separate queue directory - queueing is in-place via frontmatter markers. I should represent this clearly.
+
+Let me set the variables in one block, then finalize in another.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to finalize the step with the two required variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

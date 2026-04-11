@@ -1,0 +1,1 @@
+The matching bill file for 深圳市海云电子 issued around Dec 2–5, 2025 is '50_finance/purchases/2025_12_04__eur_000044__bill__house_mesh_esp32_order.md' (purchased_on: 2025-12-04, counterparty: 深圳市海云电子). The exact line count of this file is 33. References: 50_finance/purchases/2025_12_04__eur_000044__bill__house_mesh_esp32_order.md, 50_finance/purchases/AGENTS.MD, 50_finance/AGENTS.MD

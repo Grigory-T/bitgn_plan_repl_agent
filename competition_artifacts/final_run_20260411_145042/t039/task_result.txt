@@ -1,0 +1,55 @@
+Task ID
+t039
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84v1jsm50dyku
+
+Task
+Work the oldest inbox message.
+
+BitGN Harness URL
+https://vm-03nmd84v1jsm50dyku.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+5m 22s
+
+Agent Result
+The oldest inbox message has already been processed successfully: the target finance record was updated with OCR frontmatter, supporting facts were cross-checked against the referenced entity/project files, and the inbox message was deleted per instructions.
+
+Final Response
+The oldest inbox message has been processed successfully, the finance record was updated with OCR frontmatter, supporting facts were cross-checked, and the inbox message was deleted.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/00_inbox/AGENTS.MD
+/AGENTS.MD
+/99_system/workflows/process-next-inbox-item.md
+/99_system/workflows/processing-inbox-email.md
+/99_system/workflows/inbox-processing-v2-update.md
+/99_system/workflows/ocr-records.md
+/99_system/AGENTS.MD
+/99_system/schemas/AGENTS.MD
+/99_system/schemas/finance-record-frontmatter.md
+/99_system/workflows/sending-email.md
+/00_inbox/000_next-task.md
+/10_entities/cast/claudia.md
+/40_projects/2026_04_30_helios_workflow_sprint/README.MD
+50_finance/invoices/2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84v1jsm50dyku
+
+Score
+0.00
+
+Details
+(none)

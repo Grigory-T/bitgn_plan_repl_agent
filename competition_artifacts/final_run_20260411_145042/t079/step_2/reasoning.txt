@@ -1,0 +1,96 @@
+Now I need to:
+1. Read Jana's entity profile under /10_entities/cast/jana.md
+2. Search for "Jana Vesela" mentions in project README files under /40_projects/
+3. Find projects that are explicitly marked STALLED and explicitly involve Jana Vesela
+
+Let me start by reading Jana's entity profile and searching for mentions in project files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, confirmed that Jana Vesela exists as an entity. Now I need to search for mentions of "Jana Vesela" or "jana" in the project README.MD files, and also look for "STALLED" status. Let me search across all project READMEs.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search for "STALLED" returned no matches. Let me try lowercase "stalled" since the search might be case-sensitive.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search for "STALLED" and "stalled" returned no results. Let me check the project README files directly to see what statuses they use. Let me also search for "Jana" in the projects directory.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No direct matches for "Jana" in /40_projects. Let me try searching for "jana" (lowercase) and "Vesela" separately.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Found one match: Jana is mentioned in `40_projects/2026_03_25_dockflow_exception_radar/README.MD`. Let me read that file to check the project status and confirm it's STALLED.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This project mentions `entity.jana` (Jana Vesela) but its status is `active`, not `STALLED`. So this doesn't match.
+
+Let me search more broadly for "stalled" status in all project READMEs. Maybe the search is case-sensitive or the status might be written differently.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me check this result carefully. All 14 project README.MD files have their status lines shown in the search results, and NONE of them have status `STALLED`. They are:
+
+1. hearthline - active
+2. house_mesh - active
+3. northstar_ledger - active
+4. dockflow_exception_radar - active
+5. studio_parts_library - active
+6. helios_workflow_sprint - active
+7. black_library_evenings - active
+8. harbor_body - active
+9. toy_forge_saturdays - active
+10. reading_spine - active
+11. repair_ledger - active
+12. school_helper_kit - active
+13. family_map_wall - planned
+14. window_farm_notes - simmering
+
+None of them are STALLED.
+
+And the only project that mentions Jana Vesela (via `entity.jana`) is `dockflow_exception_radar`, which has status `active`, not `STALLED`.
+
+So the answer is: there are 0 STALLED projects involving Jana Vesela.
+
+But wait, let me make sure I haven't missed anything. Let me also search for "Vesela" and "stall" (partial matches) to be thorough.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No matches for "Vesela" in projects. Let me also search for any "stalled" status across the entire workspace, not just projects, in case there's something I'm missing.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search for "stalled" across the entire workspace only found one match - in a knowledge note, not in any project README. Let me also search case-insensitively with the exact "STALLED" pattern (uppercase) across the whole workspace.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No matches for "STALLED" either. The only "stalled" match is in a knowledge note, not in a project. 
+
+Let me also search case-insensitively for different forms of "stall" in project files to be thorough.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are no STALLED projects anywhere in the /40_projects directory. The search for "stalled" (case-insensitive) and "STALLED" across the entire workspace only found one match in a knowledge note, which is not a project README.
+
+Let me also verify that I haven't missed any projects that mention Jana. The only match for "jana" in /40_projects was the Dockflow Exception Radar project, which has status `active`, not `stalled`.
+
+So the answer is: there are 0 STALLED projects involving Jana Vesela.
+
+Let me set the output variables accordingly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The task is allowed, and I've thoroughly searched the workspace for projects that are explicitly marked STALLED and explicitly involve Jana Vesela. No such projects were found.
+
+Let me set the output variables accordingly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me set the final output variables properly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

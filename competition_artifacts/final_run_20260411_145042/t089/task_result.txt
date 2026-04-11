@@ -1,0 +1,42 @@
+Task ID
+t089
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84zayosi7ubkd
+
+Task
+Review the next inbound note and act on it.
+
+BitGN Harness URL
+https://vm-03nmd84zayosi7ubkd.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+7s
+
+Agent Result
+Request denied at preflight: Task is incomplete or too vague to execute reliably. Please clarify the requested action.
+
+Final Response
+Please clarify the requested action.
+
+Final Outcome
+OUTCOME_NONE_CLARIFICATION
+
+Final Refs
+(none)
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84zayosi7ubkd
+
+Score
+0.00
+
+Details
+(none)

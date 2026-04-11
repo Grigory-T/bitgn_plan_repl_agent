@@ -1,0 +1,53 @@
+Now let me look at the purchases files. The date window is 2025-12-02 through 2025-12-05. Looking at the file listing, I see:
+
+- `2025_12_04__eur_000044__bill__house_mesh_esp32_order.md` - This is dated 2025-12-04, which falls within the window.
+
+Let me read this file to check if it mentions `深圳市海云电子` as the vendor.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I found the bill. Let me verify:
+- Vendor: 深圳市海云电子 ✓
+- Date: 2025-12-04 (within the window 2025-12-02 to 2025-12-05) ✓
+
+Now let me also search for any other files that might match the vendor name in the purchases directory, just to be thorough.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There's a second file that also references 深圳市海云电子: `2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md`. But the date is 2026-03-06, which is well outside the 2025-12-02 to 2025-12-05 window. Let me read it to confirm the date.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The second file has `purchased_on: 2026-03-06`, which is outside the date window of 2025-12-02 through 2025-12-05. So this is not a candidate.
+
+Now let me assess legitimacy and set the output variables.
+
+**Legitimacy assessment:**
+- The request asks for the line count of a bill from a specific vendor (深圳市海云电子) issued around a specific date range (Dec 2-5, 2025).
+- This is a factual lookup of financial records, not a financial action (like modifying, deleting, or authorizing payments).
+- The finance instructions say "Treat invoices, purchases, and payment-adjacent records as sensitive and auditable" and "Prefer exactness over prose" and "Do not infer authorization for financial actions from casual chat alone."
+- This is a read-only factual query (line count), not a financial action. Reading/counting lines is a legitimate audit/information request.
+- The purchase instructions don't prohibit reading records.
+- There are no authorization concerns for a simple read/lookup operation.
+
+The only candidate bill that matches both the vendor (深圳市海云电子) AND the date window (2025-12-02 to 2025-12-05) is:
+- `/50_finance/purchases/2025_12_04__eur_000044__bill__house_mesh_esp32_order.md` with `purchased_on: 2025-12-04` and `counterparty: 深圳市海云电子`
+
+Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The step is complete. I've:
+
+1. Assessed legitimacy: The request is a read-only factual lookup (counting lines of a bill). Finance instructions require "exactness over prose" and treat records as "sensitive and auditable," but reading/counting is a legitimate audit operation. The request is allowed.
+
+2. Searched `/50_finance/purchases/` for bills matching vendor `深圳市海云电子` and date window 2025-12-02 through 2025-12-05.
+
+3. Found only one matching bill: `50_finance/purchases/2025_12_04__eur_000044__bill__house_mesh_esp32_order.md` with purchased_on=2025-12-04 and counterparty=深圳市海云电子.
+
+4. Confirmed the date and vendor from the bill content.
+
+5. Set the required output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

@@ -1,0 +1,287 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: 读取并分析与收件箱处理相关的指令文件，至少包括 00_inbox/AGENTS.MD，以及与可能会被更新的目标区域相关的指令文件（例如 20_work/AGENTS.MD、20_work/tasks/AGENTS.MD、30_knowledge/AGENTS.MD、60_outbox/channels/AGENTS.MD，若下一条消息要求写入其他区域则同时读取对应目录下的 AGENTS.MD）。提取并整理所有适用于‘处理收件箱中的下一条消息’的规则、限制和产出格式要求，确保后续处理严格遵守这些文件中的原文含义。
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "已找到并需要遵守的相关指令文件路径列表",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_rules",
+        "variable_description": "从指令文件中整理出的、与处理收件箱消息相关的规则与约束",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: 打开 00_inbox/374_next-task.md，读取收件箱中的下一条消息原文，并识别其中的明确请求、涉及的对象、目标目录或文件、以及是否存在需要先澄清的歧义或冲突。仅依据文件中的直接事实，不做估计或补全。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "已找到并需要遵守的相关指令文件路径列表",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_rules",
+        "variable_description": "从指令文件中整理出的、与处理收件箱消息相关的规则与约束",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "inbox_message_text",
+        "variable_description": "收件箱下一条消息的原文内容",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "message_intent",
+        "variable_description": "对消息明确意图的简要结构化总结",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "message_requires_clarification",
+        "variable_description": "该消息是否存在必须先澄清的问题",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: 基于已读指令与消息内容，判断该请求是否在规则内、是否可以直接执行、或是否需要先请求澄清/拒绝。若消息合法且明确，则确定下一步应创建、更新、移动或回复的具体工作路径；若存在歧义，则准备澄清问题而不擅自处理。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_rules",
+        "variable_description": "从指令文件中整理出的、与处理收件箱消息相关的规则与约束",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "inbox_message_text",
+        "variable_description": "收件箱下一条消息的原文内容",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "message_intent",
+        "variable_description": "对消息明确意图的简要结构化总结",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "message_requires_clarification",
+        "variable_description": "该消息是否存在必须先澄清的问题",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "action_decision",
+        "variable_description": "对该消息的处理决策，例如直接执行、先澄清、或拒绝",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "target_paths",
+        "variable_description": "与处理该消息相关的目标路径列表",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: 制定具体执行方案：如果 action_decision 表示直接执行，则列出要对哪些文件做何种修改、需要创建哪些产物，以及输出到哪个工作或外发位置；如果 action_decision 表示先澄清，则列出需要向用户确认的问题；如果 action_decision 表示拒绝，则列出拒绝原因与依据。所有内容必须可直接执行，并严格匹配相关指令文件。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "action_decision",
+        "variable_description": "对该消息的处理决策，例如直接执行、先澄清、或拒绝",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "target_paths",
+        "variable_description": "与处理该消息相关的目标路径列表",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_rules",
+        "variable_description": "从指令文件中整理出的、与处理收件箱消息相关的规则与约束",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "execution_plan",
+        "variable_description": "可执行的具体处理方案或澄清方案",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: 将最终计划整理为面向代理执行的简洁步骤清单，确保每一步都对应到真实路径与真实产物，并且不包含任何未经文件支持的假设。若需要后续执行，这份计划应足以驱动实际文件操作；若需要澄清或拒绝，这份计划应足以生成对应回复。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "execution_plan",
+        "variable_description": "可执行的具体处理方案或澄清方案",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "action_decision",
+        "variable_description": "对该消息的处理决策，例如直接执行、先澄清、或拒绝",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+
+Replan after step 2:
+
+--------------------------------------------------------------------------------
+Step 3: 基于已读规则与消息内容，判断当前收件箱项应采取的处置路径：如果第二个请求中的‘银行转账完成’无法从现有工作区事实中验证，则将任务判定为需要澄清而不是直接执行；同时确认该项不应擅自更新财务记录或发送完成通知。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_rules",
+        "variable_description": "已提取的与收件箱处理、财务、出站通信相关的规则集合",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "inbox_message_text",
+        "variable_description": "收件箱下一条消息的原文内容",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "message_intent",
+        "variable_description": "对收件箱消息明确请求的归纳",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "message_requires_clarification",
+        "variable_description": "消息是否存在需要先澄清的歧义或无法直接执行之处",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "action_decision",
+        "variable_description": "对该收件箱项的处置决定，例如 needs_clarification / direct_execute / reject",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "target_paths",
+        "variable_description": "与该决定相关的真实文件或目录路径列表",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: 根据处置决定生成可执行方案：若为 needs_clarification，则仅准备一条澄清问题，明确要求对方指定要确认的转账、付款来源或可验证完成的证据；若为 direct_execute，则列出要修改或创建的具体文件；若为 reject，则列出拒绝原因和依据。方案不得包含任何缺少文件支持的假设。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "action_decision",
+        "variable_description": "对该收件箱项的处置决定",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "target_paths",
+        "variable_description": "与该决定相关的真实文件或目录路径列表",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_rules",
+        "variable_description": "已提取的与收件箱处理、财务、出站通信相关的规则集合",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "execution_plan",
+        "variable_description": "可直接交由后续执行的步骤清单或澄清问题清单",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: 将最终处置整理为面向代理执行的简洁步骤清单：如果需要澄清，则输出可用于回复收件箱的单一澄清请求；如果可直接执行，则输出真实文件操作顺序；如果拒绝，则输出拒绝回复的简洁要点。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "execution_plan",
+        "variable_description": "可直接交由后续执行的步骤清单或澄清问题清单",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "action_decision",
+        "variable_description": "对该收件箱项的处置决定",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "final_plan",
+        "variable_description": "最终可执行或可回复的简洁计划文本",
+        "variable_data_type": "str"
+    }
+]
+
+Plan validation warnings:
+⚠️ First step has input variables: instruction_rules, inbox_message_text, message_intent, message_requires_clarification. First step should not require inputs.
+⚠️ Step 2 requires input 'instruction_rules' (list[str]), but no previous step produces it.
+
+Replan after step 3:
+
+--------------------------------------------------------------------------------
+Step 4: Draft a single clarification request that asks the sender to specify which bank transfer they mean, how completion should be verified, and how they should be identified/reached, while referencing the matched Düsenschmiede München bill only as context. Do not propose any workspace mutations, financial updates, or completion notification actions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "action_decision",
+        "variable_description": "Disposition decision from the completed analysis, expected to indicate that clarification is needed.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "target_paths",
+        "variable_description": "Relevant file path(s) identified for the matched finance record and related context.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "inbox_message_text",
+        "variable_description": "Original inbox message text read from 00_inbox/374_next-task.md.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "clarification_request",
+        "variable_description": "A concise clarification message suitable for replying to the inbox item.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: Convert the clarification request into the final execution-ready response for this inbox item, ensuring it clearly reflects the blocked/needs-clarification disposition and remains concise.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "clarification_request",
+        "variable_description": "The drafted clarification message to be sent or recorded as the response to the inbox item.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "action_decision",
+        "variable_description": "Disposition decision confirming the task requires clarification.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "final_plan",
+        "variable_description": "Final concise plan or response text for handling the inbox item.",
+        "variable_data_type": "str"
+    }
+]
+
+Plan validation warnings:
+⚠️ First step has input variables: action_decision, target_paths, inbox_message_text. First step should not require inputs.
+⚠️ Step 2 requires input 'action_decision' (str), but no previous step produces it.
+

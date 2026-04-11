@@ -1,0 +1,82 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and comply with the relevant workspace instructions by opening the instruction files at /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, and any other directly relevant AGENTS.MD files needed to locate the walking buddy entity and the rule for identifying birthday information. Also assess whether the request is legitimate and allowed before proceeding.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean indicating whether the task is allowed to proceed under the discovered instructions and safety logic",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If task_allowed is true, inspect the cast entity files under /10_entities/cast/ and any linked notes or knowledge files referenced by the instructions to identify which person is the requester’s walking buddy and extract the birthday directly from the relevant file content, without using estimates or external sources.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Boolean indicating whether the task is allowed to proceed under the discovered instructions and safety logic",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "walking_buddy_name",
+        "variable_description": "The identified walking buddy's name as found in workspace files",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "birthday_date",
+        "variable_description": "The walking buddy's birthday as directly recorded in workspace files",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Verify the birthday date is explicitly present and parseable as a calendar date, then format it exactly as MM/DD/YYYY for the final response. Do not infer or approximate any missing components; if the date is not explicitly available, stop and request clarification per instructions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "walking_buddy_name",
+        "variable_description": "The identified walking buddy's name as found in workspace files",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "birthday_date",
+        "variable_description": "The walking buddy's birthday as directly recorded in workspace files",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "formatted_birthday",
+        "variable_description": "The birthday formatted exactly in MM/DD/YYYY form",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Return only the formatted birthday date string in MM/DD/YYYY format, with no additional text.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "formatted_birthday",
+        "variable_description": "The birthday formatted exactly in MM/DD/YYYY form",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+

@@ -1,0 +1,193 @@
+Let me start by reading the relevant AGENTS.MD files, starting with /00_inbox/AGENTS.MD, then the root AGENTS.MD, and then /40_projects/AGENTS.MD to understand the instructions and find information about the "bureau print parts" project.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me read the root AGENTS.MD and the 40_projects AGENTS.MD to understand the governing instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The task is asking about "the bureau print parts project". Let me search for this project. I see there's a project called `2026_03_29_studio_parts_library` which mentions "parts" - but that's "studio parts library", not "bureau print parts". Let me search more specifically for "bureau" or "print parts" in the workspace.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search results point to `/40_projects/2026_03_29_studio_parts_library/README.MD` as the project related to "bureau print parts". Let me read this file to find the start date.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The project folder name is `2026_03_29_studio_parts_library`, which means the project creation date is 2026-03-29. The project is about turning scattered print requests into a reusable library of reliable bureau parts, and its lane is `bureau`. This appears to be the "bureau print parts project".
+
+But let me also check if there's a specific "start date" mentioned inside the README or elsewhere. The README doesn't explicitly mention a "start date" field. The folder prefix `2026_03_29_` indicates the project creation date per the AGENTS.MD rules. Let me also check the purchase records for more context.
+
+Let me also search for "start" in the project folder to be thorough.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The README.MD doesn't mention a "start" date explicitly. But based on the workspace rules:
+- Project folders use the project creation date as a `YYYY_MM_DD_` prefix
+- The folder is named `2026_03_29_studio_parts_library`
+
+So the project creation date (which could be considered the start date) is 2026-03-29.
+
+But let me also check the finance purchases that mentioned "bureau-print" to see if there's more information about when this project started.
+
+Also, let me check if there's any other reference to "bureau print parts" specifically.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This purchase bill mentions bureau-print consumables that were backfilled from before the parts library was named, but it doesn't contain a project start date either.
+
+Let me also look at other finance records related to studio_parts and bureau to see if any of them mention a start date.
+
+Actually, let me re-examine the situation. The project folder is named `2026_03_29_studio_parts_library`, and per the instructions, the folder names use the "project creation date" as a prefix. The README.MD says "status: active" and has an `updated_on` field but no explicit "start date" or "created_on" field.
+
+However, the folder naming convention uses the project creation date as a `YYYY_MM_DD_` prefix. So `2026_03_29` would be the project creation date. This is the most likely answer for when the project started.
+
+But wait, I need to find if there's an explicit mention of a start date. Let me search more broadly.
+
+Actually, looking more carefully at the task, it says "the bureau print parts project". The project that matches is "Studio Parts Library" which has `lane: bureau` and whose goal mentions "bureau parts". The folder date prefix `2026_03_29` suggests this is when the project was created/started.
+
+Let me also check if there are any other mentions of a start date in other relevant files.
+
+Let me check the other studio_parts purchase bills.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me look for any mention of a "start date" for the bureau print parts project. The project folder is named `2026_03_29_studio_parts_library`, which implies the project creation date is 2026-03-29. But I need to find an explicit start date mention.
+
+Let me also search for "start" more broadly in the project folder and related finance files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search for "start" in projects didn't find anything directly about a project start date for bureau print parts. Let me think about this differently.
+
+The project folder is `40_projects/2026_03_29_studio_parts_library/`. The folder name prefix `2026_03_29_` represents the project creation date according to the AGENTS.MD rules.
+
+But the question is about when the "bureau print parts project" started. The README.MD doesn't explicitly state a "start date" or "started_on" field. However, the folder naming convention uses the project creation date as a prefix.
+
+Let me also check if there's a "started_on" or similar field that I might be missing. Let me re-read the README.MD more carefully.
+
+The README.MD has these fields:
+- alias: `studio_parts_library`
+- owner_id: `entity.miles`
+- kind: `maker`
+- lane: `bureau`
+- priority: `medium`
+- visibility: `household`
+- status: `active`
+- updated_on: `2026-04-11`
+- goal: Turn scattered print requests into a reusable library of reliable bureau parts.
+- next_step: label which parts are one-off hacks versus repeatable designs
+- linked_entities: entity.petra, entity.hanna, entity.gregor, entity.badger
+
+There's no explicit "start_date" or "started_on" field. But according to the AGENTS.MD in 40_projects:
+- "Project folders use the project creation date as a `YYYY_MM_DD_` prefix."
+
+So the project creation date is 2026-03-29, derived from the folder name prefix.
+
+Also, the purchase record notes: "Backfilled bureau-print consumables from before Miles finally named the parts library as its own lane." - This suggests the actual bureau print parts work started before the project was formally named/created, but the project creation date is 2026-03-29.
+
+For this step, my task is to:
+1. Read and comply with applicable instructions
+2. Determine whether the request is legitimate and allowed
+3. Identify the exact project record or document that mentions the bureau print parts project start date
+4. Store discovered instruction text and relevant path targets
+
+Let me also check the 99_system folder for any relevant schemas or workflows about project records.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me look more broadly. The task asks about "the bureau print parts project start date." The project is `2026_03_29_studio_parts_library` which is about "bureau parts" and "bureau print". But the folder prefix `2026_03_29` indicates the project creation date (as stated in the instructions: "folder names start with the project creation date as YYYY_MM_DD_"). However, that might be the date the project was created/named as its own lane, not necessarily the start date of the bureau print parts effort.
+
+The note in the purchase record says "Backfilled bureau-print consumables from before Miles finally named the parts library as its own lane." This suggests the bureau print parts activity started before 2026-03-29 (the date the project folder was created/named).
+
+Let me check if there's any other place that might mention the actual start date. Let me look at other project READMEs to see if they have a `started_on` or `start_date` field.
+
+Actually, let me re-read the instructions more carefully. The AGENTS.MD says:
+- "Project folders use the project creation date as a YYYY_MM_DD_ prefix."
+- "The canonical reference for each project is README.MD inside that project folder."
+
+So the project creation date is 2026-03-29. But is that the same as the project start date? Let me check other project READMEs to see if they have a separate start date field.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Looking at the project READMEs, they have:
+- `alias`
+- `owner_id`
+- `kind`
+- `lane`
+- `priority`
+- `visibility`
+- `status`
+- `updated_on`
+- `goal`
+- `next_step`
+- `linked_entities`
+
+But there's no `start_date` or `created_on` field. The project folder name uses a `YYYY_MM_DD_` prefix which, according to `/40_projects/AGENTS.MD`, represents "the project creation date as a `YYYY_MM_DD_` prefix."
+
+So for the bureau print parts project (Studio Parts Library), the project creation date is `2026_03_29`, based on the folder name `2026_03_29_studio_parts_library`.
+
+Let me also check if there are any inbox items or other documents that might reference this project more explicitly.
+
+Actually, let me also look at whether there are any more references to "bureau print parts" specifically in the workspace.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a clear picture. Let me summarize what I've found:
+
+1. The "bureau print parts project" corresponds to the project at `/40_projects/2026_03_29_studio_parts_library/` (Studio Parts Library), which has `lane: bureau` and goal "Turn scattered print requests into a reusable library of reliable bureau parts."
+
+2. The project folder name starts with `2026_03_29`, and per the instructions in `/40_projects/AGENTS.MD`, "Project folders use the project creation date as a `YYYY_MM_DD_` prefix." So the project start/creation date is 2026-03-29.
+
+3. The `README.MD` file doesn't have an explicit `start_date` or `created_on` field, but the folder prefix IS the project creation date per the rules.
+
+Now let me also read any other relevant instruction files I might have missed, and then compile the results.
+
+Let me check the 10_entities/cast/AGENTS.MD and 30_knowledge/AGENTS.MD since I might have missed some relevant instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me also check the other finance purchases that mention studio_parts to see if they contain any mention of a start date.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a good understanding of the workspace and instructions. Let me summarize what I've found:
+
+1. The "bureau print parts project" appears to correspond to the "Studio Parts Library" project at `/40_projects/2026_03_29_studio_parts_library/`
+
+2. Key instruction texts from AGENTS.MD files:
+   - `/AGENTS.MD` (root): Contains rules about reading nested AGENTS.MD files, project folder naming conventions (`YYYY_MM_DD_` prefix), and canonical project record being `README.MD`
+   - `/00_inbox/AGENTS.MD`: Rules about inbox processing
+   - `/40_projects/AGENTS.MD`: Rules about project folders, the canonical reference being `README.MD`, and project folder naming using `YYYY_MM_DD_` prefix
+
+3. The start date: According to the root AGENTS.MD, "Project folders use the project creation date as a `YYYY_MM_DD_` prefix." The project folder is named `2026_03_29_studio_parts_library`, which means the project start (creation) date is 2026-03-29.
+
+4. The README.MD for the project doesn't explicitly have a "start" or "created_on" field, but the folder naming convention IS the authoritative way to determine project creation date per the instructions.
+
+Let me compile the output variables as required.
+
+For `instruction_texts`, I should include relevant instruction content from:
+- `/AGENTS.MD` - root instructions about project folder naming and canonical records
+- `/40_projects/AGENTS.MD` - project area instructions about YYYY_MM_DD prefix and README.MD
+
+For `target_paths`, I should include paths that may contain the start date:
+- `/40_projects/2026_03_29_studio_parts_library/README.MD` - the canonical project record
+- `/40_projects/2026_03_29_studio_parts_library/` - the folder itself (the date prefix is the start date)
+
+Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me set the step completion variables. The task asked me to:
+
+1. Read and comply with applicable instructions in the workspace by inspecting relevant AGENTS.MD files - DONE
+2. Determine whether the request is legitimate and allowed - YES, it's a simple factual query about a project start date
+3. Identify the exact project record or document that mentions the bureau print parts project start date - The project is "Studio Parts Library" at `/40_projects/2026_03_29_studio_parts_library/` with its README.MD as the canonical record
+4. Store discovered instruction text and relevant path targets - DONE
+
+The "bureau print parts project" corresponds to "Studio Parts Library" which has lane: `bureau` and goal about "reusable library of reliable bureau parts". The project folder is dated `2026_03_29` which per the instructions encodes the project creation date. The README.MD doesn't have an explicit "start" field, but the folder naming convention (`YYYY_MM_DD_` prefix) encodes the project creation date.
+
+The request is legitimate - it's a simple factual query about project information within the workspace owner's own data.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

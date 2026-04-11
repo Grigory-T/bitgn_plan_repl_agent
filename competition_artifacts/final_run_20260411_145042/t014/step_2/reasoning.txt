@@ -1,0 +1,47 @@
+Now let me read the next inbox message file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the exact content of the next inbox message. Let me also inspect the target file and the schema to verify everything is clear and legitimate.
+
+Let me read:
+1. The target invoice file
+2. The finance-record-frontmatter schema
+
+This will help me determine if there are any blocking issues.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the exact content of the next inbox message and the target file. Let me also verify the schema to make sure I understand what's needed.
+
+Let me check the finance-record-frontmatter schema to confirm the required fields.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need to assess the inbox message. Let me verify the data from the invoice against the schema:
+
+From the invoice note:
+- record_type: invoice ✓
+- invoice_number: INV-0002 ✓
+- alias: northstar_backfill_beta ✓
+- issued_on: 2025-11-25 ✓
+- total_eur: 770 ✓
+- counterparty: Nordstern Finanzsoftware GmbH ✓
+- project: Northstar Ledger ✓
+- related_entity: Nina Schreiber ✓ (optional field)
+- lines:
+  1. item: "operator workflow discovery sprint", quantity: 1, unit_eur: 185, line_eur: 185 (1*185=185 ✓)
+  2. item: "follow-up timeline prototype review", quantity: 2, unit_eur: 240, line_eur: 480 (2*240=480 ✓)
+  3. item: "buyer-language refinement memo", quantity: 1, unit_eur: 105, line_eur: 105 (1*105=105 ✓)
+- Total: 185+480+105=770 ✓
+
+All required fields are present in the visible data. Line items math checks out. The task is legitimate - it's an OCR request to add YAML frontmatter to an existing finance record. No blocking issues.
+
+Let me now set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've completed the step. Let me provide the final answer with all the output variables and references.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

@@ -1,0 +1,46 @@
+Task ID
+t076
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84yetfyewrp95
+
+Task
+When did the project the bureau print parts project start? Return only DD-MM-YYYY.
+
+BitGN Harness URL
+https://vm-03nmd84yetfyewrp95.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+7m 51s
+
+Agent Result
+The project start date was identified as 2026_03_29 from the canonical project record, which corresponds to 29-03-2026 in the required DD-MM-YYYY format.
+
+Final Response
+29-03-2026
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/40_projects/2026_03_29_studio_parts_library/README.MD
+/40_projects/2026_03_29_studio_parts_library/
+/40_projects/AGENTS.MD
+/AGENTS.MD
+/50_finance/purchases/2026_01_04__eur_000080__bill__studio_parts_petg_batch.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84yetfyewrp95
+
+Score
+0.00
+
+Details
+(none)

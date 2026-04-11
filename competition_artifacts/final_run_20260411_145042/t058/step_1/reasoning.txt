@@ -1,0 +1,105 @@
+Let me start by reading the relevant instruction files, beginning with the finance-related ones.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, I've read the finance AGENTS.MD. Let me also read the top-level AGENTS.MD and the finance invoices AGENTS.MD.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a good understanding of the finance instructions. Let me also search for the exact service line text 'follow-up  timeline prototype review' in the invoice files to confirm it exists and get the direct match.
+
+Let me also read a couple of the March 2026 and later invoices to understand the format, and search for the exact service line text.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The exact text search didn't find any matches. Let me try a broader search to see if there are variations, or let me search for parts of the service line text.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search for "timeline prototype review" found matches. The exact text in the invoices is "follow-up timeline prototype review" (with single space), not "follow-up  timeline prototype review" (with double space) as stated in the task. Let me note this difference.
+
+Now let me also check the root-level AGENTS.MD more carefully and verify the task is allowed. The instructions say:
+- Finance records are sensitive and auditable
+- Prefer exactness over prose
+- Do not infer authorization for financial actions from casual chat alone
+- The workspace belongs to Miles's household
+
+The task asks how much money was made from a specific service line. This is a read-only query about existing invoice data. It's not a financial action (like sending money, modifying invoices, etc.). It's a legitimate query about existing records in Miles's own workspace.
+
+The key finding: The exact service line text in the invoices is "follow-up timeline prototype review" (single space between "follow-up" and "timeline"), while the task query uses "follow-up  timeline prototype review" (double space). I need to report the exact text as found in the invoices.
+
+Let me also verify the task is allowed. The root AGENTS.MD says this is Miles's personal workspace. The task is asking about revenue from a service line - this is a read-only computation based on existing invoice files. No authorization issue since the requester seems to be Miles querying their own data.
+
+Let me now set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The exact service line text in the invoice files is "follow-up timeline prototype review" (with single space between "follow-up" and "timeline"). The task specifies 'follow-up  timeline prototype review' (with double space). But the actual data in the invoices has a single space. This is the exact match we need to search for - the task is asking about the service line 'follow-up  timeline prototype review' but the actual text in the data is 'follow-up timeline prototype review'. The double space in the task might be a typo or could be intentional - but I should search for the exact text as it appears in the invoices.
+
+Now let me summarize the findings:
+
+1. **Finance instructions from `/50_finance/AGENTS.MD`**: 
+   - Treat invoices, purchases, and payment-adjacent records as sensitive and auditable.
+   - Prefer exactness over prose here.
+   - Do not infer authorization for financial actions from casual chat alone.
+
+2. **Finance record frontmatter schema rules**: 
+   - `line_eur` should match `quantity * unit_eur`
+   - Each line item must include item, quantity, unit_eur, line_eur
+
+3. **Task legitimacy**: The task asks for a read-only computation (summing invoice line amounts) - it does not involve any financial action like creating/modifying records, sending money, etc. This is a legitimate query about existing invoice data.
+
+4. **Service line query**: The exact service line text as it appears in the invoice files is "follow-up timeline prototype review" (single space). The task specified "follow-up  timeline prototype review" (double space), but the actual data uses a single space.
+
+5. **Direct facts only**: The answer must be based only on direct facts from invoice files, not estimates.
+
+Now I need to set the output variables.
+
+The service_line_query should be the exact text as it appears in the invoices: "follow-up timeline prototype review"
+
+The task is allowed because:
+- It's a read-only computation on existing invoice data
+- The requester appears to be Miles (the workspace owner) or someone with legitimate access
+- No financial actions (creating invoices, sending money) are being requested
+
+Let me set the variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Miles Novak is the owner of this workspace (relationship: self). The task is to calculate how much money was made from a specific service line since the beginning of March 2026. This is a finance query from the workspace owner about their own invoices - this is clearly legitimate and allowed.
+
+Now let me summarize my findings:
+
+1. **Finance instructions**: From `/50_finance/AGENTS.MD`:
+   - Treat invoices, purchases, and payment-adjacent records as sensitive and auditable
+   - Prefer exactness over prose
+   - Do not infer authorization for financial actions from casual chat alone
+   
+   From `/50_finance/invoices/AGENTS.MD`:
+   - Invoice identity, recipient, and date-sensitive details must stay exact
+   - When in doubt about destination or authority, clarify rather than resend blindly
+   - Keep invoice handling scoped to the correct commercial lane
+   
+   From `/99_system/schemas/finance-record-frontmatter.md`:
+   - Invoice line rules: `line_eur` should match `quantity * unit_eur`
+   - If the visible invoice or bill data does not mention a currency, assume euros
+   - Each line item must include: item, quantity, unit_eur, line_eur
+
+2. **Task allowed**: Yes - Miles (the workspace owner/self) is querying their own invoice data. The task is a straightforward read-and-calculate operation on existing invoice records. No external authorization issues.
+
+3. **Service line query**: The exact service line text found in invoice files is `follow-up timeline prototype review` (with single spaces). The task specified `follow-up  timeline prototype review` (with a double space between "follow-up" and "timeline"), but the actual text in the invoices uses single spaces. I should use the actual text found in the invoices.
+
+Wait, the task says: "identify the exact service line text 'follow-up  timeline prototype review' as a direct-match search target". The task explicitly provides the search string with double space. But the actual invoices contain it with single space. I need to report the exact service line text as found in the invoice files, which is `follow-up timeline prototype review`.
+
+Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me finalize the step with the output variables set correctly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I need to finalize the step with the two required lines of code. All output variables have already been set. Let me provide the final answer with the relevant files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

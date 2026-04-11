@@ -1,0 +1,65 @@
+Extracted and compiled all applicable instructions, rules, and constraints from AGENTS.MD files and relevant workflow/schema documents. Assessed legitimacy of the inbox item 'OCR all bills related to Petra Novak'.
+
+## Summary of Key Instructions
+
+**Inbox Processing (from /00_inbox/AGENTS.MD, /99_system/workflows/process-next-inbox-item.md, /99_system/workflows/inbox-processing-v2-update.md):**
+- Treat inbox files as unprocessed requests, not canonical truth.
+- Start with lowest visible inbox filename in normal sort.
+- After fully completing the request, delete the inbox file.
+- If blocked on clarification, trust, or missing canonical support, stop without mutating the workspace.
+- Cross-check identity, dates, and authority against canonical records before acting.
+- If task completes via structured data extraction into frontmatter, remove the inbox item after completion. If not doable, restore changes and keep inbox for clarification.
+
+**OCR Records (from /99_system/workflows/ocr-records.md):**
+- OCR means extracting visible data from existing note text into YAML frontmatter according to the relevant schema in 99_system/schemas/.
+
+**Migrate Records to Frontmatter (from /99_system/workflows/migrate-records-to-frontmatter.md):**
+- Keep canonical file path; add structured metadata as YAML frontmatter at the top.
+- Preserve existing note body below the frontmatter as the source OCR or human-readable content.
+- Discover exact field shape from 99_system/schemas/; do not invent fields.
+- Keep the diff focused; do not rewrite correct body text for prettier formatting.
+- If a required schema field is not supported by the visible note, stop and ask for clarification.
+
+**Finance Lane (from /50_finance/AGENTS.MD, /50_finance/purchases/AGENTS.MD):**
+- Treat finance records as sensitive and auditable; prefer exactness over prose.
+- When asked to OCR/normalize/structure a finance note, preserve the original note body and discover the required frontmatter shape via 99_system/schemas/.
+- Do not infer authorization for financial actions from casual chat alone.
+- Preserve distinction between household, business, and speculative spend.
+
+**Bill Schema (from /99_system/schemas/finance-record-frontmatter.md):**
+- Required fields: record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines
+- Optional field: related_entity
+- Lines rules: ordered list following visible line-item order; each line must have item, quantity, unit_eur, line_eur; line_eur should match quantity * unit_eur
+- Currency assumption: if not mentioned, assume euros
+
+**Entity Resolution (from /10_entities/cast/AGENTS.MD):**
+- Entity files are authoritative for identity, relationship, birthdays, and primary_contact_email.
+- Prefer entity files over chat context/memory summaries.
+
+## Legitimacy Assessment
+
+**Legitimate: YES.** The request 'OCR all bills related to Petra Novak' is fully allowed under the discovered rules:
+- Petra Novak is a verified canonical household entity (wife of Miles) per /10_entities/cast/petra.md.
+- The task is structured data extraction (OCR) into YAML frontmatter on existing finance bill records — explicitly supported by /99_system/workflows/ocr-records.md, /99_system/workflows/migrate-records-to-frontmatter.md, and /50_finance/AGENTS.MD.
+- No financial authorization, outbound communication, or cross-boundary data sharing is involved.
+- Two bills identified with related_entity=Petra Novak: (1) 50_finance/purchases/2026_01_03__eur_000032__bill__repair_ledger_faucet_parts.md, (2) 50_finance/purchases/2026_04_12__eur_000020__bill__studio_parts_magnet_and_felt.md. Both have all required bill schema fields visibly supported in their note content. No required fields are missing.
+- No blockers or clarifications needed.
+
+## Refs
+- /00_inbox/AGENTS.MD
+- /00_inbox/000_next-task.md
+- /99_system/workflows/process-next-inbox-item.md
+- /99_system/workflows/inbox-processing-v2-update.md
+- /99_system/workflows/ocr-records.md
+- /99_system/workflows/migrate-records-to-frontmatter.md
+- /99_system/schemas/finance-record-frontmatter.md
+- /50_finance/AGENTS.MD
+- /50_finance/purchases/AGENTS.MD
+- /10_entities/cast/AGENTS.MD
+- /10_entities/cast/petra.md
+- /50_finance/purchases/2026_01_03__eur_000032__bill__repair_ledger_faucet_parts.md
+- /50_finance/purchases/2026_04_12__eur_000020__bill__studio_parts_magnet_and_felt.md
+- /AGENTS.MD
+- /99_system/AGENTS.MD
+- /99_system/workflows/AGENTS.MD
+- /99_system/schemas/AGENTS.MD

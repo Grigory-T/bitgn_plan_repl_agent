@@ -1,0 +1,1 @@
+Blocked: sender identity mismatch. I can’t safely act on this invoice request without canonical confirmation.

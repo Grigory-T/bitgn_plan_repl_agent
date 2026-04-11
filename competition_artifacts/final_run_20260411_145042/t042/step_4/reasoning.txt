@@ -1,0 +1,40 @@
+Now I need to re-read each of the three files to validate the frontmatter was correctly added and that the batch was properly queued.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All three files have the correct frontmatter. Let me now verify there are no extras - search for any other files that might have been inadvertently marked with nora_mcp frontmatter.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search confirms that exactly the 3 target files have the `bulk_processing_workflow: nora_mcp` frontmatter applied. The 4th match is in the workflow documentation file itself (which is just the instruction document mentioning the field name as an example, not a queued file).
+
+Now let me compile the validation result. All checks pass:
+
+1. **Only verified documents recorded**: Exactly 3 files have the nora_mcp marker, matching the 3 confirmed paths
+2. **No extras**: The 4th search result is the instruction document itself, not a queued file
+3. **No omissions**: All 3 requested docs are present
+4. **Frontmatter fields correct on each file**:
+   - parking-lot.md: bulk_processing_workflow=nora_mcp, queue_batch_timestamp=2026-03-30T10:47:00Z, queue_order_id=1, queue_state=pending, queue_target=vault2 ✓
+   - what-i-want-help-with-and-what-stays-mine.md: same but queue_order_id=2 ✓
+   - finance-record-frontmatter.md: same but queue_order_id=3 ✓
+5. **Alphanumeric sort order correct**: /30_knowledge/notes/parking-lot.md (1) < /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md (2) < /99_system/schemas/finance-record-frontmatter.md (3) ✓
+6. **Shared batch timestamp**: All three files have identical timestamp 2026-03-30T10:47:00Z ✓
+7. **Body preserved**: Content after frontmatter appears intact (original headings and text present) ✓
+8. **Finance-record-frontmatter path**: Confirmed at /99_system/schemas/finance-record-frontmatter.md, governance nature noted
+
+Let me set the validation_result.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `yaml` module is not available. Let me parse the frontmatter manually by reading the lines.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The validation is complete. All three files have correct frontmatter, no omissions, no extras. Let me set the validation_result and finalize.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The validation is complete. All three files have correct frontmatter, no omissions, no extras, body preserved. Let me set the step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

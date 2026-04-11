@@ -1,0 +1,146 @@
+Now I have all the information I need. Let me proceed step by step:
+
+1. Read each of the three target files to check if they already have YAML frontmatter and whether the NORA MCP marker is already present.
+2. Sort the paths alphanumerically and assign queue_order_id.
+3. Capture a single RFC3339 timestamp for the batch.
+4. Apply the frontmatter changes (merge or add new).
+
+Let me first sort the paths alphanumerically:
+- /30_knowledge/notes/parking-lot.md
+- /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md
+- /99_system/schemas/finance-record-frontmatter.md
+
+So queue_order_id assignments:
+1. /30_knowledge/notes/parking-lot.md → queue_order_id: 1
+2. /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md → queue_order_id: 2
+3. /99_system/schemas/finance-record-frontmatter.md → queue_order_id: 3
+
+Now let me read each file to check for existing frontmatter.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The read result is not a dict but an object. Let me use proper attribute access.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, I can see the file contents. Let me check more carefully:
+
+1. **parking-lot.md** - starts with `# Things I would only attempt...` - NO frontmatter (no `---` at the top)
+2. **what-i-want-help-with-and-what-stays-mine.md** - starts with `# What I want help with...` - NO frontmatter (no `---` at the top)
+3. **finance-record-frontmatter.md** - starts with `# Finance record frontmatter` - NO frontmatter (no `---` at the top)
+
+None of the three files have existing YAML frontmatter. So for all three, I need to add new YAML frontmatter at the top.
+
+Now I need to:
+1. Get the current timestamp from the workspace context
+2. Sort the three file paths alphanumerically
+3. Assign queue_order_id 1 through 3
+
+Let me sort the paths:
+- /30_knowledge/notes/parking-lot.md
+- /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md
+- /99_system/schemas/finance-record-frontmatter.md
+
+Alphanumeric sort:
+- /30_knowledge/notes/parking-lot.md → 1 (p comes before w)
+- /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md → 2
+- /99_system/schemas/finance-record-frontmatter.md → 3
+
+Now let me get the current timestamp.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All three files start with `#` headings and have no YAML frontmatter (`---`). I need to:
+
+1. Sort the paths alphanumerically
+2. Get current timestamp
+3. Add YAML frontmatter with the migration marker to each file
+
+Let me sort the paths first:
+- /30_knowledge/notes/parking-lot.md
+- /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md
+- /99_system/schemas/finance-record-frontmatter.md
+
+So queue_order_id assignments:
+1. /30_knowledge/notes/parking-lot.md → 1
+2. /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md → 2
+3. /99_system/schemas/finance-record-frontmatter.md → 3
+
+Now I need to get the current timestamp. Let me use bitgn.context() to get the current time.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, I have the current timestamp. The RFC3339 format with Z form is: 2026-03-30T10:47:00Z
+
+Now let me sort the three file paths alphanumerically to determine the queue_order_id:
+
+1. /30_knowledge/notes/parking-lot.md → queue_order_id: 1
+2. /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md → queue_order_id: 2
+3. /99_system/schemas/finance-record-frontmatter.md → queue_order_id: 3
+
+Wait, let me sort properly. Alphanumeric sort of the paths:
+- /30_knowledge/notes/parking-lot.md
+- /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md
+- /99_system/schemas/finance-record-frontmatter.md
+
+The /3... comes before /9... so the order is:
+1. /30_knowledge/notes/parking-lot.md
+2. /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md
+3. /99_system/schemas/finance-record-frontmatter.md
+
+Now, none of these files have existing YAML frontmatter (no `---` delimiters at the top). So I need to add new YAML frontmatter at the top of each file.
+
+The marker to add for each file:
+```yaml
+---
+bulk_processing_workflow: nora_mcp
+queue_batch_timestamp: 2026-03-30T10:47:00Z
+queue_order_id: 1
+queue_state: pending
+queue_target: vault2
+---
+```
+
+Let me now read the full content of each file and then write the files with the frontmatter prepended.
+
+I need to be careful to preserve the body byte-for-byte. Let me read each file fully and then write with the frontmatter added at the top.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to:
+1. Read each file's current full content
+2. Prepend the frontmatter marker (no existing frontmatter in any file)
+3. Write the updated content back
+
+Let me get the full content of each file and then write them with the frontmatter prepended.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to prepend the YAML frontmatter to each file. Since none of them have existing frontmatter, I'll add the new frontmatter block at the top, preserving the existing body byte-for-byte.
+
+Let me write each file with the frontmatter prepended.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, all three files have been written. Let me verify the results by reading the first few lines of each file to confirm the frontmatter was properly applied.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All three files have been successfully updated with the NORA MCP migration frontmatter. Let me verify that the body content is preserved by checking a few lines from the end of each file as well, to make sure nothing was lost.
+
+Actually, the write operation was writing `fm + content` where content was the full original file content, so nothing should be lost. The verification above shows the frontmatter is correct and the original content starts right after the closing `---`. This looks good.
+
+Let me now set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All three files have been correctly updated. The body content is preserved byte-for-byte, and the frontmatter was correctly added with all required fields.
+
+Let me now set the queue_result output variable.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The step is complete. All three files have been successfully updated with the NORA MCP migration frontmatter. Let me set the step status and final answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

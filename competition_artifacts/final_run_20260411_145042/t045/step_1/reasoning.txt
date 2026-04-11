@@ -1,0 +1,60 @@
+Let me read all the relevant AGENTS.MD files and the inbox item to understand the rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the key workflow documents mentioned in the AGENTS.MD files:
+1. `99_system/workflows/processing-inbox-email.md` - for processing inbox emails
+2. `99_system/workflows/sending-email.md` - for sending/resending emails
+3. `99_system/schemas/finance-record-frontmatter.md` - for finance records
+4. `99_system/workflows/process-next-inbox-item.md` - for processing next inbox item
+
+Let me also check the channel docs for helios_client_email to understand trust semantics.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the outbox drafts and outbox AGENTS.MD files, as well as the helios client email channel doc since the invoice request comes from someone at Helios.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the entity files for Claudia and Miles to understand identity and trust.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check for Helios-related invoices that match the date referenced in the email (18-12-2025). The invoice from 2025-12-18 in the finance invoices folder seems relevant.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me compile the relevant instructions into a structured dictionary.
+
+The inbox item `/00_inbox/000_invoice-request.md` is an inbound email from Claudia Reiter (claudia@helios-tax.example) to Miles Novak (miles@novak.example) requesting a resend of the invoice from 18-12-2025 from Helios Steuerbüro München GmbH.
+
+Let me now structure all the relevant instructions:
+
+1. **Inbox handling rules** (from /00_inbox/AGENTS.MD and /99_system/workflows/process-next-inbox-item.md)
+2. **Email processing rules** (from /99_system/workflows/processing-inbox-email.md)
+3. **Email sending/outbox rules** (from /99_system/workflows/sending-email.md and /60_outbox/AGENTS.MD)
+4. **Channel trust rules** (from /60_outbox/channels/AGENTS.MD)
+5. **Finance/invoice rules** (from /50_finance/AGENTS.MD and /50_finance/invoices/AGENTS.MD)
+6. **Entity resolution rules** (from /10_entities/AGENTS.MD and /10_entities/cast/AGENTS.MD)
+7. **Schema rules** (from /99_system/schemas/AGENTS.MD and /99_system/schemas/finance-record-frontmatter.md)
+8. **Work lane rules** (from /20_work/AGENTS.MD)
+9. **Root rules** (from /AGENTS.MD)
+
+Now let me determine what should happen with this inbox item:
+
+- It's an email requesting an invoice copy/resend
+- The sender is Claudia Reiter, whose `primary_contact_email` is `claudia@helios-tax.example` which matches the `from` field
+- The matching invoice appears to be `/50_finance/invoices/2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md`
+- This is an email-shaped request → use processing-inbox-email.md workflow
+- Since it results in outbound communication (resending an invoice) → also use sending-email.md
+- The response should go to `60_outbox/outbox/` as a durable outbound email with the invoice as an attachment
+- This does NOT create a new finance record, entity note, or work task - it creates an outbox response
+
+Let me structure the `relevant_instructions` dict now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've thoroughly analyzed all the relevant AGENTS.MD files and workflow documents. Let me now set the step status and final answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

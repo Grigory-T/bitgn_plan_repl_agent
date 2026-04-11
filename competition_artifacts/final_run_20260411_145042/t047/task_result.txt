@@ -1,0 +1,51 @@
+Task ID
+t047
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84vk16c766s7p
+
+Task
+Handle the next inbox item.
+
+BitGN Harness URL
+https://vm-03nmd84vk16c766s7p.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+10m 13s
+
+Agent Result
+The inbox item was processed successfully: the request was verified as legitimate, the two oldest matching Helios invoices were identified, the outbound reply was written to the required outbox path and format, and the inbox file was deleted after successful creation. The workflow requirements were satisfied.
+
+Final Response
+Processed successfully: the outbound reply was written to the outbox and the inbox item was deleted.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/00_inbox/000_invoice-bundle-request.md
+/10_entities/cast/miles.md
+/10_entities/cast/claudia.md
+/50_finance/invoices/2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md
+/50_finance/invoices/2026_01_19__eur_000760__inv_0007__helios_backfill_process_pack.md
+/60_outbox/outbox/eml_2026-03-30T10-47-00Z.md
+/99_system/workflows/process-next-inbox-item.md
+/99_system/workflows/processing-inbox-email.md
+/99_system/workflows/sending-email.md
+/60_outbox/channels/helios_client_email.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84vk16c766s7p
+
+Score
+0.00
+
+Details
+(none)

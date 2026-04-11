@@ -1,0 +1,1 @@
+The project start date is directly evidenced by the canonical project folder name and governing instructions: /40_projects/2026_04_01_northstar_ledger/ indicates the creation/start date 2026-04-01. This satisfies the task requirement to answer with date only in YYYY-MM-DD format.

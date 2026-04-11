@@ -1,0 +1,182 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and analyze the applicable instruction files for this inbox workflow before doing anything else. Specifically inspect `00_inbox/AGENTS.MD`, `20_work/AGENTS.MD`, `50_finance/AGENTS.MD`, `60_outbox/channels/AGENTS.MD`, and any more specific AGENTS.md files relevant to the inbox item path `00_inbox/000_invoice-bundle-request.md` and the likely target paths under `50_finance/invoices/` or `60_outbox/`. Extract the required procedure, constraints, naming conventions, and any rules for handling invoice-related inbox items.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "relevant_instructions",
+        "variable_description": "A structured summary of the applicable workflow rules and constraints collected from the relevant AGENTS.md files.",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Assess whether handling the next inbox item is legitimate and allowed under the gathered instructions. Then open `00_inbox/000_invoice-bundle-request.md` and identify the exact request, required recipients or files, and any constraints that must be satisfied without guessing. If the request is ambiguous or missing required information, record that the correct action is to seek clarification or stop rather than invent details.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "relevant_instructions",
+        "variable_description": "A structured summary of the applicable workflow rules and constraints collected from the relevant AGENTS.md files.",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "inbox_request",
+        "variable_description": "The parsed contents and requirements of `00_inbox/000_invoice-bundle-request.md`.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "task_is_allowed",
+        "variable_description": "Whether the task can be executed under the gathered rules and the inbox request is sufficiently clear.",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: If the task is allowed and clear, determine the exact deliverable structure by inspecting any existing invoice bundle patterns in `50_finance/invoices/` and any related outbox channel conventions needed to respond. Identify the target files that must be created, updated, or referenced, and the precise naming format and content requirements directly supported by existing workspace files and instructions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "inbox_request",
+        "variable_description": "The parsed contents and requirements of `00_inbox/000_invoice-bundle-request.md`.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "task_is_allowed",
+        "variable_description": "Whether the task can be executed under the gathered rules and the inbox request is sufficiently clear.",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "target_actions",
+        "variable_description": "A list or mapping of the concrete file operations or content actions required to fulfill the invoice bundle request.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "reference_patterns",
+        "variable_description": "Observed file naming and content patterns from existing invoices or related files that are relevant to the request.",
+        "variable_data_type": "list"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Execute the inbox item according to the instructions and the determined file actions. Create or update only the necessary workspace files, using direct facts from the inbox item and existing patterns. Do not estimate missing values; if required data is absent, stop and prepare a clarification response instead of fabricating invoice contents.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "target_actions",
+        "variable_description": "A list or mapping of the concrete file operations or content actions required to fulfill the invoice bundle request.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "reference_patterns",
+        "variable_description": "Observed file naming and content patterns from existing invoices or related files that are relevant to the request.",
+        "variable_data_type": "list"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "execution_result",
+        "variable_description": "A structured record of what was created or updated, or a clarification/stop status if the task could not be completed as requested.",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: Verify the outcome against the applicable instructions and the inbox request. Confirm that all required files exist, contents are consistent with the request, and any outbox or follow-up artifacts are placed in the correct locations. If the task was not executable because of missing information, verify that the resulting state reflects a safe stop rather than an invented completion.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "execution_result",
+        "variable_description": "A structured record of what was created or updated, or a clarification/stop status if the task could not be completed as requested.",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: []
+
+Replan after step 2:
+
+--------------------------------------------------------------------------------
+Step 3: Inspect the concrete invoice file pattern and the outbound email/channel conventions needed to fulfill the request safely. Read the target invoice file and any closest matching invoice or outbox examples, plus the required sending-email and channel instructions, to determine the exact deliverable structure, attachment/reference handling, and any required metadata. Derive the precise file actions needed for the response without inventing missing details.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "inbox_request",
+        "variable_description": "Structured details of the inbox request, including requester, requested invoice bundle scope, resolved recipient, and any constraints already identified",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "task_is_allowed",
+        "variable_description": "Whether the inbox request is legitimate and allowed to proceed",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "deliverable_spec",
+        "variable_description": "Exact structure and requirements for the outbound response and any file artifacts to create or update",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "execution_references",
+        "variable_description": "List of concrete files or examples inspected to guide the implementation",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Execute the allowed inbox request using the validated deliverable specification. Create the outbound draft or outbox record in the correct 60_outbox location, attach or reference the identified oldest invoice exactly, and avoid mutating unrelated finance records. If the deliverable spec indicates any missing required information, stop safely and produce a clarification-oriented output instead of fabricating contents.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "deliverable_spec",
+        "variable_description": "Exact structure and requirements for the outbound response and any file artifacts to create or update",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "inbox_request",
+        "variable_description": "Structured details of the inbox request, including requester, requested invoice bundle scope, resolved recipient, and any constraints already identified",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "task_is_allowed",
+        "variable_description": "Whether the inbox request is legitimate and allowed to proceed",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "execution_result",
+        "variable_description": "Outcome of the file operations performed, including created/updated paths and whether the request was fully satisfied or safely blocked",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: Verify the resulting workspace state against the inbox request and the applicable instructions. Confirm the outbound artifact is in the correct location and that the original inbox item has been removed only if the request was completed successfully. If the task was blocked, confirm that no unsafe mutations were made.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "execution_result",
+        "variable_description": "Outcome of the file operations performed, including created/updated paths and whether the request was fully satisfied or safely blocked",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "inbox_request",
+        "variable_description": "Structured details of the inbox request, including requester, requested invoice bundle scope, resolved recipient, and any constraints already identified",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: []
+
+Plan validation warnings:
+⚠️ First step has input variables: inbox_request, task_is_allowed. First step should not require inputs.
+⚠️ Step 2 requires input 'inbox_request' (dict), but no previous step produces it.
+⚠️ Step 2 requires input 'task_is_allowed' (bool), but no previous step produces it.
+⚠️ Step 3 requires input 'inbox_request' (dict), but no previous step produces it.
+⚠️ Step 1 outputs 'execution_references' (list[str]), but it's not used by any subsequent step.
+

@@ -1,0 +1,15 @@
+I read and analyzed the relevant instruction files to determine task legitimacy and how to identify service revenue.
+
+Key findings from instructions:
+- `/AGENTS.MD`: This is Miles's personal workspace; read nested AGENTS.MD files when entering folders; inspect 99_system/ before starting task work.
+- `/50_finance/AGENTS.MD`: "Prefer exactness over prose here"; treat finance records as sensitive and auditable; do not infer authorization for financial actions from casual chat alone.
+- `/50_finance/invoices/AGENTS.MD`: Invoice identity, recipient, and date-sensitive details must stay exact.
+- `/99_system/schemas/finance-record-frontmatter.md`: Defines the invoice schema with required fields including `lines` with `item`, `quantity`, `unit_eur`, and `line_eur`. Revenue from a service project would come from invoice line items matching that service name.
+- `/99_system/AGENTS.MD`: Read system docs before handling unusual workflow questions or ambiguous authority.
+
+Task legitimacy assessment: The task asks a factual question about how much revenue was earned from a specific service project ("operator workflow discovery sprint") from February 2026 onwards. This is Miles querying their own financial records in their own workspace. No authorization concerns. The task is allowed.
+
+From direct facts in workspace files, only one invoice from February 2026 onwards contains a line item for "operator workflow discovery sprint": invoice INV-0004 (issued 2026-02-14) with line_eur of 650. The answer must be based only on direct facts, without estimates.
+
+instruction_files: ['/AGENTS.MD', '/00_inbox/AGENTS.MD', '/50_finance/AGENTS.MD', '/50_finance/invoices/AGENTS.MD', '/50_finance/purchases/AGENTS.MD', '/99_system/schemas/finance-record-frontmatter.md', '/99_system/AGENTS.MD', '/40_projects/AGENTS.MD']
+task_is_allowed: True

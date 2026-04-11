@@ -1,0 +1,47 @@
+Task ID
+t079
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84yt90zwzf955
+
+Task
+How many STALLED projects involve Jana Vesela? Answer with a number only
+
+BitGN Harness URL
+https://vm-03nmd84yt90zwzf955.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+5m 40s
+
+Agent Result
+The direct evidence search found no projects explicitly marked STALLED that involve Jana Vesela, so the count is 0.
+
+Final Response
+0
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/AGENTS.MD
+/10_entities/AGENTS.MD
+/10_entities/cast/AGENTS.MD
+/10_entities/cast/jana.md
+/40_projects/AGENTS.MD
+/40_projects/2026_03_25_dockflow_exception_radar/README.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84yt90zwzf955
+
+Score
+0.00
+
+Details
+(none)

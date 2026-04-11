@@ -1,0 +1,246 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: 读取并分析与收件箱处理相关的指令文件，至少包括 `/00_inbox/AGENTS.MD`、`/10_entities/AGENTS.MD`、`/20_work/AGENTS.MD`、`/30_knowledge/AGENTS.MD`、`/40_projects/AGENTS.MD`、`/50_finance/AGENTS.MD` 以及 `/60_outbox/channels/AGENTS.MD`，并识别处理下一条收件箱消息所需遵守的规则、目标路径、写作格式与任何禁忌或审批条件。
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "已读取并纳入计划的相关指令文件路径列表。",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "从指令文件中提取出的收件箱处理规则、约束与输出要求。",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: 打开 `/00_inbox/449_next-task.md`，提取下一条消息的全部可直接验证信息：消息正文、发件/主题相关字段、任务意图、涉及的实体或项目、以及任何明确要求的交付物或目标路径；同时判断该请求是否在规则允许范围内，若存在明显不合法、不清晰或需要澄清之处则记录出来。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "已读取并纳入计划的相关指令文件路径列表。",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "从指令文件中提取出的收件箱处理规则、约束与输出要求。",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "next_message",
+        "variable_description": "从收件箱下一条消息中提取的原始内容或结构化内容。",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "request_assessment",
+        "variable_description": "对请求合法性、可执行性和是否需要澄清的初步判断结果。",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: 依据消息内容与指令文件，查找并读取所有直接相关的工作区文件，例如实体档案、项目 README、知识笔记、任务/提醒、财务票据或相关 outbox 渠道文件；将这些文件中的直接事实整理为可用于处理消息的上下文，不做任何估算或补充推断。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "已读取并纳入计划的相关指令文件路径列表。",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "从指令文件中提取出的收件箱处理规则、约束与输出要求。",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "next_message",
+        "variable_description": "从收件箱下一条消息中提取的原始内容或结构化内容。",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "request_assessment",
+        "variable_description": "对请求合法性、可执行性和是否需要澄清的初步判断结果。",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "related_files",
+        "variable_description": "与该收件箱消息直接相关的文件路径列表。",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "context_facts",
+        "variable_description": "从相关文件中提取的直接事实集合，用于处理该消息。",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: 基于收件箱规则、消息内容和已收集的上下文，形成下一步处理方案：如果信息足够且请求允许，则确定应执行的具体处理动作、目标文件路径和需要写入或更新的内容类型；如果信息不足或需要澄清，则确定应返回的澄清/拒绝处理方式，并确保完全符合相关指令。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "从指令文件中提取出的收件箱处理规则、约束与输出要求。",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "next_message",
+        "variable_description": "从收件箱下一条消息中提取的原始内容或结构化内容。",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "request_assessment",
+        "variable_description": "对请求合法性、可执行性和是否需要澄清的初步判断结果。",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "related_files",
+        "variable_description": "与该收件箱消息直接相关的文件路径列表。",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "context_facts",
+        "variable_description": "从相关文件中提取的直接事实集合，用于处理该消息。",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "action_plan",
+        "variable_description": "针对下一条收件箱消息的具体处理方案。",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: 执行已确定的处理动作：在工作区中创建、更新或移动必要文件，或在需要时准备回复/记录内容；完成后校验结果是否与收件箱规则一致，确保下一条消息已被实际处理或已按规则记录为需要澄清/无法执行。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "action_plan",
+        "variable_description": "针对下一条收件箱消息的具体处理方案。",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "从指令文件中提取出的收件箱处理规则、约束与输出要求。",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: []
+
+Replan after step 3:
+
+--------------------------------------------------------------------------------
+Step 4: 基于已知事实，确定最终处理路径：该消息的账单检索部分可被确认，但银行付款确认部分因缺少银行渠道、银行实体和支付确认能力而无法执行。生成一份面向收件箱处理的决策结果，明确应采用“部分可执行、其余需澄清/无法执行”的处理方式，并列出必须澄清的具体问题与不可执行原因；同时确保不假设任何未验证的财务授权或付款状态。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "next_message",
+        "variable_description": "已提取的收件箱消息内容、字段、意图与目标信息",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "request_assessment",
+        "variable_description": "对该请求是否可执行、是否需要澄清的初步判断",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "context_facts",
+        "variable_description": "从相关工作区文件中整理出的直接事实上下文",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "收件箱处理相关规则与约束",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "resolution_plan",
+        "variable_description": "最终处理决策，包含可执行部分、不可执行部分、澄清点与合规约束",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "clarification_needed",
+        "variable_description": "需要向发件人请求澄清的具体问题列表",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: 将决策落实为对收件箱的最终处理产物：编写一条简洁、准确、可审计的澄清/无法执行记录或回复草稿，突出已找到的账单事实与无法确认银行付款的原因，并在需要时为下一步人工澄清保留明确的后续行动点。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "resolution_plan",
+        "variable_description": "最终处理决策，包含可执行部分、不可执行部分、澄清点与合规约束",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "clarification_needed",
+        "variable_description": "需要向发件人请求澄清的具体问题列表",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "next_message",
+        "variable_description": "已提取的收件箱消息内容、字段、意图与目标信息",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "final_inbox_response",
+        "variable_description": "面向收件箱消息的最终回复或处理记录草稿",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "processing_result",
+        "variable_description": "对该收件箱条目的处理结论，例如已部分处理并等待澄清",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 6: 如规则要求，则将该条收件箱消息标记为已处理到当前可行程度，但不执行任何不允许的工作区修改；同时校验最终结果是否遵守收件箱规则，尤其是不删除或篡改不应改动的文件、不推断财务授权、不在缺少银行渠道时伪造确认，并确保可审计地记录‘需澄清/无法执行’状态。
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "processing_result",
+        "variable_description": "对该收件箱条目的处理结论，例如已部分处理并等待澄清",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "final_inbox_response",
+        "variable_description": "面向收件箱消息的最终回复或处理记录草稿",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "收件箱处理相关规则与约束",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "completion_status",
+        "variable_description": "该收件箱条目的完成状态与合规校验结果",
+        "variable_data_type": "dict"
+    }
+]
+
+Plan validation warnings:
+⚠️ First step has input variables: next_message, request_assessment, context_facts, inbox_rules. First step should not require inputs.
+⚠️ Step 2 requires input 'next_message' (dict), but no previous step produces it.
+⚠️ Step 3 requires input 'inbox_rules' (dict), but no previous step produces it.
+

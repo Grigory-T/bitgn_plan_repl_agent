@@ -1,0 +1,147 @@
+Now I need to read the key source files to collect direct facts needed to complete the inbox task. Let me read the invoice, entity files, the sending-email workflow, the inbox message, and the channel file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, I have the invoice details. Now let me read the other key files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. Now let me read the other critical files - sending-email.md, the channel file, the entity files, and the outbox AGENTS.MD.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to read more supporting files to get all the facts I need. Let me read:
+1. The Claudia entity file
+2. The Miles entity file
+3. The helios_client_email channel
+4. The processing-inbox-email workflow
+5. The outbox AGENTS.MD
+6. Current time
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the Miles entity file and the Helios client email channel file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the channel file for helios_client_email, the outbox AGENTS.MD, and the processing-inbox-email workflow.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the critical source files. Let me also read the processing-inbox-email.md and the outbox AGENTS.MD for any additional rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, now let me read the remaining key files: the inbox AGENTS.MD, outbox AGENTS.MD, outbox/outbox AGENTS.MD, the project README, and check the current time context.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the outbox/outbox AGENTS.MD to see if there are any special rules for creating files in the outbox folder.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also get the runtime context for the current timestamp.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Current runtime time is `2026-03-31T16:32:00Z`. This matches the timestamp already planned in the message_task_analysis.
+
+Now let me read a few more relevant files to ensure I have all the direct facts:
+
+1. The project README for Helios Workflow Sprint
+2. The inbox AGENTS.MD
+3. The channels AGENTS.MD
+
+Let me also check what existing outbox files are there to make sure the filename won't collide.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the direct facts I need. Let me also check the finance invoices AGENTS.MD for any specific rules about invoice resends.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I now have all the key files read. Let me also check if there are any existing outbox files to understand naming conventions.
+
+Let me also read the 50_finance/AGENTS.MD and the process-next-inbox-item.md for completeness.
+
+Actually, let me also check the existing outbox directory for any existing files to understand naming conventions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+No existing outbox files, so I need to create a new one following the naming convention from sending-email.md: `eml_YYYY-MM-DDTHH-MM-SSZ.md`.
+
+Now let me check the channels AGENTS.MD for any additional rules.
+
+Let me also read the inbox AGENTS.MD and the process-next-inbox-item.md to make sure I have the complete set of instructions for the steps.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the facts I need. Let me compile the supporting_facts dictionary and target_files list.
+
+Key facts gathered:
+1. **Invoice**: INV-0010, issued 2026-04-21, EUR 780, counterparty Helios Steuerbüro München GmbH, project Helios Workflow Sprint, related_entity Claudia Reiter, line item: "checklist rewrite and rollout pack" qty 1 EUR 780
+
+2. **Sender**: Claudia Reiter, claudia@helios-tax.example, consulting_client, primary_contact_email verified
+
+3. **Recipient for reply**: claudia@helios-tax.example (verified via primary_contact_email)
+
+4. **Sender of outbound email**: Miles Novak, miles@novak.example
+
+5. **Channel**: helios_client_email, participants: entity.miles, entity.claudia
+
+6. **Project**: helios_workflow_sprint, alias matches the invoice project
+
+7. **Inbox message**: from claudia@helios-tax.example, subject "Could you resend the invoice?", received_at 2026-03-31T14:32:00Z, requests resend of invoice for 21-04-2026
+
+8. **Current runtime time**: 2026-03-31T16:32:00Z
+
+9. **Outbound email filename format**: eml_YYYY-MM-DDTHH-MM-SSZ.md (using runtime time)
+
+10. **Frontmatter schema** (from sending-email.md): record_type, created_at, send_state, to, subject, attachments, plus optional related_entities, related_projects, source_channel
+
+11. **Attachment ordering**: reverse chronological by invoice issue date (only one invoice here)
+
+12. **Send state**: draft (unless visible workflow establishes otherwise - no evidence of different state)
+
+13. **Subject**: should be concrete, reply-shaped - "Re: Could you resend the invoice?" is appropriate
+
+14. **After completing**: delete inbox file per 00_inbox/AGENTS.MD
+
+Target files:
+1. CREATE: 60_outbox/outbox/eml_2026-03-31T16-32-00Z.md (outbound email)
+2. DELETE: 00_inbox/000_invoice-request.md (after completion)
+
+Let me compile this properly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have collected all the direct facts needed. Let me verify the completeness:
+
+1. **Invoice details**: INV-0010, EUR 780, dated 2026-04-21, counterparty Helios Steuerbüro München GmbH, project Helios Workflow Sprint, related entity Claudia Reiter, single line item "checklist rewrite and rollout pack" ✅
+
+2. **Sender entity**: Claudia Reiter, alias `claudia`, consulting_client, primary_contact_email `claudia@helios-tax.example` ✅
+
+3. **Miles entity**: Miles Novak, alias `miles`, self, primary_contact_email `miles@novak.example` ✅
+
+4. **Inbox message**: Full frontmatter and body, request to resend invoice dated 2026-04-21 ✅
+
+5. **Channel**: helios_client_email, participants entity.miles and entity.claudia ✅
+
+6. **Project**: helios_workflow_sprint, consulting, active ✅
+
+7. **Runtime context**: Current time 2026-03-31T16:32:00Z, outbox filename eml_2026-03-31T16-32-00Z.md ✅
+
+8. **Sending email rules**: All key rules captured ✅
+
+9. **Finance invoice rules**: Clarify rather than resend blindly, keep scoped to correct lane ✅
+
+10. **Outbox rules**: Use sending-email workflow, records reflect action ✅
+
+11. **Inbox post-processing**: Delete inbox file after fully completing request ✅
+
+12. **Target files**: Create outbound email, delete inbox file ✅
+
+Everything looks complete. Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

@@ -1,0 +1,69 @@
+Let me start by reading the key instruction files, beginning with the main AGENTS.MD files and the next task file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the root AGENTS.MD and the next-task file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the remaining AGENTS.MD files and relevant workflow files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me continue reading the remaining AGENTS.MD files and also the relevant workflow files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the remaining AGENTS.MD files for 60_outbox and 90_memory, and also the 99_system AGENTS.MD and the workflow that applies to inbox processing.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a good picture of the instructions. Let me also check the deletion-and-wiping workflow since the inbox task asks to delete a project, and the inbox-processing-v2-update since the task might be a "repository cleanup" task.
+
+Let me also read the processing-inbox-email.md since the inbox AGENTS.MD mentions it.
+
+The next inbox item is `/00_inbox/000_next-task.md` which says:
+
+"Find the start date of the bureau print parts project, then tell me whether the sailboat refit notebook started earlier. Delete the earliest project."
+
+This involves deleting a project, so I need to read deletion-and-wiping.md. It also seems like a repository cleanup task, so I may need inbox-processing-v2-update.md.
+
+Let me read the relevant workflow docs.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a good understanding of all the AGENTS.MD files and the key workflow documents. Let me also check the remaining workflow docs that might be relevant.
+
+The next inbox item to process is `/00_inbox/000_next-task.md`.
+
+The task in that file says: "Find the start date of the bureau print parts project, then tell me whether the sailboat refit notebook started earlier. Delete the earliest project."
+
+This is not an email-shaped record - it's a plain markdown task. So `processing-inbox-email.md` doesn't apply. This is about project comparison and deletion, so `deletion-and-wiping.md` is relevant.
+
+Let me also read the remaining workflow docs for completeness, then summarize my findings.
+
+Actually, let me also check the `sending-email.md` just in case, and `bulk-processing-and-queueing-frontmatter.md` since it's in schemas.
+
+Actually, I have enough information now. Let me compile the results.
+
+Let me identify the relevant instruction files:
+
+1. `/AGENTS.MD` - Root workspace rules
+2. `/00_inbox/AGENTS.MD` - Inbox handling rules
+3. `/99_system/workflows/process-next-inbox-item.md` - Workflow for processing next inbox item
+4. `/99_system/workflows/deletion-and-wiping.md` - Deletion workflow (since the task involves deleting a project)
+5. `/40_projects/AGENTS.MD` - Project folder rules (since the task involves finding project start dates)
+6. `/99_system/workflows/AGENTS.MD` - System workflow index (meta-instruction)
+
+The task is NOT email-shaped, so `processing-inbox-email.md` doesn't apply. It doesn't involve OCR, frontmatter migration, or sending email.
+
+The next inbox path is `/00_inbox/000_next-task.md`.
+
+Let me compile the summaries and set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've now gathered all the relevant instruction files and extracted the rules. Let me set the final output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

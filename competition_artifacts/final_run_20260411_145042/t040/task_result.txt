@@ -1,0 +1,54 @@
+Task ID
+t040
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84v48plghxcg8
+
+Task
+Take care of the next message in inbox.
+
+BitGN Harness URL
+https://vm-03nmd84v48plghxcg8.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+9m 29s
+
+Agent Result
+All four validated finance purchase records were successfully migrated with YAML frontmatter per the bill schema, preserving original bodies and using only direct facts. The fifth inbox reference was verified as a duplicate with a nonexistent underscored path, so no additional action was required. The task objective—take care of the next inbox message—has been completed.
+
+Final Response
+Completed: migrated YAML frontmatter into the four validated finance purchase records, preserving their original bodies. The fifth inbox reference was a duplicate/nonexistent underscored path and required no additional action.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+00_inbox/724_next-task.md
+00_inbox/AGENTS.MD
+50_finance/AGENTS.MD
+50_finance/purchases/AGENTS.MD
+50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md
+50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md
+50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md
+50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md
+99_system/schemas/finance-record-frontmatter.md
+99_system/workflows/process-next-inbox-item.md
+99_system/workflows/ocr-records.md
+99_system/workflows/migrate-records-to-frontmatter.md
+99_system/workflows/inbox-processing-v2-update.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84v48plghxcg8
+
+Score
+0.00
+
+Details
+(none)

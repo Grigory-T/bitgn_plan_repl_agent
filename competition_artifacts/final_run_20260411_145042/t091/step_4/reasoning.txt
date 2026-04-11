@@ -1,0 +1,149 @@
+Now I need to:
+1. Read the schema file to understand exact field shape
+2. Read each of the three bill files
+3. Add YAML frontmatter to each bill
+4. Delete the inbox item
+
+Let me start by reading the schema and the three bill files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the three bill files to extract the visible data.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the data I need. Let me also re-read the workflow instructions for OCR and frontmatter migration to make sure I follow the exact procedure.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed. Let me prepare the frontmatter for each bill and write the updated files.
+
+For Bill 1 (family_map_wall_board):
+```yaml
+---
+record_type: bill
+bill_id: bill.family_map_wall_board
+alias: family_map_wall_board
+purchased_on: 2026-02-01
+total_eur: 36
+counterparty: Möbelhaus Malmö AB
+project: Family Map Wall
+related_entity: Ida Novak
+lines:
+  - item: pin board
+    quantity: 1
+    unit_eur: 29
+    line_eur: 29
+  - item: colored map pins
+    quantity: 1
+    unit_eur: 7
+    line_eur: 7
+---
+```
+
+For Bill 2 (toy_forge_wheel_and_magnet_pack):
+```yaml
+---
+record_type: bill
+bill_id: bill.toy_forge_wheel_and_magnet_pack
+alias: toy_forge_wheel_and_magnet_pack
+purchased_on: 2026-02-23
+total_eur: 22
+counterparty: 深圳市星河玩具配件
+project: Toy Forge Saturdays
+related_entity: Ida Novak
+lines:
+  - item: small wheel kit
+    quantity: 1
+    unit_eur: 13
+    line_eur: 13
+  - item: magnet pack
+    quantity: 1
+    unit_eur: 9
+    line_eur: 9
+---
+```
+
+For Bill 3 (school_helper_label_tape):
+```yaml
+---
+record_type: bill
+bill_id: bill.school_helper_label_tape
+alias: school_helper_label_tape
+purchased_on: 2026-03-02
+total_eur: 25
+counterparty: Müller Bürobedarf
+project: School Helper Kit
+related_entity: Ida Novak
+lines:
+  - item: label tape refill
+    quantity: 1
+    unit_eur: 14
+    line_eur: 14
+  - item: small organizer bins
+    quantity: 1
+    unit_eur: 11
+    line_eur: 11
+---
+```
+
+Now I need to:
+1. Write each bill with frontmatter prepended to the existing body
+2. Delete the inbox item
+
+Let me verify the line_eur calculations:
+- Bill 1: 1*29=29 ✓, 1*7=7 ✓, total=36 ✓
+- Bill 2: 1*13=13 ✓, 1*9=9 ✓, total=22 ✓
+- Bill 3: 1*14=14 ✓, 1*11=11 ✓, total=25 ✓
+
+All correct. Let me write the files now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, bill 1 is written. Let me write bills 2 and 3.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Bill 2 written successfully. Now write bill 3.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All three bills now have YAML frontmatter. Let me verify them by reading them back, then delete the inbox item.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All three bills now have correct YAML frontmatter with all required and optional fields properly extracted from the visible note data. Let me verify the line_eur values match quantity * unit_eur:
+
+Bill 1: pin board (1*29=29 ✓), colored map pins (1*7=7 ✓), total=29+7=36 ✓
+Bill 2: small wheel kit (1*13=13 ✓), magnet pack (1*9=9 ✓), total=13+9=22 ✓
+Bill 3: label tape refill (1*14=14 ✓), small organizer bins (1*11=11 ✓), total=14+11=25 ✓
+
+All correct. Now I need to delete the inbox item per the instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The inbox item has been deleted. Let me verify it's gone and then prepare the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The inbox item has been successfully deleted. All tasks are complete:
+
+1. Added YAML frontmatter to bill 1 (family_map_wall_board) with all required and optional fields
+2. Added YAML frontmatter to bill 2 (toy_forge_wheel_and_magnet_pack) with all required and optional fields
+3. Added YAML frontmatter to bill 3 (school_helper_label_tape) with all required and optional fields
+4. Deleted the inbox item /00_inbox/000_next-task.md
+
+Now I need to set the output variable `resulting_changes_summary`.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me verify that I've set the `resulting_changes_summary` variable correctly and then finalize with `step_status` and `final_answer`.
+
+The `resulting_changes_summary` was already set in the previous code block. Let me verify it's accessible and then set the final two variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The resulting_changes_summary is properly set as a dict with all the required information. Now I need to finalize the step with the two required lines.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

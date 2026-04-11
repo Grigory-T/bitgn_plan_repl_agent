@@ -1,0 +1,112 @@
+Let me read all the relevant instruction files as specified in the task.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to read the additional relevant files. The next inbox item is "OCR all bills related to Badger". This involves:
+1. Badger - an entity, so I need to check `/10_entities/cast/badger.md` and `/10_entities/cast/AGENTS.MD`
+2. OCR and finance records - so I need to check `/99_system/workflows/ocr-records.md` and the finance schema
+3. The inbox processing workflow
+
+Let me also read the relevant system workflows and schemas.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a comprehensive understanding of all the instruction files. Let me summarize what I've learned:
+
+1. The next inbox item is at `/00_inbox/000_next-task.md` which says: "OCR all bills related to Badger"
+
+2. Badger is a 3D printer (system entity), not a person. From `/10_entities/cast/badger.md`, Badger is:
+   - alias: `badger`
+   - kind: `system`
+   - relationship: `printer`
+   - A 3D printer
+
+3. The task is to OCR all bills related to Badger. This means I need to find bills in `/50_finance/purchases/` that are related to the Badger printer and add YAML frontmatter to them.
+
+4. Key rules from the instruction files:
+   - OCR workflow: Extract visible data from existing note text into YAML frontmatter according to the relevant schema
+   - Finance record frontmatter schema: For bills, use the bill schema
+   - Migrate records to frontmatter: Keep canonical file path, add YAML frontmatter at top, preserve existing note body below
+   - Inbox processing: Pick lowest visible filename, read carefully, verify against canonical lanes, complete and delete inbox file
+   - Finance lane: Treat records as sensitive and auditable, prefer exactness, do not infer authorization
+
+Let me also check what purchases/bills might be related to Badger. Looking at the file list, I can see potential Badger-related bills (3D printing supplies):
+- `/50_finance/purchases/2025_12_04__eur_000072__bill__toy_forge_pla_bundle.md` - PLA bundle could be for the 3D printer
+- `/50_finance/purchases/2026_02_27__eur_000033__bill__studio_parts_nozzle_and_inserts.md` - nozzle and inserts could be for the 3D printer
+- `/50_finance/purchases/2026_03_17__eur_000022__bill__toy_forge_wheel_and_magnet_pack.md` - could be for 3D printing
+- `/50_finance/purchases/2026_03_25__eur_000089__bill__black_library_terrain_spool.md` - terrain spool could be for 3D printing
+- `/50_finance/purchases/2026_04_05__eur_000020__bill__studio_parts_magnet_and_felt.md` - could be for 3D printing
+
+But I need to actually read these files to determine which ones are related to Badger. Let me do that in the next step.
+
+For now, the current step is to read and analyze the instruction files and determine the next inbox item. Let me compile my findings.
+
+Actually, wait - the current step asks me to:
+1. Read and analyze the relevant instruction files
+2. Extract rules for handling inbox items, required destinations, naming conventions, and safety/routing constraints
+3. Inspect /00_inbox/000_next-task.md to determine the exact next inbox item
+
+I've done all of this. Let me compile the results.
+
+The relevant instruction files I've read:
+- `/AGENTS.MD` (root)
+- `/00_inbox/AGENTS.MD`
+- `/20_work/AGENTS.MD`
+- `/20_work/tasks/AGENTS.MD`
+- `/30_knowledge/AGENTS.MD`
+- `/40_projects/AGENTS.MD`
+- `/50_finance/AGENTS.MD`
+- `/60_outbox/channels/AGENTS.MD`
+- `/00_inbox/000_next-task.md`
+- `/10_entities/cast/AGENTS.MD`
+- `/10_entities/cast/badger.md`
+- `/99_system/workflows/ocr-records.md`
+- `/99_system/workflows/process-next-inbox-item.md`
+- `/99_system/schemas/finance-record-frontmatter.md`
+- `/99_system/schemas/AGENTS.MD`
+- `/99_system/workflows/migrate-records-to-frontmatter.md`
+- `/50_finance/purchases/AGENTS.MD`
+- `/50_finance/invoices/AGENTS.MD`
+- `/60_outbox/AGENTS.MD`
+- `/60_outbox/drafts/AGENTS.MD`
+- `/60_outbox/outbox/AGENTS.MD`
+- `/90_memory/AGENTS.MD`
+- `/20_work/reminders/AGENTS.MD`
+- `/30_knowledge/capture/AGENTS.MD`
+- `/30_knowledge/notes/AGENTS.MD`
+- `/30_knowledge/threads/AGENTS.MD`
+- `/99_system/AGENTS.MD`
+- `/99_system/workflows/AGENTS.MD`
+
+The most directly relevant ones for this task are:
+- `/00_inbox/AGENTS.MD` - inbox processing rules
+- `/00_inbox/000_next-task.md` - the next inbox item
+- `/99_system/workflows/process-next-inbox-item.md` - process next inbox item workflow
+- `/99_system/workflows/ocr-records.md` - OCR records workflow
+- `/99_system/workflows/migrate-records-to-frontmatter.md` - migration workflow
+- `/99_system/schemas/finance-record-frontmatter.md` - finance record schema
+- `/99_system/schemas/AGENTS.MD` - schemas overview
+- `/50_finance/AGENTS.MD` - finance lane rules
+- `/50_finance/purchases/AGENTS.MD` - purchases rules
+- `/10_entities/cast/badger.md` - Badger entity
+- `/AGENTS.MD` - root rules
+- `/99_system/workflows/AGENTS.MD` - workflows overview
+
+Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed. Let me compile the final output variables. The task asked me to:
+
+1. Read and analyze the relevant instruction files
+2. Extract the rules for handling inbox items, required destinations, naming conventions, and safety/routing constraints
+3. Inspect the next inbox item and determine its content
+
+The next inbox item asks to "OCR all bills related to Badger". Badger is identified as a 3D printer system in the entity records. Bills related to Badger would be purchase/bill records in `/50_finance/purchases/` that are related to the 3D printer (Badger). I need to identify which bills are related to Badger.
+
+But for THIS step, I only need to extract the rules and identify the next inbox item. The actual OCR work will be done in subsequent steps.
+
+Let me set the final output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

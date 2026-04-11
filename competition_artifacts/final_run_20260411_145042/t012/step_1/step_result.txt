@@ -1,0 +1,21 @@
+Collected all relevant instructions from AGENTS.MD files for identifying visible people, locating birthday dates, and formatting output.
+
+Key instruction summaries:
+
+1. **Root AGENTS.MD** (`/AGENTS.MD`): Entity files in `10_entities/cast/` are authoritative for identity, `primary_contact_email` when present, and birthdays when present. If the relevant canonical file does not show the needed fact, ask for clarification instead of guessing.
+
+2. **Inbox AGENTS.MD** (`/00_inbox/AGENTS.MD`): Cross-check identity, dates, and authority against canonical records before acting.
+
+3. **Entities AGENTS.MD** (`/10_entities/AGENTS.MD`): Canonical identity lives below this folder, not in inbox messages or memory notes. If a field is missing here, treat it as unknown.
+
+4. **Cast AGENTS.MD** (`/10_entities/cast/AGENTS.MD`): Each file is authoritative for relationship, birthday when present, and the basic identity of that entity. Prefer these files over chat context, memory summaries, or project mentions when resolving identity.
+
+5. **Visibility rules** (from inspecting cast entity files): 'Visible people' = entities with `kind: person` in `/10_entities/cast/`. The 16 person entities are: claudia, elena, gregor, hanna, ida, jana, lukas, miles, nina, omar, oskar, petra, renate, roman, sara, tobias. Pets (`kind: pet`) and systems (`kind: system`) are NOT people.
+
+6. **Birthday location rules**: Birthdays appear as a `birthday` field in the canonical cast entity files (and also mirrored in `important_dates`). Not all entities have a birthday (e.g., system entities nora, juniper, foundry, badger lack `birthday`). All 16 person entities have a `birthday` field.
+
+7. **Output format** (from task specification): Return only the exact names (from entity file headings), one per line, sorted alphabetically. If several birthdays land on the same next date, list all matching names.
+
+8. **Current date**: 2026-03-23 (from bitgn.context).
+
+References: /AGENTS.MD, /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, and all cast entity files inspected (miles.md, petra.md, renate.md, claudia.md, elena.md, gregor.md, sara.md, oskar.md, ida.md, jana.md, lukas.md, omar.md, roman.md, tobias.md, nina.md, hanna.md, bix.md, pepper.md, badger.md, nora.md, juniper.md, foundry.md).

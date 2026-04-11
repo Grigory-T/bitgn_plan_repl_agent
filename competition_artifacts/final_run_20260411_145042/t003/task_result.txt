@@ -1,0 +1,47 @@
+Task ID
+t003
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84rglrrbmjn1k
+
+Task
+In which projects is the ops manager at the tax firm involved? Return only the exact project names, one per line, sorted alphabetically.
+
+BitGN Harness URL
+https://vm-03nmd84rglrrbmjn1k.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+3m 22s
+
+Agent Result
+The identified project name has been verified as 'Helios Workflow Sprint', and no additional project associations were found. The remaining step is just formatting the final answer, which can be completed now.
+
+Final Response
+Helios Workflow Sprint
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+10_entities/cast/claudia.md
+40_projects/2026_04_23_helios_workflow_sprint/README.MD
+/AGENTS.MD
+/10_entities/AGENTS.MD
+/10_entities/cast/AGENTS.MD
+/40_projects/AGENTS.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84rglrrbmjn1k
+
+Score
+0.00
+
+Details
+(none)

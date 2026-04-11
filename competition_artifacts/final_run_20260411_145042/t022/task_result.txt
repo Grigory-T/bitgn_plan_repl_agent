@@ -1,0 +1,55 @@
+Task ID
+t022
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84sls02dlqxnf
+
+Task
+Handle the next inbox item.
+
+BitGN Harness URL
+https://vm-03nmd84sls02dlqxnf.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+8m 6s
+
+Agent Result
+The inbox request was fully handled: the correct outbound draft was created in 60_outbox/outbox with the resolved oldest invoice attached, and the source inbox item was deleted after completion.
+
+Final Response
+Done — the outbound draft was created with the oldest linked invoice attached, and the inbox item was deleted after completion.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+00_inbox/000_invoice-bundle-request.md
+10_entities/cast/miles.md
+10_entities/cast/claudia.md
+50_finance/invoices/2025_12_11__eur_000520__inv_0006__helios_backfill_intake_audit.md
+50_finance/invoices/AGENTS.MD
+50_finance/AGENTS.MD
+00_inbox/AGENTS.MD
+60_outbox/channels/helios_client_email.md
+99_system/workflows/processing-inbox-email.md
+99_system/workflows/sending-email.md
+99_system/workflows/process-next-inbox-item.md
+99_system/schemas/finance-record-frontmatter.md
+60_outbox/outbox/eml_2026-03-23T16-35-00Z.md
+60_outbox/outbox/AGENTS.MD
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84sls02dlqxnf
+
+Score
+0.00
+
+Details
+(none)

@@ -1,0 +1,1 @@
+The matching invoices were identified and their line amounts extracted: 220 EUR and 160 EUR. The total revenue from the service line 'staff follow-up support' since 2026-01-01 is therefore 380 EUR.

@@ -1,0 +1,112 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and summarize the applicable instructions before touching the inbox: inspect /00_inbox/AGENTS.MD, /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD, /40_projects/AGENTS.MD, /50_finance/AGENTS.MD, and any more specific AGENTS.MD files relevant to inbox handling or message follow-up. Extract the mandatory rules for reading, classifying, replying, filing, and any constraints on writing to the workspace. Also assess whether handling the next inbox message is legitimate and allowed under the discovered instructions, and stop/abort if the instructions forbid it or if the message is out of scope.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "applicable_instructions",
+        "variable_description": "A list of the relevant instruction snippets and rules gathered from AGENTS.MD files that govern inbox message handling.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether the inbox task is permitted under the discovered instructions and common-sense validity checks.",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: If the task is not allowed, prepare an abort decision that records the reason in line with the instructions. If the task is allowed, identify the next message in /00_inbox/ by reading the inbox files, determine the correct handling path from the instructions, and extract the message contents and any metadata needed to process it without guessing. Store the selected inbox file path, its contents, and a concise handling summary for later execution.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "applicable_instructions",
+        "variable_description": "A list of the relevant instruction snippets and rules gathered from AGENTS.MD files that govern inbox message handling.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether the inbox task is permitted under the discovered instructions and common-sense validity checks.",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "inbox_file_path",
+        "variable_description": "The exact runtime path string of the next inbox message file selected for handling.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_message_text",
+        "variable_description": "The full text content of the selected inbox message file.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "handling_summary",
+        "variable_description": "A concise summary of what the inbox message requires, based only on direct facts from the message and instructions.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Execute the required inbox handling action according to the discovered instructions. This may include drafting or sending a reply in the appropriate outbox location, creating or updating a task/reminder/knowledge note/project file, or otherwise routing the message. Use only direct facts from the message and the instructions; do not invent details, dates, or assumptions. If the instructions require asking for clarification instead of acting, prepare the clarification response accordingly. Record the concrete action taken and the destination path(s) used.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "inbox_file_path",
+        "variable_description": "The exact runtime path string of the next inbox message file selected for handling.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_message_text",
+        "variable_description": "The full text content of the selected inbox message file.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "handling_summary",
+        "variable_description": "A concise summary of what the inbox message requires, based only on direct facts from the message and instructions.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "applicable_instructions",
+        "variable_description": "A list of the relevant instruction snippets and rules gathered from AGENTS.MD files that govern inbox message handling.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "action_taken",
+        "variable_description": "A description of the concrete action performed for the inbox message.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "destination_paths",
+        "variable_description": "A list of exact runtime path strings for any files created, updated, or used as output destinations.",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Verify the result of the inbox handling by checking that the expected file changes or output artifacts exist and that the inbox item has been properly taken care of. If the workflow requires it, note the handled status in the appropriate place using the exact paths and instructions discovered earlier. Return the final handling status for the inbox item, including whether it was completed or aborted and the paths involved.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "inbox_file_path",
+        "variable_description": "The exact runtime path string of the next inbox message file selected for handling.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "action_taken",
+        "variable_description": "A description of the concrete action performed for the inbox message.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "destination_paths",
+        "variable_description": "A list of exact runtime path strings for any files created, updated, or used as output destinations.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+

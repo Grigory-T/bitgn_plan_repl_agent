@@ -1,0 +1,82 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read the relevant instruction files to determine how to search and interpret project documents: /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD, and /40_projects/AGENTS.MD, along with any more specific instructions found in /40_projects/2026_04_30_helios_workflow_sprint/README.MD and related files if those instructions direct additional reading. Extract any rules about where project start dates are recorded and how to report them.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "List of instruction file paths that were read for task-specific guidance",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Directly relevant rules and guidance extracted from the instruction files",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Locate the authoritative project document for the Helios workflow cleanup by searching /40_projects/2026_04_30_helios_workflow_sprint/README.MD and any directly linked project or finance files that mention Helios workflow cleanup, workflow sprint, or project kickoff/start. Identify the exact file(s) that contain the project start date.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_paths",
+        "variable_description": "List of instruction file paths that were read for task-specific guidance",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Directly relevant rules and guidance extracted from the instruction files",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "candidate_source_paths",
+        "variable_description": "File paths that appear to contain authoritative information about the Helios workflow cleanup start date",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "candidate_source_summaries",
+        "variable_description": "Short direct-fact summaries of what each candidate source says about the project start date",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Read the identified authoritative source files and extract the exact project start date for the Helios workflow cleanup from direct textual evidence only. Resolve any conflicting references by preferring the clearest primary project record, and store the date in a normalized form if the file provides it in another format.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "candidate_source_paths",
+        "variable_description": "File paths that appear to contain authoritative information about the Helios workflow cleanup start date",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "candidate_source_summaries",
+        "variable_description": "Short direct-fact summaries of what each candidate source says about the project start date",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "project_start_date_iso",
+        "variable_description": "The exact project start date extracted from source files in ISO format YYYY-MM-DD",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Convert the extracted ISO date into the required output format DD-MM-YYYY and verify that the final value is supported directly by the source evidence with no estimation or inference.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "project_start_date_iso",
+        "variable_description": "The exact project start date extracted from source files in ISO format YYYY-MM-DD",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+

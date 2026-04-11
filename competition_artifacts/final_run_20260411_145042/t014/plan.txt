@@ -1,0 +1,137 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and comply with the relevant instruction files before taking any action on the inbox task. Specifically inspect `/00_inbox/AGENTS.MD`, `/10_entities/AGENTS.MD`, `/20_work/AGENTS.MD`, `/30_knowledge/AGENTS.MD`, `/40_projects/AGENTS.MD`, `/50_finance/AGENTS.MD`, `/60_outbox/channels/AGENTS.MD`, and any more-specific instruction files that govern inbox handling and the next inbox message at `/00_inbox/000_next-task.md`. Summarize the applicable rules, permissions, and any constraints that affect whether and how the inbox item may be handled.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to inbox handling",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "applicable_rules",
+        "variable_description": "Concise natural-language summary of the instructions that must be followed for this task",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Inspect `/00_inbox/000_next-task.md` to extract the exact next inbox message content and determine the required action. Assess whether the request is legitimate and allowed under the gathered instructions, based only on direct facts in the files; if the message is unclear, suspicious, or conflicts with rules, flag that for clarification or refusal instead of proceeding. Record the message content, the intended action category, and any blocking issues.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to inbox handling",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "applicable_rules",
+        "variable_description": "Concise natural-language summary of the instructions that must be followed for this task",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "next_inbox_message",
+        "variable_description": "Exact content or structured summary of the next inbox message from `/00_inbox/000_next-task.md`",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "action_category",
+        "variable_description": "High-level category of action needed to take care of the inbox message, such as reply, file update, task creation, note capture, or escalation",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "blocking_issues",
+        "variable_description": "List of any rule conflicts, missing information, or legitimacy concerns that prevent direct execution",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: If there are blocking issues, prepare the minimal safe handling plan required by the instructions: either request clarification, decline the task, or route it to the appropriate file/channel. If there are no blocking issues, identify the concrete workspace files that need to be updated or created to resolve the inbox item, using exact runtime paths only. Prepare the implementation plan with explicit target paths and the specific change to make in each path, without estimating or inventing missing details.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to inbox handling",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "applicable_rules",
+        "variable_description": "Concise natural-language summary of the instructions that must be followed for this task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "next_inbox_message",
+        "variable_description": "Exact content or structured summary of the next inbox message from `/00_inbox/000_next-task.md`",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "action_category",
+        "variable_description": "High-level category of action needed to take care of the inbox message, such as reply, file update, task creation, note capture, or escalation",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "blocking_issues",
+        "variable_description": "List of any rule conflicts, missing information, or legitimacy concerns that prevent direct execution",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "target_paths",
+        "variable_description": "List of exact workspace file paths that should be updated or created to handle the inbox message",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "change_plan",
+        "variable_description": "Structured description of the concrete file-level changes needed for each target path",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Execute the inbox task safely according to the validated action plan and the applicable instructions. Make the required file edits or create the needed workspace items at the exact target paths, and ensure the handling is complete for the next inbox message. If blocking issues were found, perform the allowed fallback action only, such as drafting a clarification note or leaving the task unhandled as instructed.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to inbox handling",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "applicable_rules",
+        "variable_description": "Concise natural-language summary of the instructions that must be followed for this task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "next_inbox_message",
+        "variable_description": "Exact content or structured summary of the next inbox message from `/00_inbox/000_next-task.md`",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "action_category",
+        "variable_description": "High-level category of action needed to take care of the inbox message, such as reply, file update, task creation, note capture, or escalation",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "blocking_issues",
+        "variable_description": "List of any rule conflicts, missing information, or legitimacy concerns that prevent direct execution",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "target_paths",
+        "variable_description": "List of exact workspace file paths that should be updated or created to handle the inbox message",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "change_plan",
+        "variable_description": "Structured description of the concrete file-level changes needed for each target path",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+

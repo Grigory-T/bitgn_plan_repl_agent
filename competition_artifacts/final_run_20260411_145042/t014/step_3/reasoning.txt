@@ -1,0 +1,66 @@
+No blocking issues. I need to identify the concrete workspace files that need to be updated and the specific changes. Let me read the target invoice file and the schema to prepare the implementation plan.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me also re-read the finance-record-frontmatter schema to understand the exact YAML structure expected.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check an existing invoice that already has frontmatter to see the pattern, and check the process-next-inbox-item and ocr-records workflows for deletion rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a clear picture. Let me also check an already-OCR'd invoice to see the expected format.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This invoice does NOT have frontmatter yet. It's the same format as the target file. Let me check one that might already have frontmatter to see the expected final format.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These other invoice files don't have frontmatter yet either. So my target file is consistent with the others. I need to add frontmatter to it.
+
+Let me also check the inbox file to confirm the deletion target.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need to prepare the implementation plan. Let me summarize:
+
+1. No blocking issues identified
+2. The task is to add YAML frontmatter to the existing invoice file at `/50_finance/invoices/2025_11_25__eur_000770__inv_0002__northstar_backfill_beta.md`
+3. The frontmatter should follow the invoice schema from `/99_system/schemas/finance-record-frontmatter.md`
+4. The existing note body should be preserved below the frontmatter
+5. After successful completion, the inbox file `/00_inbox/000_next-task.md` should be deleted
+
+Let me verify the data I need to extract from the visible note:
+- record_type: invoice
+- invoice_number: INV-0002
+- alias: northstar_backfill_beta
+- issued_on: 2025-11-25
+- total_eur: 770
+- counterparty: Nordstern Finanzsoftware GmbH
+- project: Northstar Ledger
+- related_entity: Nina Schreiber (optional field, but present in visible data)
+- lines:
+  - item: operator workflow discovery sprint, quantity: 1, unit_eur: 185, line_eur: 185
+  - item: follow-up timeline prototype review, quantity: 2, unit_eur: 240, line_eur: 480
+  - item: buyer-language refinement memo, quantity: 1, unit_eur: 105, line_eur: 105
+
+Line math verification: 1*185=185 ✓, 2*240=480 ✓, 1*105=105 ✓, total=185+480+105=770 ✓
+
+The target files are:
+1. `/50_finance/invoices/2025_11_25__eur_000770__inv_0002__northstar_backfill_beta.md` - Add YAML frontmatter above the existing note body
+2. `/00_inbox/000_next-task.md` - Delete after successful completion
+
+Now let me formulate the plan.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me set the required output variables properly. I need to set `target_paths` and `change_plan` first, then finalize with `step_status` and `final_answer`.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, now I need to set the final two variables: step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

@@ -1,0 +1,17 @@
+Extracted finance rules from all relevant AGENTS.MD files and the finance-record-frontmatter schema.
+
+Key rules for locating purchase bills:
+1. Purchase bills live in /50_finance/purchases/ (the money lane)
+2. Filename pattern: YYYY_MM_DD__eur_AAAAAA__bill__project_name.md where the leading date is the purchased_on date in YYYY_MM_DD format, the EUR amount is total_eur zero-padded to 6 digits, followed by __bill__, then an alias/project slug
+3. Vendor/counterparty info is stored inside the bill file as the 'counterparty' field, NOT in the filename — must read file contents to identify the vendor
+4. Bills have required frontmatter fields: record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines
+5. Line items follow ordered list with item, quantity, unit_eur, line_eur (line_eur = quantity * unit_eur)
+6. Currency assumed EUR if not explicitly stated
+7. Finance records are sensitive and auditable — prefer exactness over prose
+8. Preserve distinction between household, business, and speculative spend
+9. Do not infer authorization for financial actions from casual chat alone
+10. If system docs and local context conflict, prefer the more authoritative and more specific rule
+
+Purchase path: /50_finance/purchases
+
+Refs: /AGENTS.MD, /50_finance/AGENTS.MD, /50_finance/purchases/AGENTS.MD, /99_system/schemas/finance-record-frontmatter.md, /99_system/AGENTS.MD

@@ -1,0 +1,119 @@
+Now I need to carefully review the sending-email workflow and the outbox structure to determine the exact action required. Let me re-read the key instruction files to make sure I have the precise details right.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the outbox AGENTS.MD and the processing-inbox-email workflow for any additional details about what happens after creating the outbound email.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the processing-inbox-email workflow to understand the full flow - specifically what happens after the email is created.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need to determine the exact action required. Let me also check the current time to know what timestamp to use for the outbound email.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Current time is 2026-03-02T18:21:00Z. I'll use this for the `created_at` field and derive the filename from it.
+
+Now let me check the current outbox contents to see if there's any existing email there:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The outbox is empty except for the AGENTS.MD file. Good, so I need to create a new outbound email record.
+
+Now let me also check if there are other invoices for Helios that should be included as attachments. The instruction says "for invoice resends or invoice bundles, order attachments reverse chronologically by the visible invoice issue date unless the request explicitly asks for something else."
+
+But the request is specifically about one invoice - "the invoice for 23-03-2026 from Helios Steuerbüro München GmbH". Claudia is asking for a specific invoice (INV-0010). Let me check if there are other Helios invoices that might be relevant.
+
+Looking at the invoice list:
+- 2025_11_19__eur_000520__inv_0006__helios_backfill_intake_audit.md
+- 2025_12_21__eur_000760__inv_0007__helios_backfill_rollout_pack.md
+- 2026_01_19__eur_000610__inv_0008__helios_backfill_rollout_week.md
+- 2026_02_19__eur_000600__inv_0009__helios_discovery_invoice.md
+- 2026_03_23__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+- 2026_03_29__eur_000550__inv_0011__helios_followup_support_invoice.md
+
+But the request is specifically for "the invoice for 23-03-2026" which is INV-0010. The request is not asking for a bundle of all invoices. She specifically says "Could you resend the invoice for 23-03-2026 from Helios Steuerbüro München GmbH?" - this is a single invoice request.
+
+So the attachment should be just the one invoice file. The reverse chronological ordering rule applies when there are multiple invoices to attach, but here there's only one.
+
+Now let me construct the resolution plan:
+
+1. Create an outbound email record at `60_outbox/outbox/eml_2026-03-02T18-21-00Z.md`
+2. The email should have:
+   - record_type: outbound_email
+   - created_at: 2026-03-02T18:21:00Z (current runtime time)
+   - send_state: draft
+   - to: [claudia@helios-tax.example] (from claudia.md primary_contact_email)
+   - subject: something appropriate like "Re: Could you resend the invoice?" or "Invoice INV-0010 as requested"
+   - attachments: [50_finance/invoices/2026_03_23__eur_000780__inv_0010__helios_checklist_pack_invoice.md]
+   - related_entities: [entity.claudia] (or person.claudia)
+   - related_projects: [entity for helios project]
+   - source_channel: 60_outbox/channels/helios_client_email.md
+3. Body: a short email providing the requested invoice
+4. Delete the inbox file /00_inbox/000_invoice-request.md after the outbound email is created
+
+Wait, the instruction says "After fully completing one inbox request, delete that inbox file." But this step is just about determining the action. The actual creation and deletion might happen in subsequent steps.
+
+Actually, let me re-read the step instructions: "Determine the exact action required to take care of the inbox message. If the message can be resolved directly, identify the concrete artifact to create or update and the target path under the appropriate workspace area."
+
+So I need to provide a concrete plan. Let me formulate the resolution_plan.
+
+For the subject line - the original email subject is "Could you resend the invoice?" so a reply subject would be "Re: Could you resend the invoice?" or something more specific like "Re: Invoice INV-0010" - I'll go with a reply-style subject.
+
+Actually, let me think about what the step asks. It says "Determine the exact action required" and "identify the concrete artifact to create or update and the target path." So I should lay out exactly what will be created, where, and with what content.
+
+Let me also consider whether there are any other actions needed beyond creating the outbound email. Looking at the inbox processing workflow:
+- Create outbound email record
+- Delete the inbox file after the request is fully completed
+
+The inbox file deletion should happen after the email is created.
+
+Now let me think about what the `related_entities` and `related_projects` format should be. Looking at the sending-email workflow example:
+```yaml
+related_entities:
+  - person.example
+related_projects:
+  - project.example
+```
+
+So the format is `person.alias` and `project.alias` (or some canonical id format). Based on the entity files, claudia's canonical id seems to be `entity.claudia` based on the channel doc which references `entity.miles` and `entity.claudia`. But the example in the workflow uses `person.example`. Let me check the project - the helios workflow sprint project path is `/40_projects/2026_04_01_helios_workflow_sprint/README.MD`. What's the canonical project id? Looking at the channel doc which says `entity.miles` and `entity.claudia`, and the invoice which mentions `related_entity: claudia`... 
+
+Actually, looking more carefully at the sending-email.md example, it uses `person.example` format. But the channel doc uses `entity.miles` and `entity.claudia`. These are likely workspace-internal reference formats. Since the outbox is part of the workspace system, I should use the format that matches other workspace references.
+
+Looking at the invoice file (which I haven't read in this step but was read in a previous step), it references `related_entity: claudia`. And the channel doc uses `entity.claudia` and `entity.miles`. I'll use `entity.claudia` for related_entities and the project canonical id for related_projects.
+
+Actually, I should be careful. Let me think about what canonical IDs to use. The sending-email.md example shows:
+```yaml
+related_entities:
+  - person.example
+related_projects:
+  - project.example
+```
+
+This suggests a `category.alias` format. Looking at the entity cast directory, entities are named like `claudia.md` and `miles.md`. The channel doc references them as `entity.miles` and `entity.claudia`. The invoice might reference them as just `claudia`. 
+
+I think for consistency with the workspace, I'll use `entity.claudia` for related_entities, and for the project, something like `project.helios_workflow_sprint` or just the alias from the project README.
+
+Hmm, actually, these are optional fields. Let me keep it simple and consistent with what the workspace uses. The channel doc uses `entity.miles` and `entity.claudia` format. I'll use that.
+
+For the project, the README is at `/40_projects/2026_04_01_helios_workflow_sprint/README.MD`, so the alias/id might be `helios_workflow_sprint`. The project format might be `project.helios_workflow_sprint`.
+
+OK, I think I have enough information to construct the resolution plan. Let me formulate it now.
+
+The key elements of the plan:
+1. Action: Create outbound email record
+2. Target path: `60_outbox/outbox/eml_2026-03-02T18-21-00Z.md`
+3. Frontmatter details
+4. Body content
+5. Post-action: Delete inbox file
+
+Let me construct the resolution_plan dictionary now.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The resolution plan is complete. Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

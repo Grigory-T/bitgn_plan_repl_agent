@@ -1,0 +1,108 @@
+Now I need to:
+1. Read the sending-email.md workflow to understand the exact format required
+2. Read the outbox AGENTS.MD for any additional rules
+3. Read the northstar_email channel for any specifics
+4. Create the outbound email record
+5. Delete the inbox file
+
+Let me start by reading the sending-email.md workflow and the outbox AGENTS.MD.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need to create the outbound email record. Let me get the current runtime time and create the email file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the current runtime time. Let me create the outbound email record.
+
+Key details:
+- Filename: `eml_2026-03-02T18-21-00Z.md` (replace `:` with `-`)
+- Path: `60_outbox/outbox/eml_2026-03-02T18-21-00Z.md`
+- `created_at`: `2026-03-02T18:21:00Z` (RFC3339 format, normal colons)
+- `record_type`: `outbound_email`
+- `send_state`: `draft`
+- `to`: `['nina@finance-workflow.example']`
+- `subject`: Something appropriate for invoice resend, like "Invoice Resend: INV-0001 (2025-10-06)"
+- `attachments`: `['50_finance/invoices/2025_10_06__eur_000610__inv_0001__northstar_backfill_alpha.md']`
+- `related_entities`: `['entity.nina']`
+- `related_projects`: `['northstar_ledger']`
+- `source_channel`: `60_outbox/channels/northstar_email.md`
+- Body: A brief message about the invoice resend
+
+Let me also check the outbox/AGENTS.MD to see if there are any additional rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. Now let me also read the inbox message one more time to make sure I have all details correct, and the invoice file to confirm its path.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed. Let me create the outbound email record.
+
+Key details:
+- Filename: `eml_2026-03-02T18-21-00Z.md` (derived from current runtime time 2026-03-02T18:21:00Z, with `:` replaced by `-`)
+- Path: `60_outbox/outbox/eml_2026-03-02T18-21-00Z.md`
+- Frontmatter:
+  - record_type: outbound_email
+  - created_at: 2026-03-02T18:21:00Z (RFC3339 format, normal colons)
+  - send_state: draft
+  - to: [nina@finance-workflow.example] (entity nina's primary_contact_email)
+  - subject: Re: Could you resend the invoice? (or something similar and appropriate)
+  - attachments: [50_finance/invoices/2025_10_06__eur_000610__inv_0001__northstar_backfill_alpha.md]
+  - related_entities: [entity.nina]
+  - related_projects: [northstar_ledger]
+  - source_channel: 60_outbox/channels/northstar_email.md
+- Body: A reply to Nina confirming the invoice is attached
+
+Let me construct the file content now.
+
+Actually wait - the sending-email.md says the `attachments` field is required. It also says "for invoice resends or invoice bundles, order attachments reverse chronologically by the visible invoice issue date unless the request explicitly asks for something else; newest-first is the default because finance review usually starts with the latest invoice" - in this case there's only one invoice so ordering doesn't matter.
+
+Let me also think about the subject line. The inbox email subject is "Could you resend the invoice?" - a reply subject would typically be "Re: Could you resend the invoice?" or something more specific. The sending-email.md says "subject should be concrete and appropriate to the request." I think "Re: Could you resend the invoice?" is appropriate, or perhaps "Re: Invoice INV-0001 – 2025-10-06". I'll go with "Re: Could you resend the invoice?" as it directly references the original subject, which is standard email practice.
+
+For the body, I should keep it narrow and purpose-built. Something like:
+
+"Hi Nina,
+
+Here is the invoice you requested (INV-0001, issued 2025-10-06, from Nordstern Finanzsoftware GmbH). It's attached for your internal approval.
+
+Best,
+Miles"
+
+Let me now create the file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The outbound email was created. Now I need to verify it was written correctly, then delete the inbox file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The outbound email looks correct. Now I need to delete the inbox file per the after-completion rule.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The inbox file has been deleted. Now I need to set the output variables as required.
+
+Let me set:
+- work_result: a structured record of what was done
+- step_status: 'completed'
+- final_answer: description of what was accomplished with references
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Everything is done. The inbox file is deleted, and the outbound email record is created. Let me set the output variables.
+
+work_result should be a structured record of the completed inbox work, including the exact files changed or created and a concise factual summary of what was done.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me verify that the work_result variable is properly set and then finalize with step_status and final_answer.
+
+The work_result dict was already set in the previous code block. Let me confirm it's correct and then set the final two variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+work_result is already set correctly. Now I need to assign the final two variables: step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

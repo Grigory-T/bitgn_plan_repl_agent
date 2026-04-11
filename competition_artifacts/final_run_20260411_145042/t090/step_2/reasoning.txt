@@ -1,0 +1,67 @@
+Now I need to read the inbox item at /00_inbox/724_next-task.md to get its full content and classify the request.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I need to read the referenced files to verify they exist. Let me check each of the 5 files mentioned in the inbox item.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The 5th file with a leading underscore does not exist. This confirms the issue identified in step 1. Let me now read the content of the 4 existing files to understand what needs to be OCR'd, and also re-read the schema file to make sure I have it fully.
+
+Let me now assess:
+- The inbox item is at /00_inbox/724_next-task.md
+- Content: Requests OCR of 5 purchase/bill files
+- Items 1-4 exist, item 5 (with leading underscore) does not exist
+- This is a legitimate OCR task under the workspace rules
+- Required followup paths: the 4 existing purchase files, the schema file, and the relevant workflow files
+
+Let me also read the existing files to confirm they need OCR (i.e., they don't already have frontmatter).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. All 4 existing files appear to be bills without YAML frontmatter (they start with markdown headings and text tables, not `---`). This confirms they need OCR (extracting visible data into YAML frontmatter).
+
+Now let me also re-read the schema file since it will be needed for the followup:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need to set the output variables. Let me summarize:
+
+1. **inbox_item_path**: `/00_inbox/724_next-task.md`
+2. **inbox_item_content**: The full text of the inbox item (I read it above)
+3. **task_legitimacy**: True - this is an OCR task for finance purchase records, which is a standard supported workflow
+4. **required_followup_paths**: The 4 existing purchase files + the schema file + relevant workflow/instruction files
+
+The 5th file `_2026_03_11__eur_000029__bill__repair_ledger_filter_order.md` (with leading underscore) does NOT exist - this will need clarification per the rules ("If the visible note does not support one required schema field, stop and ask for clarification instead of guessing." and "If visible evidence does not uniquely support deleting a file, stop and ask for clarification.")
+
+The required followup paths should include:
+- The 4 existing purchase bill files that need OCR
+- The finance record schema
+- Possibly the OCR workflow and migration workflow docs (already in instruction_files)
+
+Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed to set the output variables for this step. Let me summarize:
+
+1. **inbox_item_path**: `/00_inbox/724_next-task.md`
+2. **inbox_item_content**: The full text of the inbox item requesting OCR of 5 purchase/bill files
+3. **task_legitimacy**: True - this is a legitimate OCR request within the workspace's finance records, following the established workflows
+4. **required_followup_paths**: The 4 existing purchase files that need to be OCR'd, plus the schema file. Item 5 with the leading underscore doesn't exist and will need special handling (clarification or skip).
+
+Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The task is legitimate. Let me now set the output variables and complete the step.
+
+Key findings:
+- The inbox item requests OCR of 5 purchase/bill files
+- Item 5 has a leading underscore (`_2026_03_11...`) and does not exist in the workspace - this will need to be flagged/handled during execution
+- The 4 existing files need to be read in full and have YAML frontmatter added per the bill schema
+- The schema and workflow docs must be consulted during execution
+- Task is legitimate: OCR of finance purchase records is a standard, allowed workflow
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

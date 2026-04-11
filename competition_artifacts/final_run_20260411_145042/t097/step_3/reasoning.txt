@@ -1,0 +1,106 @@
+Now I need to determine the exact workspace actions required. Let me read the key workflow files to understand the exact format and structure needed for the outbound email draft and the cleanup action.
+
+Let me read:
+1. `/99_system/workflows/sending-email.md` - for the exact email draft format
+2. `/60_outbox/drafts/AGENTS.MD` - for draft placement rules
+3. `/60_outbox/outbox/AGENTS.MD` - for outbox placement rules
+4. `/60_outbox/channels/helios_client_email.md` - for the channel context
+
+Let me also re-read the inbox processing workflow to confirm the cleanup step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The drafts/AGENTS.MD says that outbound email should go to `60_outbox/outbox/` following the sending-email.md workflow, not to drafts. Good.
+
+Now let me check the outbox directory structure and the outbox AGENTS.MD.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good. The outbox/AGENTS.MD confirms I should use sending-email.md for outbound email filename, frontmatter, and attachment rules, and write to `60_outbox/outbox/`.
+
+Now let me also check the inbox file one more time and the processing-inbox-email workflow to confirm the reply structure and deletion rule.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me check the source channel for Helios client email to understand the reply context.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed to determine the exact workspace actions. Let me compile the required_workspace_actions dict:
+
+1. **Create outbound email draft** in `60_outbox/outbox/` with:
+   - Filename: `eml_YYYY-MM-DDTHH-MM-SSZ.md` (need runtime time)
+   - `to`: `[miles@novak.example]` (replying to the requester)
+   - `subject`: Appropriate subject for the invoice bundle reply
+   - `attachments`: The oldest 4 invoices, ordered reverse chronologically (newest first):
+     - `50_finance/invoices/2026_02_19__eur_000600__inv_0009__helios_discovery_invoice.md` (INV-0009, 2026-02-19)
+     - `50_finance/invoices/2026_01_19__eur_000610__inv_0008__helios_backfill_rollout_week.md` (INV-0008, 2026-01-19)
+     - `50_finance/invoices/2025_12_21__eur_000760__inv_0007__helios_backfill_process_pack.md` (INV-0007, 2025-12-21)
+     - `50_finance/invoices/2025_11_19__eur_000520__inv_0006__helios_backfill_intake_audit.md` (INV-0006, 2025-11-19)
+   - `related_entities`: `entity.miles`, `entity.claudia`
+   - `source_channel`: `60_outbox/channels/helios_client_email.md`
+   - `record_type`: `outbound_email`
+   - `send_state`: `draft`
+   - Body: Narrow, purpose-built email body replying with the requested invoice bundle
+
+2. **Delete inbox file**: `/00_inbox/000_invoice-bundle-request.md` after completing the request
+
+Let me get the current runtime time to determine the filename timestamp.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information needed to determine the exact workspace actions. Let me compile the required_workspace_actions dict.
+
+Key decisions:
+
+1. **Outbound email draft**: Create a new file in `60_outbox/outbox/` following the sending-email.md workflow
+   - Filename: `eml_2026-03-02T18-21-00Z.md` (derived from runtime current time, colons replaced with dashes)
+   - Frontmatter fields:
+     - record_type: outbound_email
+     - created_at: 2026-03-02T18:21:00Z
+     - send_state: draft
+     - to: [miles@novak.example] (reply to requester, using their primary_contact_email)
+     - subject: Re: Need linked invoices (reply to original subject)
+     - attachments: ordered reverse chronologically (newest first):
+       - 50_finance/invoices/2026_02_19__eur_000600__inv_0009__helios_discovery_invoice.md
+       - 50_finance/invoices/2026_01_19__eur_000610__inv_0008__helios_backfill_rollout_week.md
+       - 50_finance/invoices/2025_12_21__eur_000760__inv_0007__helios_backfill_process_pack.md
+       - 50_finance/invoices/2025_11_19__eur_000520__inv_0006__helios_backfill_intake_audit.md
+     - related_entities: [entity.miles, entity.claudia]
+     - related_projects: (not specified - no project explicitly linked)
+     - source_channel: 60_outbox/channels/helios_client_email.md (the inbound email came through this channel per the inbox file)
+
+   Wait, let me re-read the inbox file to check what source_channel was specified there.
+
+Actually, looking back at the previous step's analysis of the inbox file, I need to check what source_channel was in the YAML frontmatter. Let me read it.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me compile the `required_workspace_actions` dict.
+
+The actions needed:
+
+1. **Create outbound email record** in `60_outbox/outbox/` with the filename `eml_2026-03-02T18-21-00Z.md` (using current runtime time, with colons replaced by dashes in filename). The frontmatter should include:
+   - `record_type: outbound_email`
+   - `created_at: 2026-03-02T18:21:00Z`
+   - `send_state: draft`
+   - `to: [miles@novak.example]`
+   - `subject: Re: Need linked invoices`
+   - `attachments` ordered reverse chronologically (newest first):
+     - `50_finance/invoices/2026_02_19__eur_000600__inv_0009__helios_discovery_invoice.md` (INV-0009, 2026-02-19)
+     - `50_finance/invoices/2026_01_19__eur_000610__inv_0008__helios_backfill_rollout_week.md` (INV-0008, 2026-01-19)
+     - `50_finance/invoices/2025_12_21__eur_000760__inv_0007__helios_backfill_process_pack.md` (INV-0007, 2025-12-21)
+     - `50_finance/invoices/2025_11_19__eur_000520__inv_0006__helios_backfill_intake_audit.md` (INV-0006, 2025-11-19)
+   - `related_entities: [entity.miles, entity.claudia]`
+   - `source_channel: 60_outbox/channels/helios_client_email.md`
+
+2. **Delete inbox file** `/00_inbox/000_invoice-bundle-request.md` after completing the request.
+
+Let me structure this as the required_workspace_actions dict.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have determined the exact workspace actions required. Let me set the step status and final answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

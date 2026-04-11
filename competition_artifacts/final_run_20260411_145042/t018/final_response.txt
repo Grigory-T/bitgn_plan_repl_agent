@@ -1,0 +1,1 @@
+Completed: both finance records were updated with OCR frontmatter, the original bodies were preserved, and the inbox item was deleted.

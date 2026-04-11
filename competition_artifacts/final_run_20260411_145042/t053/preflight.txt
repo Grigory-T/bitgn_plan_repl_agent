@@ -1,0 +1,8 @@
+Preflight
+Status: PASSED
+Outcome: proceed
+Explanation: The task is clear and normal: identify projects involving Sara and return the exact project names alphabetically.
+
+Notes:
+- Likely requires inspecting workspace documents or records to find Sara's project involvement.
+- Return only exact project names, one per line, sorted alphabetically.

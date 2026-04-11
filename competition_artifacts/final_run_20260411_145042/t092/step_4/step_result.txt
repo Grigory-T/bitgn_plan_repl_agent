@@ -1,0 +1,9 @@
+Final validation pass completed — ALL CHECKS PASSED, no discrepancies found. All five queued documents carry the correct NORA MCP migration frontmatter per the schema (99_system/schemas/bulk-processing-and-queueing-frontmatter.md) and workflow (99_system/workflows/migrating-to-nora-mcp.md):
+
+1. 30_knowledge/notes/design-constraints-for-a-household-assistant.md — bulk_processing_workflow: nora_mcp, queue_batch_timestamp: 2026-03-02T18:21:00Z, queue_order_id: 1, queue_state: pending, queue_target: vault2
+2. 30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md — bulk_processing_workflow: nora_mcp, queue_batch_timestamp: 2026-03-02T18:21:00Z, queue_order_id: 2, queue_state: pending, queue_target: vault2
+3. 30_knowledge/notes/why-i-keep-coming-back-to-a-personal-assistant.md — bulk_processing_workflow: nora_mcp, queue_batch_timestamp: 2026-03-02T18:21:00Z, queue_order_id: 3, queue_state: pending, queue_target: vault2
+4. 99_system/schemas/bulk-processing-and-queueing-frontmatter.md — bulk_processing_workflow: nora_mcp, queue_batch_timestamp: 2026-03-02T18:21:00Z, queue_order_id: 4, queue_state: pending, queue_target: vault2
+5. 99_system/workflows/sending-email.md — bulk_processing_workflow: nora_mcp, queue_batch_timestamp: 2026-03-02T18:21:00Z, queue_order_id: 5, queue_state: pending, queue_target: vault2
+
+All required fields present. Batch timestamp consistent across all files. queue_order_id forms contiguous sequence 1-5 matching alphanumeric path sort. queue_state correctly set to pending for initial queueing. No extra migration fields beyond the five required schema fields. Relevant files: 99_system/schemas/bulk-processing-and-queueing-frontmatter.md, 99_system/workflows/migrating-to-nora-mcp.md, 30_knowledge/notes/design-constraints-for-a-household-assistant.md, 30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md, 30_knowledge/notes/why-i-keep-coming-back-to-a-personal-assistant.md, 99_system/workflows/sending-email.md

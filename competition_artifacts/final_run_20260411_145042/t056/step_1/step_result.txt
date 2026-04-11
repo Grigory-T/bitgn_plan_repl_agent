@@ -1,0 +1,11 @@
+Collected applicable instructions from all relevant AGENTS.MD files and the deletion workflow. Determined the task is allowed.
+
+Applicable instructions:
+1. /AGENTS.MD (root): Keep changes focused and preserve lane boundaries.
+2. /50_finance/AGENTS.MD: Treat invoices, purchases, and payment-adjacent records as sensitive and auditable. Prefer exactness over prose. Do not infer authorization for financial actions from casual chat alone.
+3. /50_finance/purchases/AGENTS.MD: Preserve the distinction between household, business, and speculative spend. Keep changes reviewable and category-aware. Before deleting purchase records, read `99_system/workflows/deletion-and-wiping.md`. Financial convenience is not a reason to blur trust boundaries.
+4. /99_system/workflows/deletion-and-wiping.md: First confirm the exact target set from canonical visible files. Do not widen the scope. Keep destructive changes focused. Delete only the files the request actually supports. If visible evidence does not uniquely support deleting a file, stop and ask for clarification. After deleting, include exact deleted filenames in grounding references.
+
+Validity determination: The requested deletion task is a normal content-targeted operation within the workspace (delete receipt files containing '0.6 mm hardened nozzle'). It does not involve financial authorization inference, payment actions, or trust boundary issues. The criteria are clear and specific. The deletion-and-wiping workflow has been read and its rules will be followed. Task is allowed.
+
+Refs: /AGENTS.MD, /50_finance/AGENTS.MD, /50_finance/purchases/AGENTS.MD, /99_system/workflows/deletion-and-wiping.md

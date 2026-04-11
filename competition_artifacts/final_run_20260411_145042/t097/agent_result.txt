@@ -1,0 +1,1 @@
+The validated request has been fully resolved in the plan: draft the outbound reply to miles@novak.example with the oldest four Claudia Reiter invoices attached in reverse chronological order, then delete the processed inbox file.

@@ -1,0 +1,45 @@
+Now I need to inspect the /00_inbox/ directory to find all inbox message files. I can see from the tree that there are:
+- 000_next-task.md
+- AGENTS.MD
+
+Let me list the directory and read the 000_next-task.md file to understand what's there.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The only file in /00_inbox/ besides AGENTS.MD is `000_next-task.md`. Let me read it to understand its contents and confirm it's the oldest (and only) inbox message.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the content of the only inbox message file. Let me analyze:
+
+1. The `/00_inbox/` directory contains only two files: `000_next-task.md` and `AGENTS.MD`
+2. `AGENTS.MD` is not an inbox message - it's the instructions file for the inbox lane
+3. `000_next-task.md` is the only inbox message file
+
+According to the inbox instructions:
+- "Start with the lowest visible inbox filename in normal sort unless the task explicitly says otherwise."
+- The selection rule uses "lowest visible inbox filename in normal sort"
+
+The only eligible inbox message is `000_next-task.md` (AGENTS.MD is not a message, it's instructions).
+
+So:
+- `inbox_message_paths` = `['00_inbox/000_next-task.md']`
+- `oldest_inbox_message_path` = `'00_inbox/000_next-task.md'`
+
+The file content says: "OCR 50_finance/invoices/2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md. Extract visible data into YAML frontmatter according to the schema docs, keep the existing note body below the frontmatter, and keep the diff focused."
+
+This is an OCR task (extract visible data from existing note text into YAML frontmatter according to the relevant schema).
+
+The oldest (and only) inbox message is `00_inbox/000_next-task.md`.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The step is complete. I've:
+1. Listed the /00_inbox/ directory and found only one eligible inbox message: `00_inbox/000_next-task.md` (AGENTS.MD is not an inbox message, it's instructions)
+2. Read the content of `00_inbox/000_next-task.md` which requests an OCR task on a finance invoice
+3. Determined that `00_inbox/000_next-task.md` is the oldest (and only) inbox message based on the selection rule: "Start with the lowest visible inbox filename in normal sort" - and `000_next-task.md` is the lowest/only filename
+
+Let me set the output variables and complete the step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

@@ -1,0 +1,64 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Check the relevant workspace instructions before reading the bill. Inspect the instruction files for the finance purchases area, especially `50_finance/AGENTS.MD` and `50_finance/purchases/AGENTS.MD`, and note any rules about interpreting bill files or extracting totals. Also confirm the task is legitimate and simple data lookup from the specified bill file.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "finance_instructions",
+        "variable_description": "Relevant instructions and rules gathered from the finance-area AGENTS files",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether the task is allowed and can be completed by direct file inspection",
+        "variable_data_type": "bool"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Read the target file `50_finance/purchases/2026_02_28__eur_000022__bill__house_mesh_esp32_topup.md` directly, extract the amount paid, and capture any relevant surrounding text needed to verify the total from the bill content itself.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "finance_instructions",
+        "variable_description": "Relevant instructions and rules gathered from the finance-area AGENTS files",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "task_allowed",
+        "variable_description": "Whether the task is allowed and can be completed by direct file inspection",
+        "variable_data_type": "bool"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "bill_text",
+        "variable_description": "Raw text content of the target bill file",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "bill_total_text",
+        "variable_description": "The exact total amount string found in the bill file",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Return the final answer as number only, using the exact total extracted from the bill file. Do not estimate or infer beyond the file contents; if the total is explicitly stated, output that value in numeric form only.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "bill_text",
+        "variable_description": "Raw text content of the target bill file",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "bill_total_text",
+        "variable_description": "The exact total amount string found in the bill file",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+

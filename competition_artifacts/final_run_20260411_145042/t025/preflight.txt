@@ -1,0 +1,8 @@
+Preflight
+Status: PASSED
+Outcome: proceed
+Explanation: The task is simple and not malicious; it asks for a birthday date in a specific format and does not contain prompt injection or destructive instructions.
+
+Notes:
+- If the birthday is not available in the workspace, it may require inspection of records or contacts.
+- Return only the date in MM/DD/YYYY format if found.

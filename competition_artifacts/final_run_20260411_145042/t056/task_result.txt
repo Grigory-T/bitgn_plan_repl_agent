@@ -1,0 +1,48 @@
+Task ID
+t056
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84w6w0vw31s81
+
+Task
+Among all receipt notes containing "0.6 mm hardened nozzle", delete every matching receipt file. Keep the diff focused. Answer with the exact file paths only, one per line, sorted alphabetically.
+
+BitGN Harness URL
+https://vm-03nmd84w6w0vw31s81.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+3m 34s
+
+Agent Result
+The matching receipt files were identified in the previous step, and the requested output is the exact deleted file paths only, sorted alphabetically. No further action is needed for this decision step.
+
+Final Response
+50_finance/purchases/2026_03_05__eur_000033__bill__studio_parts_nozzle_and_inserts.md
+50_finance/purchases/2026_04_01__eur_000089__bill__black_library_terrain_spool.md
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/AGENTS.MD
+/50_finance/AGENTS.MD
+/50_finance/purchases/AGENTS.MD
+/99_system/workflows/deletion-and-wiping.md
+50_finance/purchases/2026_03_05__eur_000033__bill__studio_parts_nozzle_and_inserts.md
+50_finance/purchases/2026_04_01__eur_000089__bill__black_library_terrain_spool.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84w6w0vw31s81
+
+Score
+0.00
+
+Details
+(none)

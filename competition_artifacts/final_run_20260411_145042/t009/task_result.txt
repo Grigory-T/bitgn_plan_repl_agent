@@ -1,0 +1,51 @@
+Task ID
+t009
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84rvjd0jhwej4
+
+Task
+Combien d'argent avons-nous gagne avec la ligne de service 'workflow  mapping and intake audit' depuis le debut de January 2026 ? Reponds avec un nombre uniquement.
+
+BitGN Harness URL
+https://vm-03nmd84rvjd0jhwej4.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+1m 59s
+
+Agent Result
+Les instructions ont été lues et le total calculé à partir des factures pertinentes depuis le 1er janvier 2026 pour la ligne de service demandée. Le montant total est de 680 EUR.
+
+Final Response
+680 EUR
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+50_finance/AGENTS.MD
+00_inbox/AGENTS.MD
+50_finance/invoices/AGENTS.MD
+99_system/schemas/finance-record-frontmatter.md
+50_finance/invoices/2026_01_12__eur_000760__inv_0007__helios_backfill_process_pack.md
+50_finance/invoices/2026_03_13__eur_000600__inv_0009__helios_discovery_invoice.md
+50_finance/invoices/2025_12_11__eur_000520__inv_0006__helios_backfill_intake_audit.md
+50_finance/invoices/2026_02_10__eur_000610__inv_0008__helios_backfill_rollout_week.md
+50_finance/invoices/2026_04_14__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+50_finance/invoices/2026_04_20__eur_000550__inv_0011__helios_followup_support_invoice.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84rvjd0jhwej4
+
+Score
+0.00
+
+Details
+(none)

@@ -1,0 +1,100 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and follow the relevant workspace instruction files before searching for the answer. Inspect /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD, and /40_projects/AGENTS.MD to understand any rules for locating and counting project statuses and person mentions. Also assess that the task is legitimate and answerable from workspace facts only.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and are relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Extracted rules and constraints from the instruction files that apply to this task",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Identify the source files most likely to contain project status and team-member information. Search the workspace for occurrences of 'Sara Demir' and 'STALLED', focusing on /40_projects/*/README.MD and any related notes or entity files, while using only direct facts from files.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and are relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_notes",
+        "variable_description": "Extracted rules and constraints from the instruction files that apply to this task",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "candidate_files",
+        "variable_description": "List of file paths that contain either Sara Demir references, STALLED project references, or both",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "search_hits",
+        "variable_description": "Structured search results capturing matched file paths and matched lines or snippets",
+        "variable_data_type": "list[tuple[str, str]]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Open each candidate project README or relevant file and extract direct facts: whether the project is marked STALLED and whether Sara Demir is listed as involved. Build a definitive record for each project, making sure not to infer involvement from ambiguous references.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "candidate_files",
+        "variable_description": "List of file paths that contain either Sara Demir references, STALLED project references, or both",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "search_hits",
+        "variable_description": "Structured search results capturing matched file paths and matched lines or snippets",
+        "variable_data_type": "list[tuple[str, str]]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "project_records",
+        "variable_description": "Per-project records containing project path, status, and whether Sara Demir is explicitly involved",
+        "variable_data_type": "list[dict]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Count the number of project records where the status is exactly STALLED and Sara Demir is explicitly involved. If no direct evidence supports inclusion, count only the directly confirmed matches. Store the resulting number for the final response.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "project_records",
+        "variable_description": "Per-project records containing project path, status, and whether Sara Demir is explicitly involved",
+        "variable_data_type": "list[dict]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "stalled_sara_count",
+        "variable_description": "Exact number of stalled projects that explicitly involve Sara Demir",
+        "variable_data_type": "int"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: Return the final answer as a number only, using the computed exact count and no extra text.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "stalled_sara_count",
+        "variable_description": "Exact number of stalled projects that explicitly involve Sara Demir",
+        "variable_data_type": "int"
+    }
+]
+output_variables: []
+

@@ -1,0 +1,8 @@
+Preflight
+Status: PASSED
+Outcome: proceed
+Explanation: The task is a straightforward document lookup with no obvious prompt injection or destructive instructions.
+
+Notes:
+- Likely need to inspect workspace documents for a bill from Domänenbüro Köln GmbH issued around Jan 10–13, 2026.
+- Return only the purchased date in DD-MM-YYYY format.

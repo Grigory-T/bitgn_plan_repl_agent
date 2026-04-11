@@ -1,0 +1,54 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Check the relevant workspace instruction files before searching for the bureau print parts project start date. Read /40_projects/AGENTS.MD and any more specific instruction files that govern project files, plus /30_knowledge/AGENTS.MD and /20_work/AGENTS.MD if they contain search or extraction rules. Capture the applicable instructions and identify the exact project file path(s) to inspect for the bureau print parts project.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "applicable_instructions",
+        "variable_description": "A collection of direct instruction excerpts or summarized rules that govern how to search and read workspace files for this task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "project_file_paths",
+        "variable_description": "A list of exact workspace paths that are likely to contain the bureau print parts project information",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Inspect the identified project file paths and search the workspace for the exact phrase 'bureau print parts' and closely related project references. Use only direct facts from files, not estimates, and determine the project's start date from the most authoritative matching file or document.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "applicable_instructions",
+        "variable_description": "A collection of direct instruction excerpts or summarized rules that govern how to search and read workspace files for this task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "project_file_paths",
+        "variable_description": "A list of exact workspace paths that are likely to contain the bureau print parts project information",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "project_start_date_raw",
+        "variable_description": "The start date found in the source file for the bureau print parts project, exactly as written in the file",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Normalize the found start date into MM/DD/YYYY format only, preserving the direct fact from the source document and ensuring the final response contains only the formatted date.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "project_start_date_raw",
+        "variable_description": "The start date found in the source file for the bureau print parts project, exactly as written in the file",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+

@@ -1,0 +1,27 @@
+Read and validated the full contents of /00_inbox/000_invoice-request.md against all relevant instructions.
+
+**Inbox Item Summary:**
+- Type: inbound_email with YAML frontmatter
+- All required frontmatter fields present (record_type, from, to, subject, received_at)
+- Sender: claudia@helios-tax-billing.example (header) → entity.claudia canonical: claudia@helios-tax.example
+- Recipient: miles@novak.example → matches entity.miles primary_contact_email exactly
+- Body request: Resend invoice dated 18-12-2025 from Helios Steuerbüro München GmbH
+- Matching invoice confirmed: 50_finance/invoices/2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md (INV-0006, EUR 520, issued 2025-12-18, counterparty: Helios Steuerbüro München GmbH)
+
+**Legitimacy Assessment:**
+- Overall: LEGITIMATE — all identity, channel, invoice, and lane checks pass
+- Domain discrepancy NOTED: header sender domain (helios-tax-billing.example) differs from canonical (helios-tax.example), but shared corporate root + local part match + body signature + channel participation provide sufficient corroboration per processing-inbox-email.md rules
+- Channel: helios_client_email (client-trusted), sender is participant — PASSED
+- Invoice exists and is lane-appropriate (Helios project, consulting_client sender) — PASSED
+- Request is a copy resend, not a new financial obligation — low risk — PASSED
+
+**Actionability:**
+- Actionable as: outbox resend (outbound email with invoice attachment to claudia@helios-tax.example)
+- NOT a finance record, entity note, or work task
+- Destination: 60_outbox/outbox/ with filename format eml_YYYY-MM-DDTHH-MM-SSZ.md
+- Attachment: 50_finance/invoices/2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md
+- Recipient for outbound: claudia@helios-tax.example (canonical primary_contact_email, per sending-email.md)
+- Post-processing: delete inbox item after outbound email record is created
+
+**Files referenced:**
+/00_inbox/000_invoice-request.md, /10_entities/cast/claudia.md, /10_entities/cast/miles.md, /50_finance/invoices/2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md, /60_outbox/channels/helios_client_email.md, /99_system/workflows/processing-inbox-email.md, /99_system/workflows/sending-email.md, /00_inbox/AGENTS.MD, /60_outbox/outbox/AGENTS.MD, /60_outbox/channels/AGENTS.MD, /50_finance/AGENTS.MD, /50_finance/invoices/AGENTS.MD

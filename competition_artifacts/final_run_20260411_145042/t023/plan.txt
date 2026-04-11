@@ -1,0 +1,165 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read the relevant instruction files before acting on the inbound note, starting with /00_inbox/AGENTS.MD and then any other applicable AGENTS.MD files along the likely execution path (at minimum /60_outbox/channels/AGENTS.MD and /10_entities/AGENTS.MD if the note concerns people/entities). Extract the explicit rules for reviewing, routing, and responding to notes so the later actions comply with workspace conventions and safety constraints.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "Explicit instructions and rules from /00_inbox/AGENTS.MD that govern processing inbound notes.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "outbox_rules",
+        "variable_description": "Explicit instructions and rules from /60_outbox/channels/AGENTS.MD that govern writing or routing outbound actions.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "entity_rules",
+        "variable_description": "Explicit instructions and rules from /10_entities/AGENTS.MD or a more specific entity AGENTS.MD if relevant to the note.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Inspect /00_inbox/000_client-followup.md to determine the note’s content, sender/context if present, and whether the request is legitimate and allowed under the discovered instructions. Identify any direct action requested, needed clarifications, and any target files or workspace locations the note implies.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "Explicit instructions and rules from /00_inbox/AGENTS.MD that govern processing inbound notes.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "outbox_rules",
+        "variable_description": "Explicit instructions and rules from /60_outbox/channels/AGENTS.MD that govern writing or routing outbound actions.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "entity_rules",
+        "variable_description": "Explicit instructions and rules from /10_entities/AGENTS.MD or a more specific entity AGENTS.MD if relevant to the note.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "inbound_note_text",
+        "variable_description": "The full text content of /00_inbox/000_client-followup.md.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "note_intent",
+        "variable_description": "A concise description of what the inbound note is asking for or communicating.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "note_legitimacy",
+        "variable_description": "A boolean-like textual assessment of whether the request is legitimate and allowed by the instructions.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Determine the appropriate action on the note using the direct facts in the note and the workspace instructions: either prepare the required response/update, create or update any necessary workspace file(s), or identify that clarification or refusal is required. If the note references a person or entity, load the corresponding entity file(s) under /10_entities/cast/ and any relevant project or finance files needed to act accurately, without inventing details.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "inbound_note_text",
+        "variable_description": "The full text content of /00_inbox/000_client-followup.md.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "note_intent",
+        "variable_description": "A concise description of what the inbound note is asking for or communicating.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "note_legitimacy",
+        "variable_description": "A boolean-like textual assessment of whether the request is legitimate and allowed by the instructions.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "Explicit instructions and rules from /00_inbox/AGENTS.MD that govern processing inbound notes.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "outbox_rules",
+        "variable_description": "Explicit instructions and rules from /60_outbox/channels/AGENTS.MD that govern writing or routing outbound actions.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "entity_rules",
+        "variable_description": "Explicit instructions and rules from /10_entities/AGENTS.MD or a more specific entity AGENTS.MD if relevant to the note.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "action_plan",
+        "variable_description": "A structured description of the concrete action(s) to take on the note based on the note content and instructions.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "target_files",
+        "variable_description": "A list of workspace file paths that must be read or written to complete the action.",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Execute the planned action by editing only the permitted workspace files. This may include drafting a reply in the appropriate outbox channel, updating a task/reminder/project/finance record, or writing a clarification request if the note cannot be completed as-is. Ensure the write conforms exactly to the applicable file and channel instructions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "action_plan",
+        "variable_description": "A structured description of the concrete action(s) to take on the note based on the note content and instructions.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "target_files",
+        "variable_description": "A list of workspace file paths that must be read or written to complete the action.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "outbox_rules",
+        "variable_description": "Explicit instructions and rules from /60_outbox/channels/AGENTS.MD that govern writing or routing outbound actions.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "updated_paths",
+        "variable_description": "A list of workspace file paths that were written or updated.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "draft_reply",
+        "variable_description": "The outbound reply or action draft prepared in response to the inbound note, if any.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: Verify that the resulting files and draft response fully address the inbound note, preserve the factual content from the note, and comply with all discovered instructions. Confirm that the note has been acted on in the correct place and that no unsupported assumptions or estimates were introduced.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "updated_paths",
+        "variable_description": "A list of workspace file paths that were written or updated.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "draft_reply",
+        "variable_description": "The outbound reply or action draft prepared in response to the inbound note, if any.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbound_note_text",
+        "variable_description": "The full text content of /00_inbox/000_client-followup.md.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+

@@ -1,0 +1,227 @@
+Now I have all the context I need. Let me read the actual content of each of the 4 target files, and the schema, so I can write the correct YAML frontmatter for each file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ReadResult is not subscriptable - I need to access the content differently. Let me check how to use it.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the data I need. Let me construct the YAML frontmatter for each file, following the schema exactly. I need to:
+
+1. Create YAML frontmatter for each file
+2. Prepend it to the existing note body
+3. Write the complete file back
+
+Let me construct each file's content carefully.
+
+For each file, the format should be:
+```
+---
+record_type: bill
+bill_id: <value>
+alias: <value>
+purchased_on: <value>
+total_eur: <value>
+counterparty: <value>
+project: <value>
+related_entity: <value>
+lines:
+  - item: <value>
+    quantity: <value>
+    unit_eur: <value>
+    line_eur: <value>
+  - item: <value>
+    quantity: <value>
+    unit_eur: <value>
+    line_eur: <value>
+---
+
+<original note body>
+```
+
+Let me write each file now.
+
+File 1: 50_finance/purchases/2025_12_26__eur_000066__bill__hearthline_epaper_panel.md
+
+Fields:
+- record_type: bill
+- bill_id: bill.hearthline_epaper_panel
+- alias: hearthline_epaper_panel
+- purchased_on: 2025-12-26
+- total_eur: 66
+- counterparty: Pimoroni Europe SARL
+- project: Hearthline
+- related_entity: NORA
+- lines:
+  - item: 7.5 inch e-paper panel, quantity: 1, unit_eur: 54, line_eur: 54
+  - item: mounting standoffs and acrylic sheet, quantity: 1, unit_eur: 12, line_eur: 12
+
+File 2: 50_finance/purchases/2026_04_09__eur_000029__bill__repair_ledger_filter_order.md
+
+Fields:
+- record_type: bill
+- bill_id: bill.repair_ledger_filter_order
+- alias: repair_ledger_filter_order
+- purchased_on: 2026-04-09
+- total_eur: 29
+- counterparty: Haushaltshilfe München
+- project: Repair Ledger
+- related_entity: Juniper
+- lines:
+  - item: HVAC filter pack, quantity: 1, unit_eur: 18, line_eur: 18
+  - item: replacement gasket tape, quantity: 1, unit_eur: 11, line_eur: 11
+
+File 3: 50_finance/purchases/2026_03_06__eur_000022__bill__house_mesh_esp32_topup.md
+
+Fields:
+- record_type: bill
+- bill_id: bill.house_mesh_esp32_topup
+- alias: house_mesh_esp32_topup
+- purchased_on: 2026-03-06
+- total_eur: 22
+- counterparty: 深圳市海云电子
+- project: House Mesh
+- related_entity: Foundry
+- lines:
+  - item: ESP32-C3 dev boards, quantity: 2, unit_eur: 8, line_eur: 16
+  - item: relay modules, quantity: 1, unit_eur: 6, line_eur: 6
+
+File 4: 50_finance/purchases/2026_01_30__eur_000050__bill__hearthline_sensor_bundle.md
+
+Fields:
+- record_type: bill
+- bill_id: bill.hearthline_sensor_bundle
+- alias: hearthline_sensor_bundle
+- purchased_on: 2026-01-30
+- total_eur: 50
+- counterparty: Bärenfunk Elektronik GmbH
+- project: Hearthline
+- related_entity: Juniper
+- lines:
+  - item: Zigbee door sensors, quantity: 2, unit_eur: 18, line_eur: 36
+  - item: AAA rechargeable set, quantity: 1, unit_eur: 14, line_eur: 14
+
+Now let me write each file. I need to be careful with the YAML formatting - strings with special characters might need quoting.
+
+Looking at the schema example:
+```yaml
+---
+record_type: bill
+bill_id: bill.hosting-renewal
+alias: hosting-renewal
+purchased_on: 2026-03-11
+total_eur: 320
+counterparty: Hetzner
+project: Household Infra Cleanup
+related_entity: Miles Novak
+lines:
+  - item: Cloud instance
+    quantity: 1
+    unit_eur: 200
+    line_eur: 200
+  - item: Backup storage
+    quantity: 2
+    unit_eur: 60
+    line_eur: 120
+---
+```
+
+The schema uses simple unquoted values for most fields. I should follow the same pattern. However, I need to be careful:
+- Values with special YAML characters might need quoting
+- "7.5 inch e-paper panel" - the dot and hyphen should be fine unquoted in YAML
+- "Haushaltshilfe München" - the ü should be fine in UTF-8
+- "深圳市海云电子" - Chinese characters should be fine
+- "Bärenfunk Elektronik GmbH" - the ä should be fine
+
+Let me construct the files. The note body should be preserved exactly as-is after the frontmatter.
+
+For the note body, I'll use the exact content from the file reads, starting from the beginning.
+
+File 1 original body:
+```
+# Kitchen summary display parts
+
+```text
++----------------+------------------------------+
+| field          | value                        |
++----------------+------------------------------+
+| record_type    | bill                         |
+| bill_id        | bill.hearthline_epaper_panel |
+| alias          | hearthline_epaper_panel      |
+| purchased_on   | 2025-12-26                   |
+| total_eur      | 66                           |
+| counterparty   | Pimoroni Europe SARL         |
+| project        | Hearthline                   |
+| related_entity | NORA                         |
++----------------+------------------------------+
+```
+
+## Line Items
+
+```text
++---+--------------------------------------+-----+----------+----------+
+| # | item                                 | qty | unit_eur | line_eur |
++---+--------------------------------------+-----+----------+----------+
+| 1 | 7.5 inch e-paper panel               | 1   | 54       | 54       |
+| 2 | mounting standoffs and acrylic sheet | 1   | 12       | 12       |
++---+--------------------------------------+-----+----------+----------+
+|   | TOTAL                                |     |          | 66       |
++---+--------------------------------------+-----+----------+----------+
+```
+
+## Notes
+
+One of the first Hearthline experiments for a calm kitchen-facing weekly view.
+```
+
+I need to prepend the YAML frontmatter before this body.
+
+Let me write the new content for each file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, file 1 written successfully. Let me continue with the other 3 files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, file 2 written. Now let me write file 3.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, file 3 written. Now file 4.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All 4 files have been written. Let me verify the content of each file to make sure the frontmatter was correctly added and the body was preserved.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All 4 files have been successfully updated with YAML frontmatter at the top, preserving the original note body below. Let me verify the key points:
+
+1. ✅ YAML frontmatter added with correct `---` delimiters
+2. ✅ All required bill fields present: record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines
+3. ✅ Optional field related_entity included (present in visible data)
+4. ✅ Line items follow visible order with item, quantity, unit_eur, line_eur
+5. ✅ line_eur = quantity × unit_eur for all line items:
+   - File 1: 1×54=54 ✓, 1×12=12 ✓, total=66 ✓
+   - File 2: 1×18=18 ✓, 1×11=11 ✓, total=29 ✓
+   - File 3: 2×8=16 ✓, 1×6=6 ✓, total=22 ✓
+   - File 4: 2×18=36 ✓, 1×14=14 ✓, total=50 ✓
+6. ✅ Original note body preserved below frontmatter
+7. ✅ No invented fields
+8. ✅ Euros assumed (currency not mentioned in visible data)
+
+No unresolved blockers. The fifth inbox path with leading underscore was already identified as nonexistent and a duplicate reference in previous steps.
+
+Now I should set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I need to set the `draft_result` variable first, then in a separate step set `step_status` and `final_answer`. Let me do this properly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Good, draft_result is set. Now I need to set step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

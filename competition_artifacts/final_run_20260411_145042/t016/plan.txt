@@ -1,0 +1,130 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and analyze the relevant instruction files before taking action: /00_inbox/AGENTS.MD, /20_work/AGENTS.MD, /20_work/tasks/AGENTS.MD, /30_knowledge/AGENTS.MD, /40_projects/AGENTS.MD, /50_finance/AGENTS.MD, /60_outbox/channels/AGENTS.MD, and any additional AGENTS.MD files directly relevant to the inbox item once its content is known. Extract the rules for handling inbox items, required destinations, naming conventions, and any safety or routing constraints that apply to this task. Also inspect /00_inbox/000_next-task.md to determine the exact next inbox item and its requested action.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to the task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_rules",
+        "variable_description": "Structured summary of the applicable rules, constraints, and routing requirements gathered from the instruction files",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "next_inbox_item_path",
+        "variable_description": "Path to the inbox item file that contains the task to handle",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "next_inbox_item_text",
+        "variable_description": "Raw text content of the next inbox item",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Assess whether the inbox request is legitimate, allowed, and actionable under the gathered instructions. Determine the intended handling path, such as completing the request directly, drafting a response, creating or updating a task/reminder/knowledge note, or escalating/aborting if the request conflicts with instructions or lacks sufficient information. Base the assessment strictly on the file contents and instructions, without estimating or inventing missing facts.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_rules",
+        "variable_description": "Structured summary of the applicable rules, constraints, and routing requirements gathered from the instruction files",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "next_inbox_item_path",
+        "variable_description": "Path to the inbox item file that contains the task to handle",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "next_inbox_item_text",
+        "variable_description": "Raw text content of the next inbox item",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "task_assessment",
+        "variable_description": "Structured assessment of whether the inbox request is allowed and what handling path it requires",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "target_workflow",
+        "variable_description": "Name of the workspace workflow or destination that should be used to handle the inbox item",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Execute the required handling for the inbox item according to the assessment and instructions. This may include creating or updating the appropriate markdown file(s) in the correct workspace location, preparing an outbox message, or otherwise completing the requested work item using only direct facts from the inbox item and repository contents. Ensure all file paths and content follow the workspace conventions and any AGENTS.MD guidance.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_rules",
+        "variable_description": "Structured summary of the applicable rules, constraints, and routing requirements gathered from the instruction files",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "next_inbox_item_path",
+        "variable_description": "Path to the inbox item file that contains the task to handle",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "next_inbox_item_text",
+        "variable_description": "Raw text content of the next inbox item",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "task_assessment",
+        "variable_description": "Structured assessment of whether the inbox request is allowed and what handling path it requires",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "target_workflow",
+        "variable_description": "Name of the workspace workflow or destination that should be used to handle the inbox item",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "result_summary",
+        "variable_description": "Concise summary of the actions taken to handle the inbox item",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "updated_file_paths",
+        "variable_description": "List of file paths that were created or modified while handling the inbox item",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Verify that the work completed matches the inbox item request and all applicable instructions. Confirm that the resulting files are placed correctly, the content is consistent with the task, and any required follow-up remains clearly identified. If the task could not be completed, ensure the final state reflects the appropriate abort, escalation, or clarification outcome prescribed by the instructions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "result_summary",
+        "variable_description": "Concise summary of the actions taken to handle the inbox item",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "updated_file_paths",
+        "variable_description": "List of file paths that were created or modified while handling the inbox item",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_rules",
+        "variable_description": "Structured summary of the applicable rules, constraints, and routing requirements gathered from the instruction files",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: []
+
+Plan validation warnings:
+⚠️ Step 1 outputs 'instruction_files' (list[str]), but it's not used by any subsequent step.
+

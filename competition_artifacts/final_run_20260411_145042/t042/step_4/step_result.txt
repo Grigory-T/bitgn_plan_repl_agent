@@ -1,0 +1,14 @@
+Validation of the queued NORA migration batch PASSED. All three requested documents were re-read and confirmed to have correct NORA MCP frontmatter with no omissions or extras.
+
+**Per-file validation:**
+1. `/30_knowledge/notes/parking-lot.md` — VALID, queue_order_id=1, all frontmatter fields correct, body preserved
+2. `/30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md` — VALID, queue_order_id=2, all frontmatter fields correct, body preserved
+3. `/99_system/schemas/finance-record-frontmatter.md` — VALID, queue_order_id=3, all frontmatter fields correct, body preserved (governance/schema document caveat noted)
+
+**Batch integrity checks:**
+- Omissions: None — all three requested documents are present
+- Extras: None — workspace search for 'bulk_processing_workflow: nora_mcp' returned only the 3 queued files (4th match was the workflow doc itself, not a queued file)
+- Finance-record-frontmatter path reconciled to: `/99_system/schemas/finance-record-frontmatter.md`
+- Batch accepted as queued: Yes
+
+Relevant files: /30_knowledge/notes/parking-lot.md, /30_knowledge/notes/what-i-want-help-with-and-what-stays-mine.md, /99_system/schemas/finance-record-frontmatter.md, /99_system/schemas/bulk-processing-and-queueing-frontmatter.md, /99_system/workflows/migrating-to-nora-mcp.md, /99_system/schemas/AGENTS.MD

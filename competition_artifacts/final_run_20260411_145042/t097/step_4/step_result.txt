@@ -1,0 +1,65 @@
+## Execution-Ready Plan
+
+Processing is **allowed** (proceed_with_processing = True). The requester miles@novak.example is verified as Miles Novak (relationship:self, primary_contact_email matches) requesting his own financial records — no cross-lane violation, no unauthorized third-party disclosure.
+
+### Action 1: CREATE outbound email record
+
+**Path:** `60_outbox/outbox/eml_2026-03-02T18-21-00Z.md`
+- Filename format per /99_system/workflows/sending-email.md: `eml_YYYY-MM-DDTHH-MM-SSZ.md`, timestamp derived from runtime current time (2026-03-02T18:21:00Z), colons replaced with hyphens.
+
+**Frontmatter:**
+```yaml
+---
+record_type: outbound_email
+created_at: 2026-03-02T18:21:00Z
+send_state: draft
+to:
+  - miles@novak.example
+subject: "Re: Need linked invoices"
+attachments:
+  - 50_finance/invoices/2026_02_19__eur_000600__inv_0009__helios_discovery_invoice.md
+  - 50_finance/invoices/2026_01_19__eur_000610__inv_0008__helios_backfill_rollout_week.md
+  - 50_finance/invoices/2025_12_21__eur_000760__inv_0007__helios_backfill_process_pack.md
+  - 50_finance/invoices/2025_11_19__eur_000520__inv_0006__helios_backfill_intake_audit.md
+related_entities:
+  - entity.miles
+  - entity.claudia
+source_channel: 60_outbox/channels/helios_client_email.md
+---
+```
+
+**Attachment order rationale:** Reverse chronological by invoice issue date (newest first) per /99_system/workflows/sending-email.md: "for invoice resends or invoice bundles, order attachments reverse chronologically by the visible invoice issue date unless the request explicitly asks for something else; newest-first is the default." The oldest 4 invoices linked to Claudia Reiter are INV-0006 (2025-11-19), INV-0007 (2025-12-21), INV-0008 (2026-01-19), INV-0009 (2026-02-19), listed here newest-first.
+
+**Frontmatter field sources:**
+- `record_type: outbound_email` — required per sending-email.md schema
+- `created_at: 2026-03-02T18:21:00Z` — runtime-derived RFC3339 timestamp
+- `send_state: draft` — per sending-email.md ("should be draft unless the visible workflow for this lane establishes a later state")
+- `to: [miles@novak.example]` — recipient from inbox email header 'to' field, verified as Miles's primary_contact_email per /10_entities/cast/miles.md
+- `subject: "Re: Need linked invoices"` — reply to inbound subject per /00_inbox/000_invoice-bundle-request.md
+- `attachments` — exact workspace paths, reverse chronological order per sending-email.md
+- `related_entities: [entity.miles, entity.claudia]` — canonical entity IDs for requester and referenced entity
+- `source_channel: 60_outbox/channels/helios_client_email.md` — Helios client mail lane
+
+**Body:**
+```markdown
+Hi Miles,
+
+Here are the oldest 4 invoices linked to Claudia Reiter, attached in reverse chronological order:
+
+1. INV-0009 — Helios discovery invoice (2026-02-19)
+2. INV-0008 — Helios backfill rollout week (2026-01-19)
+3. INV-0007 — Helios backfill process pack (2025-12-21)
+4. INV-0006 — Helios backfill intake audit (2025-11-19)
+
+Best,
+Miles
+```
+Body rules followed: narrow and purpose-built, mentions only attachments that exist, does not claim email was already sent.
+
+### Action 2: DELETE processed inbox file
+
+**Path:** `00_inbox/000_invoice-bundle-request.md`
+- Per /00_inbox/AGENTS.MD: "After fully completing one inbox request, delete that inbox file."
+- Per /99_system/workflows/process-next-inbox-item.md: "If the request can be completed from canonical evidence, do the focused work and then delete the inbox file you processed."
+
+Relevant files: 99_system/workflows/sending-email.md, 00_inbox/AGENTS.MD, 99_system/workflows/process-next-inbox-item.md, 99_system/workflows/processing-inbox-email.md, 50_finance/invoices/AGENTS.MD, 60_outbox/channels/helios_client_email.md, 10_entities/cast/miles.md, 10_entities/cast/claudia.md, 00_inbox/000_invoice-bundle-request.md, 50_finance/invoices/2026_02_19__eur_000600__inv_0009__helios_discovery_invoice.md, 50_finance/invoices/2026_01_19__eur_000610__inv_0008__helios_backfill_rollout_week.md, 50_finance/invoices/2025_12_21__eur_000760__inv_0007__helios_backfill_process_pack.md, 50_finance/invoices/2025_11_19__eur_000520__inv_0006__helios_backfill_intake_audit.md, 60_outbox/outbox/AGENTS.MD

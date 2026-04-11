@@ -1,0 +1,45 @@
+Task ID
+t075
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84y7cc1772256
+
+Task
+What is my infra counterpart's DoB? Return only DD-MM-YYYY.
+
+BitGN Harness URL
+https://vm-03nmd84y7cc1772256.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+7m 58s
+
+Agent Result
+The lookup cannot be completed as requested because the intended entity is not authoritatively resolved: no canonical cast file contains an 'infra_counterpart' relationship, and the closest match ('engineering_counterpart' Roman Stiller) is not sufficient to guess a DoB. The correct next action is to ask the user to clarify the counterpart identity.
+
+Final Response
+Could you clarify which person you mean by “infra counterpart”?
+
+Final Outcome
+OUTCOME_NONE_CLARIFICATION
+
+Final Refs
+/AGENTS.MD
+/10_entities/AGENTS.MD
+/10_entities/cast/AGENTS.MD
+/10_entities/cast/roman.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84y7cc1772256
+
+Score
+0.00
+
+Details
+(none)

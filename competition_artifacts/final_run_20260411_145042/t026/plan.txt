@@ -1,0 +1,64 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and comply with the relevant workspace instructions before investigating the project date. Specifically inspect /40_projects/AGENTS.MD and /40_projects/2026_04_01_northstar_ledger/README.MD, and any other directly referenced instruction files that govern project metadata lookup. Confirm the task is legitimate and that the requested answer should be derived from direct file evidence only, with no estimation or inference.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "project_instructions",
+        "variable_description": "Relevant instructions and rules extracted from the project and workspace AGENTS files",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "project_readme_text",
+        "variable_description": "Raw text content of /40_projects/2026_04_01_northstar_ledger/README.MD",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Search the Northstar Ledger project README and any directly linked or nearby project records for an explicit start date. Use only direct facts from files, prioritizing the project README and any project creation metadata if present. Extract the exact YYYY-MM-DD date associated with the project start without using estimates or extrapolation.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "project_readme_text",
+        "variable_description": "Raw text content of /40_projects/2026_04_01_northstar_ledger/README.MD",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "project_instructions",
+        "variable_description": "Relevant instructions and rules extracted from the project and workspace AGENTS files",
+        "variable_data_type": "str"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "northstar_start_date",
+        "variable_description": "Explicit start date of the Northstar Ledger project in YYYY-MM-DD format",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "date_supporting_evidence",
+        "variable_description": "Direct textual evidence from the files showing the project start date",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Validate that the extracted date is an explicit project start date, not another milestone or unrelated timestamp. If the evidence is sufficient, prepare the final response as date only in YYYY-MM-DD format. If the evidence is missing or ambiguous, do not invent a date and instead flag the inability to answer from direct facts.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "northstar_start_date",
+        "variable_description": "Explicit start date of the Northstar Ledger project in YYYY-MM-DD format",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "date_supporting_evidence",
+        "variable_description": "Direct textual evidence from the files showing the project start date",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+

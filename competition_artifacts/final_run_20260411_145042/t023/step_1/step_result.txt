@@ -1,0 +1,9 @@
+Extracted explicit rules from three AGENTS.MD files relevant to processing the inbound note from Nina Schreiber:
+
+1. **Inbox rules** (`/00_inbox/AGENTS.MD`): Inbox files are unprocessed requests; email-shaped records with YAML frontmatter must use `99_system/workflows/processing-inbox-email.md`; prefer entity `primary_contact_email` over legacy channel notes; process lowest filename first; delete inbox file after full completion (stop without mutating if blocked); cross-check identity/dates/authority against canonical records; move durable knowledge out of inbox.
+
+2. **Outbox rules** (`/60_outbox/channels/AGENTS.MD`): Channel docs define trust semantics (household/work/client/social/unknown); legacy email channels are context only, not canonical for outbound email; new email work uses `99_system/workflows/sending-email.md` and `60_outbox/outbox/`; familiarity ≠ authority; slow down if channel and domain don't align.
+
+3. **Entity rules** (`/10_entities/AGENTS.MD` + `/10_entities/cast/AGENTS.MD`): Use entities to resolve identity before acting; canonical identity lives here, not in inbox or memory; missing fields are unknown; cast files are authoritative for relationship/birthday/identity; `primary_contact_email` is the canonical email identity; prefer these over chat/memory/project mentions.
+
+Relevant files: /00_inbox/AGENTS.MD, /60_outbox/channels/AGENTS.MD, /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, /AGENTS.MD, /99_system/workflows/processing-inbox-email.md, /00_inbox/000_client-followup.md, /10_entities/cast/nina.md

@@ -1,0 +1,158 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read the relevant instruction files that govern inbox handling and any general agent rules: /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD, /40_projects/AGENTS.MD, and any more specific AGENTS.MD files needed after inspecting the inbox item and related workspace areas. Also verify whether the requested action is legitimate and allowed under those instructions before doing any content work.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to this task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_summary",
+        "variable_description": "Structured summary of the applicable rules, priorities, and constraints extracted from the instruction files",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Open /00_inbox/000_invoice-request.md and determine exactly what the next inbox message requests, including any referenced entities, projects, finance records, deadlines, or response requirements. Capture only direct facts from the file and from any explicitly referenced workspace files needed to understand the message.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to this task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_summary",
+        "variable_description": "Structured summary of the applicable rules, priorities, and constraints extracted from the instruction files",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "inbox_message_path",
+        "variable_description": "Path of the inbox message being processed",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_message_facts",
+        "variable_description": "Direct factual summary of the inbox message content and any explicitly referenced items",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Inspect the workspace files required to satisfy the inbox request, using only direct facts and following the applicable instructions. This may include entity notes under /10_entities/cast/, finance records under /50_finance/invoices/ or /50_finance/purchases/, work items under /20_work/, knowledge notes under /30_knowledge/, and project readmes under /40_projects/ when explicitly relevant to the inbox message.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to this task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_summary",
+        "variable_description": "Structured summary of the applicable rules, priorities, and constraints extracted from the instruction files",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "inbox_message_path",
+        "variable_description": "Path of the inbox message being processed",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_message_facts",
+        "variable_description": "Direct factual summary of the inbox message content and any explicitly referenced items",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "related_workspace_facts",
+        "variable_description": "Direct factual summary of the relevant workspace files needed to address the inbox message",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Determine the exact action required to take care of the inbox message. If the message can be resolved directly, identify the concrete artifact to create or update and the target path under the appropriate workspace area. If the message requires clarification, identify the clarification needed instead of inventing details. Base this decision only on the inbox message and applicable instructions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to this task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_summary",
+        "variable_description": "Structured summary of the applicable rules, priorities, and constraints extracted from the instruction files",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "inbox_message_path",
+        "variable_description": "Path of the inbox message being processed",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_message_facts",
+        "variable_description": "Direct factual summary of the inbox message content and any explicitly referenced items",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "related_workspace_facts",
+        "variable_description": "Direct factual summary of the relevant workspace files needed to address the inbox message",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "resolution_plan",
+        "variable_description": "Concrete plan for how to resolve the inbox message, or a clarification-needed decision if the task cannot be completed directly",
+        "variable_data_type": "dict"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 5: Carry out the resolution plan by drafting or updating the appropriate workspace file(s) with direct facts only, or by preparing the clarification/response artifact if the inbox item cannot be resolved without more information. Ensure the final result conforms to the instructions from the relevant AGENTS.MD files.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_files",
+        "variable_description": "List of instruction file paths that were read and found relevant to this task",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "instruction_summary",
+        "variable_description": "Structured summary of the applicable rules, priorities, and constraints extracted from the instruction files",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "resolution_plan",
+        "variable_description": "Concrete plan for how to resolve the inbox message, or a clarification-needed decision if the task cannot be completed directly",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "final_action_status",
+        "variable_description": "Status of the completed inbox action, such as resolved, needs_clarification, or blocked_by_instructions",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 6: Verify that the chosen action was completed in the correct workspace location, that all instructions were followed, and that no unsupported estimates or invented facts were introduced. If needed, note any remaining follow-up required for the inbox item.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "final_action_status",
+        "variable_description": "Status of the completed inbox action, such as resolved, needs_clarification, or blocked_by_instructions",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+

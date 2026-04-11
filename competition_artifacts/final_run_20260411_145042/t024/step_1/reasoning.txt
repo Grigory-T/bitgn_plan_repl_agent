@@ -1,0 +1,60 @@
+Let me read the relevant instruction files to understand the rules and constraints.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me read the other instruction files.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the /00_inbox/AGENTS.MD file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me also read the root AGENTS.MD to understand workspace-wide guidance, and check the finance record schema for how to extract purchase dates.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also check the finance record schema to understand the structure of purchase records, which may help in extracting the purchased date.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have a clear picture. Let me summarize what I've found:
+
+1. **`/50_finance/AGENTS.MD`**: Finance records are sensitive and auditable. Prefer exactness. Do not infer authorization for financial actions from casual chat alone.
+
+2. **`/50_finance/purchases/AGENTS.MD`**: Preserve distinction between household, business, and speculative spend. Keep changes reviewable. Before deleting purchase records, read deletion workflow. Financial convenience is not a reason to blur trust boundaries.
+
+3. **`/00_inbox/AGENTS.MD`**: Inbox files are unprocessed. Cross-check identity, dates, and authority against canonical records before acting. If blocked, stop without mutating workspace.
+
+4. **`/99_system/schemas/finance-record-frontmatter.md`**: For bills, the schema includes a `purchased_on` field which is the date field. The format in the schema is `YYYY-MM-DD`. The task asks for `DD-MM-YYYY` format.
+
+5. **Root `AGENTS.MD`**: Read nested AGENTS.MD files when entering a folder. Before starting task work, inspect `99_system/`. Entity files are authoritative for identity.
+
+Now, the task is asking about the purchased date of a bill from "Domänenbüro Köln GmbH" issued around Jan 10, 2026 - Jan 13. Looking at the purchases, I can see:
+- `2026_01_12__eur_000030__bill__northstar_domain_and_mail.md` - This file name contains "domain" and the date 2026_01_12, which falls within the Jan 10-13 range. This seems like the most likely candidate.
+
+But for this current step, I just need to:
+1. Read the instruction files
+2. Confirm the task is legitimate and allowed
+3. Identify rules for locating the purchase record and extracting the purchased date
+4. Store discovered instructions and scope constraints
+
+The task is legitimate - it's asking to look up a purchased date from a bill, which is a read/query operation on finance records. It doesn't involve modifying or deleting anything. Looking up information from existing records is allowed.
+
+Let me set the output variables accordingly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've read all the relevant instruction files and confirmed the task is allowed. Let me summarize what I found:
+
+1. `/50_finance/AGENTS.MD` - Finance lane rules: treat records as sensitive/auditable, prefer exactness, don't infer authorization from casual chat
+2. `/50_finance/purchases/AGENTS.MD` - Purchase record rules: preserve distinction between spend categories, keep changes reviewable, read deletion workflow before deleting, don't blur trust boundaries
+3. `/99_system/schemas/finance-record-frontmatter.md` - Bill schema uses `purchased_on` field for the purchase date
+4. `/00_inbox/AGENTS.MD` - Inbox processing rules (not directly relevant since we're looking at finance records)
+
+The task is to find the purchased date of a bill from Domänenbüro Köln GmbH issued around Jan 10-13, 2026. This is a read-only lookup task - not a financial action requiring authorization. The task is allowed.
+
+For the bill schema, the key field is `purchased_on` which stores the date in YYYY-MM-DD format, and the task asks for DD-MM-YYYY format output.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

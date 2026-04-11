@@ -1,0 +1,58 @@
+Task ID
+t071
+
+Benchmark ID
+bitgn/pac1-prod
+
+Trial ID
+vm-03nmd84xkmrq5i3dx6
+
+Task
+Take care of the next message in inbox.
+
+BitGN Harness URL
+https://vm-03nmd84xkmrq5i3dx6.eu.bitgn.com
+
+Runner Exit
+0
+
+Elapsed
+9m 36s
+
+Agent Result
+The inbox request has been fully handled: a compliant outbound email draft was created with the matching invoice attached, and the inbox message was deleted after completion.
+
+Final Response
+Completed: drafted the outbound email with the matching invoice attached and deleted the inbox item.
+
+Final Outcome
+OUTCOME_OK
+
+Final Refs
+/00_inbox/AGENTS.MD
+/AGENTS.MD
+/99_system/workflows/process-next-inbox-item.md
+/99_system/workflows/processing-inbox-email.md
+/99_system/workflows/sending-email.md
+/50_finance/AGENTS.MD
+/50_finance/invoices/AGENTS.MD
+/60_outbox/AGENTS.MD
+/60_outbox/channels/AGENTS.MD
+/60_outbox/channels/helios_client_email.md
+/10_entities/cast/AGENTS.MD
+/10_entities/cast/claudia.md
+/10_entities/cast/miles.md
+/00_inbox/000_invoice-request.md
+/50_finance/invoices/2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+/40_projects/2026_04_30_helios_workflow_sprint/README.MD
+/60_outbox/outbox/eml_2026-03-31T16-32-00Z.md
+
+BitGN Evaluation
+Trial ID
+vm-03nmd84xkmrq5i3dx6
+
+Score
+0.00
+
+Details
+(none)

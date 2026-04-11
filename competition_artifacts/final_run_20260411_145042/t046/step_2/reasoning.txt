@@ -1,0 +1,156 @@
+Now let me read the oldest inbox message file to confirm it's the oldest and get its full contents.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The only inbox message file is `000_invoice-request.md`. It's the lowest (and only) filename, so it's the oldest. Now let me read its full contents.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me analyze this inbox message carefully:
+
+1. **Path**: `/00_inbox/000_invoice-request.md` - This is the lowest filename in normal sort, confirming it's the oldest inbox message.
+
+2. **Content analysis**:
+   - **Record type**: inbound_email
+   - **From**: nina@finance-workflow.example
+   - **To**: miles@novak.example
+   - **Subject**: Invoice resend request
+   - **Received at**: 2026-03-30T08:47:00Z
+   - **Body**: Nina Schreiber is asking Miles to resend an invoice for 03-11-2025 from Nordstern Finanzsoftware GmbH. She needs it for internal approval before Friday.
+
+3. **What the message asks the agent to do**:
+   - This is an email-shaped record with YAML frontmatter, so per the rules, I should also consider `processing-inbox-email.md`.
+   - The request is to resend an invoice dated 03-11-2025 from Nordstern Finanzsoftware GmbH.
+   - This seems to involve outbound communication (resending an invoice via email).
+   
+Let me think about what entities are referenced:
+   - **Nina Schreiber** - sender (nina@finance-workflow.example)
+   - **Miles** - recipient (miles@novak.example) 
+   - **Nordstern Finanzsoftware GmbH** - company referenced in the invoice
+
+Now let me look at the finance invoices to find the one from 03-11-2025 (which would be March 11, 2025) from Nordstern. Looking at the invoice filenames in /50_finance/invoices/:
+
+- 2025_11_03__eur_000610__inv_0001__northstar_backfill_alpha.md
+- 2025_12_01__eur_000770__inv_0002__northstar_backfill_beta.md
+- 2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md
+- 2025_12_29__eur_000530__inv_0003__northstar_backfill_gamma.md
+- 2026_01_19__eur_000760__inv_0007__helios_backfill_process_pack.md
+- 2026_02_14__eur_000890__inv_0004__northstar_design_partner_sprint.md
+- 2026_02_17__eur_000610__inv_0008__helios_backfill_rollout_week.md
+- 2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md
+- 2026_03_26__eur_000420__inv_0005__northstar_followup_pack.md
+- 2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+- 2026_04_27__eur_000550__inv_0011__helios_followup_support_invoice.md
+
+The date 03-11-2025 doesn't match any of these directly. The date format could be interpreted as:
+- March 11, 2025 (US format) - no invoices near that date
+- November 3, 2025 (European format DD-MM-YYYY) - this matches `2025_11_03__eur_000610__inv_0001__northstar_backfill_alpha.md`
+
+Given that this is from a German context (Nordstern Finanzsoftware GmbH, and the name Nina Schreiber), the date is likely in European format (DD-MM-YYYY), meaning November 3, 2025. That matches the invoice `2025_11_03__eur_000610__inv_0001__northstar_backfill_alpha.md`.
+
+Wait, but the message says "Nordstern Finanzsoftware GmbH" and the invoice file says "northstar". "Nordstern" is German for "North Star", so this is likely the same entity.
+
+Let me also check the entity files for Nina and Miles to cross-check identity and authority.
+
+For now, I have enough to create the summary. Let me also look at the entity files to understand the relationships.
+
+Actually, for this step, I just need to:
+1. Confirm the oldest inbox message path
+2. Read the full contents
+3. Summarize the requested action
+
+Let me formulate the summary.
+
+The message_work_summary should cover:
+- Who sent it: Nina Schreiber (nina@finance-workflow.example)
+- Who it's addressed to: Miles (miles@novak.example)
+- What's requested: Resend the invoice for 03-11-2025 from Nordstern Finanzsoftware GmbH
+- Purpose: Nina needs it for internal approval before Friday
+- This is an outbound communication task (resending an invoice)
+- Need to cross-check Nina and Miles entity records for identity and authority
+- The date 03-11-2025 likely refers to November 3, 2025 (European date format), matching invoice inv_0001 (2025_11_03__eur_000610__inv_0001__northstar_backfill_alpha.md)
+- Nordstern Finanzsoftware GmbH likely refers to "northstar" project invoices
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the full picture. Let me understand what the message asks:
+
+1. Nina Schreiber (nina@finance-workflow.example) is emailing Miles (miles@novak.example)
+2. She's asking to resend an invoice for 03-11-2025 from Nordstern Finanzsoftware GmbH
+3. She needs it for internal approval before Friday
+
+Let me check the invoices to see if there's one matching "03-11-2025" from Nordstern/Northstar. The invoices I saw in the tree are:
+- 2025_11_03__eur_000610__inv_0001__northstar_backfill_alpha.md
+- 2025_12_01__eur_000770__inv_0002__northstar_backfill_beta.md
+- 2025_12_29__eur_000530__inv_0003__northstar_backfill_gamma.md
+- 2026_02_14__eur_000890__inv_0004__northstar_design_partner_sprint.md
+- 2026_03_26__eur_000420__inv_0005__northstar_followup_pack.md
+- 2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md
+- 2026_01_19__eur_000760__inv_0007__helios_backfill_process_pack.md
+- 2026_02_17__eur_000610__inv_0008__helios_backfill_rollout_week.md
+- 2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md
+- 2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+- 2026_04_27__eur_000550__inv_0011__helios_followup_support_invoice.md
+
+Nina asks for "the invoice for 03-11-2025 from Nordstern Finanzsoftware GmbH". This is a bit ambiguous - it could mean an invoice dated 2025-03-11 or 2025-11-03. Looking at the Northstar invoices:
+- inv_0001 is dated 2025_11_03 - this could be "03-11-2025" in day-month-year format (3 Nov 2025) or "03-11-2025" could be month-day-year (March 11, 2025)
+
+Actually, looking at the European date format (DD-MM-YYYY), "03-11-2025" would be November 3, 2025. And inv_0001 has date 2025_11_03 which is November 3, 2025. This matches!
+
+Wait, but I need to verify that "Nordstern Finanzsoftware GmbH" matches "Northstar". "Nordstern" is German for "Northstar", so this is likely the same entity.
+
+Let me also check the Northstar channel/outbox to understand how communication with Northstar works.
+
+Actually, let me focus on what the current step asks me to do: "Inspect /00_inbox/000_invoice-request.md to confirm it is the oldest inbox message and read its full contents. Determine the requested action, any referenced entities, and the exact work needed to resolve the message while staying within the instruction rules."
+
+So I need to:
+1. Confirm it's the oldest message - ✓ (it's the only message file, named 000_...)
+2. Read full contents - ✓ done
+3. Determine requested action - resend an invoice
+4. Any referenced entities - Nina Schreiber, Miles Novak, Nordstern Finanzsoftware GmbH (likely Northstar)
+5. Exact work needed - find the relevant Northstar invoice dated around 2025-11-03 and resend it via the appropriate channel
+
+Let me read the Northstar outbox channel and the relevant invoice to understand the full picture better. But the current step just asks me to summarize what work is needed, not to actually do the work.
+
+Let me compose a clear summary.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me look at the invoices in /50_finance/invoices/ to find the one dated 03-11-2025 from Nordstern Finanzsoftware GmbH (which seems to be the company name related to Northstar). The message mentions "03-11-2025" which could be a date format. Let me check the invoices.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me look at the Northstar invoices to see if there's one from 03-11-2025 (March 11, 2025). The email mentions "03-11-2025" which could be March 11 or November 3 depending on the date format. Let me check the existing invoices.
+
+The invoices I see are:
+- 2025_11_03__eur_000610__inv_0001__northstar_backfill_alpha.md
+- 2025_12_01__eur_000770__inv_0002__northstar_backfill_beta.md
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the information I need. Let me summarize:
+
+1. The oldest inbox message is `/00_inbox/000_invoice-request.md`
+2. The message is from Nina Schreiber (nina@finance-workflow.example) to Miles Novak (miles@novak.example)
+3. The request is to resend the invoice for 03-11-2025 from Nordstern Finanzsoftware GmbH
+4. "03-11-2025" in European date format = November 3, 2025, which matches invoice INV-0001 (`2025_11_03__eur_000610__inv_0001__northstar_backfill_alpha.md`)
+5. The counterparty is "Nordstern Finanzsoftware GmbH" which matches
+6. The related entity is "Nina Schreiber" who is the sender of the email
+7. Nina is confirmed as a startup partner (entity file exists), and her primary_contact_email matches the sender address
+8. The request is to resend this invoice - this would be an outbound communication task
+
+Now I need to provide the output variables:
+- `oldest_inbox_message_path`: `/00_inbox/000_invoice-request.md`
+- `inbox_message_content`: the full text content
+- `message_work_summary`: a concise summary of what needs to be done
+
+The message asks Miles to resend invoice INV-0001 (the Northstar backfill alpha invoice dated 2025-11-03, for €610, to Nordstern Finanzsoftware GmbH) to Nina Schreiber for internal approval. This would involve sending an outbound email with the invoice content to Nina.
+
+Let me formulate the summary and set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have all the information needed to complete this step. Let me set the output variables.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

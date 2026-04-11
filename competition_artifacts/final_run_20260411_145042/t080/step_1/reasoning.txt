@@ -1,0 +1,48 @@
+Let me read the relevant AGENTS.MD files to understand the rules for handling finance records and answer formatting.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the finance-related AGENTS.MD files and any relevant schema docs.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me read the purchases AGENTS.MD file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now let me also read the higher-level AGENTS.MD files and the finance record frontmatter schema to get all relevant rules.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me also read the finance record frontmatter schema since the root AGENTS.MD mentions checking 99_system/ before task work, and the finance AGENTS.MD mentions checking schemas for frontmatter shape.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the relevant instructions. Let me compile the finance_instructions dict with all the rules I've gathered from the various AGENTS.MD files and the schema file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've gathered all the relevant instructions from the finance-related AGENTS.MD files and the finance record frontmatter schema. Let me now set the step status and final answer.
+
+The key rules I've extracted are:
+
+1. From root AGENTS.MD: Read nested AGENTS.MD files, inspect 99_system/ before task work, records migrate to YAML frontmatter, don't guess if canonical file doesn't show needed fact.
+
+2. From 50_finance/AGENTS.MD: Treat finance records as sensitive and auditable, prefer exactness over prose, don't infer authorization for financial actions from casual chat alone.
+
+3. From 50_finance/purchases/AGENTS.MD: Preserve distinction between household/business/speculative spend, keep changes reviewable and category-aware, financial convenience is not a reason to blur trust boundaries.
+
+4. From 50_finance/invoices/AGENTS.MD: Invoice identity, recipient, and date-sensitive details must stay exact, clarify rather than resend blindly, keep invoice handling scoped to correct commercial lane.
+
+5. From 99_system/schemas/finance-record-frontmatter.md: Finance notes migrating to YAML frontmatter, bill line rules (lines is ordered list, each line item has item/quantity/unit_eur/line_eur, line_eur = quantity * unit_eur), if currency not mentioned assume euros.
+
+For the global task, to find what Bärenfunk Elektronik GmbH charged for an "AAA rechargeable set" 111 days ago, I'll need to:
+- Search purchase records for Bärenfunk Elektronik GmbH
+- Find the specific line item "AAA rechargeable set"
+- Report the line_eur as a number only
+- Current date needs to be determined from the workspace
+
+But for this current step, I just need to gather the instructions and set finance_instructions.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

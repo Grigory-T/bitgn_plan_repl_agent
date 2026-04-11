@@ -1,0 +1,112 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read the relevant instruction files for inbox handling and workspace rules, especially /00_inbox/AGENTS.MD, /20_work/AGENTS.MD, /50_finance/AGENTS.MD, and any other directly relevant AGENTS.MD files needed to process inbox work safely and correctly. Extract the operative rules for selecting the oldest inbox message and for what counts as completing the message work.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "A structured summary of the inbox-processing instructions and any related workspace rules that apply to working the oldest inbox message.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "relevant_instruction_paths",
+        "variable_description": "A list of exact runtime paths to the instruction files that were found and need to be followed.",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Inspect /00_inbox/000_invoice-request.md to confirm it is the oldest inbox message and read its full contents. Determine the requested action, any referenced entities, and the exact work needed to resolve the message while staying within the instruction rules.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "A structured summary of the inbox-processing instructions and any related workspace rules that apply to working the oldest inbox message.",
+        "variable_data_type": "dict"
+    },
+    {
+        "variable_name": "relevant_instruction_paths",
+        "variable_description": "A list of exact runtime paths to the instruction files that were found and need to be followed.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "oldest_inbox_message_path",
+        "variable_description": "The exact runtime path of the oldest inbox message file.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_message_content",
+        "variable_description": "The full text content of the oldest inbox message.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "message_work_summary",
+        "variable_description": "A concise summary of what the inbox message asks the agent to do.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Carry out the work requested by the inbox message, using only direct facts from the workspace and following the discovered instructions. If the message requires creating, updating, routing, or referencing files, perform those actions in the correct workspace location and keep the work aligned to the message content.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "oldest_inbox_message_path",
+        "variable_description": "The exact runtime path of the oldest inbox message file.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_message_content",
+        "variable_description": "The full text content of the oldest inbox message.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "message_work_summary",
+        "variable_description": "A concise summary of what the inbox message asks the agent to do.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "inbox_rules",
+        "variable_description": "A structured summary of the inbox-processing instructions and any related workspace rules that apply to working the oldest inbox message.",
+        "variable_data_type": "dict"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "work_result_paths",
+        "variable_description": "A list of exact runtime paths for files created, updated, or otherwise produced while working the inbox message.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "work_result_summary",
+        "variable_description": "A concise summary of the completed work performed for the inbox message.",
+        "variable_data_type": "str"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 4: Finalize by verifying the inbox message has been worked according to the instructions, and prepare the completion state by recording what changed and ensuring the oldest inbox message is handled consistently with workspace conventions.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "work_result_paths",
+        "variable_description": "A list of exact runtime paths for files created, updated, or otherwise produced while working the inbox message.",
+        "variable_data_type": "list[str]"
+    },
+    {
+        "variable_name": "work_result_summary",
+        "variable_description": "A concise summary of the completed work performed for the inbox message.",
+        "variable_data_type": "str"
+    },
+    {
+        "variable_name": "oldest_inbox_message_path",
+        "variable_description": "The exact runtime path of the oldest inbox message file.",
+        "variable_data_type": "str"
+    }
+]
+output_variables: []
+

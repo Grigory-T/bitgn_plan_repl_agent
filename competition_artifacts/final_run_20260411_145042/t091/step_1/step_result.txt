@@ -1,0 +1,35 @@
+Collected and analyzed all relevant AGENTS.MD files and workflow/schema documents for inbox handling. The inbox task requests 'OCR all bills related to Ida Novak', which is a structured-record maintenance task (extracting visible data from existing bill note text into YAML frontmatter per the bill schema in 99_system/schemas/finance-record-frontmatter.md).
+
+Key findings:
+- Ida Novak is a canonical entity in 10_entities/cast/ida.md (Miles's daughter, internal household entity)
+- The task is legitimate: it is an internal workspace inbox drop requesting OCR/structing of purchase records
+- All required workflows exist: ocr-records.md, migrate-records-to-frontmatter.md, inbox-processing-v2-update.md, process-next-inbox-item.md
+- The bill schema in 99_system/schemas/finance-record-frontmatter.md defines required/optional fields for bill frontmatter
+- No cross-trust-boundary or sensitive outbound communication is involved
+- Task legitimacy confirmed: True
+
+Relevant instruction files read:
+- /AGENTS.MD
+- /00_inbox/AGENTS.MD
+- /10_entities/AGENTS.MD
+- /10_entities/cast/AGENTS.MD
+- /10_entities/cast/ida.md
+- /20_work/AGENTS.MD
+- /30_knowledge/AGENTS.MD
+- /40_projects/AGENTS.MD
+- /50_finance/AGENTS.MD
+- /50_finance/purchases/AGENTS.MD
+- /50_finance/invoices/AGENTS.MD
+- /60_outbox/AGENTS.MD
+- /90_memory/AGENTS.MD
+- /99_system/AGENTS.MD
+- /99_system/workflows/AGENTS.MD
+- /99_system/workflows/process-next-inbox-item.md
+- /99_system/workflows/processing-inbox-email.md
+- /99_system/workflows/inbox-processing-v2-update.md
+- /99_system/workflows/ocr-records.md
+- /99_system/workflows/migrate-records-to-frontmatter.md
+- /99_system/workflows/deletion-and-wiping.md
+- /99_system/schemas/AGENTS.MD
+- /99_system/schemas/finance-record-frontmatter.md
+- /00_inbox/000_next-task.md

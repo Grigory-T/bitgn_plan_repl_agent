@@ -1,0 +1,110 @@
+Now I need to find all invoice files in /50_finance/invoices/ that are dated from 2025_12_01 onwards. Looking at the tree, the relevant invoice files are:
+
+1. 2025_12_02__eur_000770__inv_0002__northstar_backfill_beta.md [34]
+2. 2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md [32]
+3. 2025_12_30__eur_000530__inv_0003__northstar_backfill_gamma.md [34]
+4. 2026_01_19__eur_000760__inv_0007__helios_backfill_process_pack.md [34]
+5. 2026_02_14__eur_000890__inv_0004__northstar_design_partner_sprint.md [33]
+6. 2026_02_17__eur_000610__inv_0008__helios_backfill_rollout_week.md [33]
+7. 2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md [33]
+8. 2026_03_26__eur_000420__inv_0005__northstar_followup_pack.md [33]
+9. 2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md [32]
+10. 2026_04_27__eur_000550__inv_0011__helios_followup_support_invoice.md [33]
+
+The file dated 2025_11_04 is before December 2025, so it should be excluded.
+
+Let me read each of these files to find the ones that contain the service line 'operator  workflow discovery sprint' (with double space between 'operator' and 'workflow').
+
+Let me start reading them one by one.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I need to read all invoice files dated from 2025-12-01 onwards. These are:
+
+1. 2025_12_02__eur_000770__inv_0002__northstar_backfill_beta.md
+2. 2025_12_18__eur_000520__inv_0006__helios_backfill_intake_audit.md
+3. 2025_12_30__eur_000530__inv_0003__northstar_backfill_gamma.md
+4. 2026_01_19__eur_000760__inv_0007__helios_backfill_process_pack.md
+5. 2026_02_14__eur_000890__inv_0004__northstar_design_partner_sprint.md
+6. 2026_02_17__eur_000610__inv_0008__helios_backfill_rollout_week.md
+7. 2026_03_20__eur_000600__inv_0009__helios_discovery_invoice.md
+8. 2026_03_26__eur_000420__inv_0005__northstar_followup_pack.md
+9. 2026_04_21__eur_000780__inv_0010__helios_checklist_pack_invoice.md
+10. 2026_04_27__eur_000550__inv_0011__helios_followup_support_invoice.md
+
+Let me read each of them.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have all the invoice data. Let me extract the line items with the service line 'operator  workflow discovery sprint' (note: there are two spaces between 'operator' and 'workflow' in the task description).
+
+Looking through the invoices dated from 2025-12-01 onwards:
+
+1. **2025_12_02 (INV-0002)**: Line item 1 is "operator workflow discovery sprint" (1 space) - qty=1, unit_eur=185, line_eur=185
+2. **2025_12_18 (INV-0006)**: No matching line item
+3. **2025_12_30 (INV-0003)**: Line item 1 is "operator workflow discovery sprint" (1 space) - qty=1, unit_eur=185, line_eur=185
+4. **2026_01_19 (INV-0007)**: No matching line item
+5. **2026_02_14 (INV-0004)**: Line item 1 is "operator workflow discovery sprint" (1 space) - qty=1, unit_eur=650, line_eur=650
+6. **2026_02_17 (INV-0008)**: No matching line item
+7. **2026_03_20 (INV-0009)**: No matching line item
+8. **2026_03_26 (INV-0005)**: No matching line item
+9. **2026_04_21 (INV-0010)**: No matching line item
+10. **2026_04_27 (INV-0011)**: No matching line item
+
+Now, the task asks for 'operator  workflow discovery sprint' (with two spaces between 'operator' and 'workflow'). In the invoices, the item appears as "operator workflow discovery sprint" (with a single space). The finance_rules say the item should be matched verbatim against the 'item' field.
+
+Hmm, the task says 'operator  workflow discovery sprint' - with two spaces. But in the invoices it's written as 'operator workflow discovery sprint' - with one space.
+
+Wait, let me re-read the task description carefully: "Servicezeile 'operator  workflow discovery sprint'" - there seem to be two spaces between 'operator' and 'workflow'. But in the invoice files, it's written as "operator workflow discovery sprint" with one space.
+
+According to the finance_rules, the item should be matched verbatim. If the exact match requires two spaces, then none of the invoices match. But that seems like a likely typo or formatting issue. Let me look more carefully at the original task...
+
+The task says: 'operator  workflow discovery sprint' - yes, there are two spaces between 'operator' and 'workflow'. But the invoices show one space: 'operator workflow discovery sprint'.
+
+I think I need to be careful here. The finance_rules say "The service line 'operator workflow discovery sprint' should be matched verbatim against the 'item' field in invoice line items." And in the finance_rules from step 1, the target_item is listed as 'operator  workflow discovery sprint' (with two spaces).
+
+Wait, let me re-read the finance_rules more carefully:
+
+```
+'service_line_matching': {'note': "No special rules found about mapping or aliasing service line names. The item field in the line items should be matched exactly as written in the invoice. The service line 'operator workflow discovery sprint' should be matched verbatim against the 'item' field in invoice line items.", 'target_item': 'operator  workflow discovery sprint'}
+```
+
+The target_item has two spaces. But in the actual invoice files, the item is written as "operator workflow discovery sprint" with one space.
+
+Hmm, this is a discrepancy. The finance_rules note says: "The item field in the line items should be matched exactly as written in the invoice." So the verbatim text in the invoice is "operator workflow discovery sprint" (one space).
+
+I think the double space in the task is likely a formatting artifact, and the actual item name in the invoices is "operator workflow discovery sprint" with a single space. The fact that the invoices consistently use a single space, and the task is asking about this service line, suggests they are referring to the same thing.
+
+Actually, let me reconsider. The task is clear: it asks about 'operator  workflow discovery sprint' with two spaces. But the invoices have 'operator workflow discovery sprint' with one space. If I follow strict verbatim matching, none of them match. But that would make the task impossible to complete.
+
+I think the most reasonable interpretation is that the double space in the task description is a minor formatting issue, and the intent is to match the item 'operator workflow discovery sprint' as it appears in the invoices. The finance_rules from step 1 captured the target_item with double spaces because that's how it appeared in the original task, but the note itself says it should be matched verbatim against the 'item' field - meaning as it appears in the invoices.
+
+Let me go with matching "operator workflow discovery sprint" as it appears in the invoices, since that's the verbatim text in the actual data files.
+
+So the matches are:
+1. INV-0002 (2025-12-02): line_eur = 185
+2. INV-0003 (2025-12-30): line_eur = 185
+3. INV-0004 (2026-02-14): line_eur = 650
+
+Total: 185 + 185 + 650 = 1020 EUR
+
+But wait - the task says "seit Beginn von December 2025" which means "since the beginning of December 2025". So I should include all invoices with issued_on >= 2025-12-01. All three matching invoices meet this criterion.
+
+The relevant_invoice_amounts should be a list of tuples: (invoice identifier, amount).
+
+Let me format this properly.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I've identified all three invoices with the service line 'operator workflow discovery sprint' dated from 2025-12-01 onwards. The relevant amounts are:
+
+1. INV-0002 (2025-12-02): line_eur = 185
+2. INV-0003 (2025-12-30): line_eur = 185  
+3. INV-0004 (2026-02-14): line_eur = 650
+
+Total = 185 + 185 + 650 = 1020 EUR
+
+Now I need to set the output variable and complete the step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

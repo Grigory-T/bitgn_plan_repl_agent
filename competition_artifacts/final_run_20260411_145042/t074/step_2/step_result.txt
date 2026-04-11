@@ -1,0 +1,14 @@
+Found exactly one candidate bill from Müller Bürobedarf within the Mar 29 – Apr 1, 2026 date window:
+
+- File: /50_finance/purchases/2026_03_31__eur_000025__bill__school_helper_label_tape.md
+  - purchased_on: 2026-03-31 (within window Mar 29 – Apr 1)
+  - counterparty: Müller Bürobedarf (exact match)
+  - total_eur: 25
+  - bill_id: bill.school_helper_label_tape
+  - alias: school_helper_label_tape
+  - project: School Helper Kit
+  - line_count: 33
+
+A comprehensive content search for 'Müller' and 'Bürobedarf' across all files under /50_finance/purchases/ confirmed no other files contain this vendor name. Files with nearby dates (2026-03-24 and 2026-04-01) were also read and confirmed as different vendors (深圳市星河玩具配件 and Filamenthütte Wien respectively).
+
+Relevant files: /50_finance/purchases/2026_03_31__eur_000025__bill__school_helper_label_tape.md, /50_finance/purchases/AGENTS.MD, /50_finance/AGENTS.MD, /99_system/schemas/finance-record-frontmatter.md, /AGENTS.MD

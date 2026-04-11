@@ -1,0 +1,7 @@
+Identified 2 invoices dated on or after 2026-01-01 with the service line 'staff follow-up support':
+1. INV-0008 (helios_backfill_rollout_week), issued 2026-01-19: 'staff follow-up support' line_eur = 220 EUR (qty=2, unit_eur=110)
+2. INV-0011 (helios_followup_support_invoice), issued 2026-03-29: 'staff follow-up support' line_eur = 160 EUR (qty=1, unit_eur=160)
+
+All 6 invoices dated >= 2026-01-01 were inspected; only these 2 contain the exact 'staff follow-up support' item. Per instruction rules: service line names are the 'item' field within invoice lines (not top-level), revenue is the line_eur for the matching line item (not total_eur), and issued_on is the official invoice date. No estimation or inference was needed — all values extracted directly from source documents.
+
+Relevant files: 50_finance/invoices/AGENTS.MD, 50_finance/AGENTS.MD, 99_system/schemas/finance-record-frontmatter.md, 50_finance/invoices/2026_01_19__eur_000610__inv_0008__helios_backfill_rollout_week.md, 50_finance/invoices/2026_03_29__eur_000550__inv_0011__helios_followup_support_invoice.md

@@ -1,0 +1,10 @@
+Inspected /00_inbox/000_next-task.md and the target invoice file. The inbox message requests OCR of 50_finance/invoices/2025_11_25__eur_000770__inv_0002__northstar_backfill_beta.md — extracting visible data into YAML frontmatter per the finance-record-frontmatter invoice schema, preserving the note body below, and keeping the diff focused.
+
+Action category: file_update (add YAML frontmatter to existing invoice note).
+
+Legitimacy and completeness assessment:
+- All required invoice schema fields are visibly present in the note body: record_type (invoice), invoice_number (INV-0002), alias (northstar_backfill_beta), issued_on (2025-11-25), total_eur (770), counterparty (Nordstern Finanzsoftware GmbH), project (Northstar Ledger), and lines (3 line items).
+- Optional field related_entity (Nina Schreiber) is also present.
+- Line-item math verified: 1×185=185, 2×240=480, 1×105=105; sum=770 matches total_eur.
+- No missing required schema fields, no rule conflicts, no suspicious actors or external requests.
+- No blocking issues identified.

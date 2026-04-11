@@ -1,0 +1,30 @@
+Let me read Sara's entity record first.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sara's entity record doesn't directly mention any projects. I need to check the project README.MD files that were identified in Step 1: Harbor Body and Reading Spine. Let me read those to confirm the project names.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sara is listed as a linked entity in Harbor Body. Now let me check the other project mentioned in the previous step - Reading Spine.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have confirmed both projects that explicitly list Sara as a linked entity. Let me also do a quick search across all project README files to make sure I haven't missed any other project that references Sara.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The search confirms that `entity.sara` appears only in two project README.MD files:
+1. Harbor Body (40_projects/2026_05_02_harbor_body/README.MD)
+2. Reading Spine (40_projects/2026_05_03_reading_spine/README.MD)
+
+The canonical project names are "Harbor Body" and "Reading Spine".
+
+I now have all the information needed to set the output variable.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I have the exact project names. Let me complete the step.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

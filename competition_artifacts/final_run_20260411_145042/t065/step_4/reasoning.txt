@@ -1,0 +1,119 @@
+Now I have a clear picture. Let me:
+
+1. Read the finance-record-frontmatter.md schema to understand exact field format
+2. Read each of the 4 target files to understand their content
+3. Extract visible data into YAML frontmatter per the bill schema
+4. Validate all required fields and line arithmetic
+5. Update each file
+
+Let me start by reading the schema and then each file.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now I have the full bill schema. Let me read all four target files to extract their visible data.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All four files have clear, well-structured data in the note body. I can extract all required fields:
+
+**File 1: house_mesh_juniper_ssd**
+- record_type: bill
+- bill_id: bill.house_mesh_juniper_ssd
+- alias: house_mesh_juniper_ssd
+- purchased_on: 2026-02-14
+- total_eur: 105
+- counterparty: Datenspeicher Köhler GmbH
+- project: House Mesh
+- related_entity: Juniper
+- lines:
+  - item: 2 TB SATA SSD, quantity: 1, unit_eur: 89, line_eur: 89
+  - item: USB clone adapter, quantity: 1, unit_eur: 16, line_eur: 16
+- Validation: 1*89=89 ✓, 1*16=16 ✓, 89+16=105 ✓
+
+**File 2: toy_forge_pla_bundle**
+- record_type: bill
+- bill_id: bill.toy_forge_pla_bundle
+- alias: toy_forge_pla_bundle
+- purchased_on: 2025-12-11
+- total_eur: 72
+- counterparty: Filamenthütte Wien
+- project: Toy Forge Saturdays
+- related_entity: Badger
+- lines:
+  - item: PLA spool mixed colors, quantity: 3, unit_eur: 24, line_eur: 72
+- Validation: 3*24=72 ✓, sum=72 ✓
+
+**File 3: repair_ledger_faucet_parts**
+- record_type: bill
+- bill_id: bill.repair_ledger_faucet_parts
+- alias: repair_ledger_faucet_parts
+- purchased_on: 2026-01-03
+- total_eur: 32
+- counterparty: Hörnbach Österreich
+- project: Repair Ledger
+- related_entity: Petra Novak
+- lines:
+  - item: faucet cartridge, quantity: 1, unit_eur: 24, line_eur: 24
+  - item: seal set, quantity: 1, unit_eur: 8, line_eur: 8
+- Validation: 1*24=24 ✓, 1*8=8 ✓, 24+8=32 ✓
+
+**File 4: studio_parts_nozzle_and_inserts**
+- record_type: bill
+- bill_id: bill.studio_parts_nozzle_and_inserts
+- alias: studio_parts_nozzle_and_inserts
+- purchased_on: 2026-03-05
+- total_eur: 33
+- counterparty: Düsenschmiede München
+- project: Studio Parts Library
+- related_entity: Badger
+- lines:
+  - item: 0.6 mm hardened nozzle, quantity: 1, unit_eur: 19, line_eur: 19
+  - item: M3 brass inserts, quantity: 1, unit_eur: 14, line_eur: 14
+- Validation: 1*19=19 ✓, 1*14=14 ✓, 19+14=33 ✓
+
+All data is present and arithmetic checks out. Now I need to write each file with YAML frontmatter prepended while preserving the existing note body.
+
+Let me construct the updated files. The frontmatter goes between `---` delimiters at the top, then the existing note body follows.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All four files were written successfully. Let me verify the content of each file to make sure the frontmatter is correct and the note body is preserved.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All four files have been successfully updated with:
+1. YAML frontmatter at the top with all required bill schema fields (record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines) and optional related_entity
+2. The existing note body preserved below the frontmatter
+3. All line items validated (quantity * unit_eur = line_eur, and sum of line_eur = total_eur)
+
+The fifth referenced file (_2026_03_05__eur_000033__bill__studio_parts_nozzle_and_inserts.md) was confirmed as non-existent/duplicate and was not created.
+
+Now I need to set the output variables:
+- updated_files: list of the four paths that were successfully updated
+- update_status: summary of what was accomplished
+
+The task says to NOT delete the inbox file in this step - that's a post-processing action. The current step only asks to OCR and update the four files. So I'll just report on the four-file update.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let me review what was accomplished:
+
+1. All four existing purchase record files were read and their visible data was extracted
+2. YAML frontmatter was added to each file per the bill schema in finance-record-frontmatter.md
+3. All required bill fields were populated: record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines
+4. Optional related_entity field was included where visible data supported it (all 4 files had it)
+5. Line arithmetic was validated: quantity * unit_eur = line_eur for every line, and sum of line_eur = total_eur
+6. Existing note body was preserved below the frontmatter
+7. The fifth referenced file (with leading underscore) was correctly skipped as non-existent/duplicate
+8. All four files were written and verified
+
+I need to set the output variables `updated_files` and `update_status`, then finalize with `step_status` and `final_answer`.
+
+Let me set the required output variables first, then finalize.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All required output variables are set. Now I need to finalize with exactly two lines of code assigning step_status and final_answer.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

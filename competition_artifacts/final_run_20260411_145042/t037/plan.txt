@@ -1,0 +1,64 @@
+Initial plan:
+
+--------------------------------------------------------------------------------
+Step 1: Read and analyze the relevant instruction files for this task, starting with /00_inbox/AGENTS.MD and /10_entities/AGENTS.MD, then any applicable instructions in /10_entities/cast/AGENTS.MD and other nearby AGENTS.MD files that govern how to inspect person records and how to format final outputs. Determine the exact rules to follow before identifying any birthdays.
+--------------------------------------------------------------------------------
+input_variables: []
+output_variables: [
+    {
+        "variable_name": "instruction_texts",
+        "variable_description": "Collected text contents of the relevant instruction files that govern the task.",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "applicable_rules",
+        "variable_description": "Parsed summary of the rules that apply to finding and reporting birthdays.",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 2: Inspect the visible people files under /10_entities/cast/ and extract each person's birthday information directly from the files, along with each person's exact name. Only use direct facts from the person documents and do not infer or estimate missing dates.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "instruction_texts",
+        "variable_description": "Collected text contents of the relevant instruction files that govern the task.",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "applicable_rules",
+        "variable_description": "Parsed summary of the rules that apply to finding and reporting birthdays.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: [
+    {
+        "variable_name": "people_birthdays",
+        "variable_description": "Mapping from exact person name to their birthday information extracted from the cast files.",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "visible_people",
+        "variable_description": "List of exact person names discovered in the visible cast files.",
+        "variable_data_type": "list[str]"
+    }
+]
+
+--------------------------------------------------------------------------------
+Step 3: Determine the next birthday among the visible people using only the birthday dates found in the files and the current date if it is explicitly stated in workspace documents. If multiple people share the same nearest upcoming birthday date, keep all matching names. Sort the selected names alphabetically and prepare only the exact names, one per line, for the final response.
+--------------------------------------------------------------------------------
+input_variables: [
+    {
+        "variable_name": "people_birthdays",
+        "variable_description": "Mapping from exact person name to their birthday information extracted from the cast files.",
+        "variable_data_type": "dict[str, str]"
+    },
+    {
+        "variable_name": "visible_people",
+        "variable_description": "List of exact person names discovered in the visible cast files.",
+        "variable_data_type": "list[str]"
+    }
+]
+output_variables: []
+

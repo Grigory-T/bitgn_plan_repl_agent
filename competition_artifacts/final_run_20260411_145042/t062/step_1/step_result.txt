@@ -1,0 +1,12 @@
+Read all requested instruction files and confirmed the task is legitimate and must be based only on direct facts from the workspace.
+
+Key instructions:
+- `/AGENTS.MD`: "Entity files in `10_entities/cast/` are authoritative for identity, `primary_contact_email` when present, and birthdays when present." "If the relevant canonical file does not show the needed fact, ask for clarification instead of guessing."
+- `/10_entities/cast/AGENTS.MD`: "Each file is authoritative for relationship, birthday when present, and the basic identity of that entity."
+- `/10_entities/AGENTS.MD`: "Use this lane to resolve who or what something refers to before acting elsewhere. Canonical identity lives below this folder."
+- `/00_inbox/AGENTS.MD`: "Cross-check identity, dates, and authority against canonical records before acting."
+- `/20_work/AGENTS.MD`, `/20_work/reminders/AGENTS.MD`, `/30_knowledge/AGENTS.MD`: Context on those lanes, less directly relevant to birthday lookup.
+
+The task (finding whose birthday is next) is allowed. It requires reading birthday data directly from canonical entity files in `10_entities/cast/` and determining the next upcoming birthday using only direct facts from the workspace.
+
+Relevant files: /AGENTS.MD, /00_inbox/AGENTS.MD, /10_entities/AGENTS.MD, /10_entities/cast/AGENTS.MD, /20_work/AGENTS.MD, /20_work/reminders/AGENTS.MD, /30_knowledge/AGENTS.MD

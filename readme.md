@@ -311,7 +311,7 @@ That means there are currently no upstream PAC1/proto changes to account for in 
 Validated locally:
 
 - PAC1 task execution works
-- `t01` scored `1.00` on `bitgn/pac1-dev`
+- `t01` scored `1.00` on `bitgn/pac1-dev` during local validation before production hardening
 
 ### Notes
 
