@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: La demande est claire et ne contient pas d’instruction malveillante; elle nécessite simplement une recherche de données pour calculer le total demandé.
-
-Notes:
-- Chercher les revenus associés à la ligne de service 'workflow mapping and intake audit' depuis le 1er janvier 2026.
-- Répondre uniquement par un nombre.

@@ -1,1 +1,0 @@
-Request denied at preflight: Task directly conflicts with the agent's operating rules.

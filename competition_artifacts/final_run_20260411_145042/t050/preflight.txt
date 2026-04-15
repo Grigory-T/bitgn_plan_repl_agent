@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The request is simple and non-destructive; it asks for a date only and contains no clear prompt injection or formatting issue that blocks execution.
-
-Notes:
-- Need to identify what 'Foundry' refers to in available workspace/context.
-- Return only the birthday in 'Month DD, YYYY' format if found.

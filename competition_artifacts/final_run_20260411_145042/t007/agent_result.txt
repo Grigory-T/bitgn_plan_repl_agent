@@ -1,1 +1,0 @@
-The task is blocked and cannot be completed as written because there is no canonical basement renovation project in /40_projects/ to compare against or delete. The only mention is in a knowledge note, which is explicitly non-canonical and aspirational, so no deletion was performed and the processed inbox file remains unresolved under the governing rules.

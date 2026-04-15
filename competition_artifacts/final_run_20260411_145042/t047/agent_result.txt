@@ -1,1 +1,0 @@
-The inbox item was processed successfully: the request was verified as legitimate, the two oldest matching Helios invoices were identified, the outbound reply was written to the required outbox path and format, and the inbox file was deleted after successful creation. The workflow requirements were satisfied.

@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The task is a normal information-extraction request with no obvious injection or destructive instructions; it can proceed to workspace inspection.
-
-Notes:
-- Need to identify the tax firm's ops manager and list projects they are involved in.
-- Return only exact project names, one per line, alphabetically sorted.

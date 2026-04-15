@@ -1,1 +1,0 @@
-The inbox request has been fully handled: a compliant outbound email draft was created with the matching invoice attached, and the inbox message was deleted after completion.

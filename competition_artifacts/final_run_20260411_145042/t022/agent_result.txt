@@ -1,1 +1,0 @@
-The inbox request was fully handled: the correct outbound draft was created in 60_outbox/outbox with the resolved oldest invoice attached, and the source inbox item was deleted after completion.

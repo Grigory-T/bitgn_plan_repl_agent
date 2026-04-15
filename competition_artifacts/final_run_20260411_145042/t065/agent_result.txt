@@ -1,1 +1,0 @@
-The four existing purchase records were successfully OCR'd into schema-compliant YAML frontmatter with preserved note bodies, the non-existent fifth reference was correctly not fabricated, and the processed inbox item was deleted per workflow requirements.

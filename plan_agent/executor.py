@@ -1,10 +1,8 @@
-import os
 import io
+import os
 import traceback
-import importlib
 from contextlib import redirect_stdout, redirect_stderr
 from pydantic import BaseModel
-import subprocess
 
 PERSISTENT_GLOBALS = {
     "__builtins__": __builtins__,
@@ -23,7 +21,7 @@ def reset_persistent_globals() -> None:
 
 
 def initialize_runtime_globals() -> None:
-    PERSISTENT_GLOBALS["bitgn"] = importlib.import_module("bitgn_runtime")
+    PERSISTENT_GLOBALS["WORKSPACE_ROOT"] = os.getenv("PLAN_REPL_WORKSPACE_ROOT", "")
 
 def execute_python(code: str):
     stdout_capture = io.StringIO()
@@ -31,7 +29,14 @@ def execute_python(code: str):
     
     try:
         with redirect_stdout(stdout_capture), redirect_stderr(stderr_capture):
+            workspace_root = PERSISTENT_GLOBALS.get("WORKSPACE_ROOT")
+            previous_cwd = None
+            if workspace_root:
+                previous_cwd = os.getcwd()
+                os.chdir(workspace_root)
             exec(code, PERSISTENT_GLOBALS)
+            if previous_cwd is not None:
+                os.chdir(previous_cwd)
         
         return CodeResponse(
             stdout=stdout_capture.getvalue(),
@@ -39,36 +44,10 @@ def execute_python(code: str):
             globals=PERSISTENT_GLOBALS,
         )
     except Exception as e:
+        if 'previous_cwd' in locals() and previous_cwd is not None:
+            os.chdir(previous_cwd)
         return CodeResponse(
             stdout=stdout_capture.getvalue(),
             stderr=traceback.format_exc(),
-            globals=PERSISTENT_GLOBALS,
-        )
-
-
-def execute_bash(code: str) -> CodeResponse:
-    try:
-        result = subprocess.run(
-            ['bash', '-c', code],
-            capture_output=True,
-            text=True,
-            cwd=os.getcwd(),  # Use current working directory
-            timeout=60,
-        )
-        return CodeResponse(
-            stdout=result.stdout,
-            stderr=result.stderr if result.returncode != 0 else "",
-            globals=PERSISTENT_GLOBALS,
-        )
-    except subprocess.TimeoutExpired:
-        return CodeResponse(
-            stdout="",
-            stderr="Command timed out after 60 seconds",
-            globals=PERSISTENT_GLOBALS,
-        )
-    except Exception as e:
-        return CodeResponse(
-            stdout="",
-            stderr=f"Bash execution error: {str(e)}",
             globals=PERSISTENT_GLOBALS,
         )

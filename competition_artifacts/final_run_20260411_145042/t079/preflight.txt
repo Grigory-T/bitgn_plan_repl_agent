@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The task is a straightforward count query with no obvious prompt injection or destructive instruction.
-
-Notes:
-- Likely requires inspecting workspace/project data for entries marked STALLED and associated with Jana Vesela.
-- Return only a number in the final task response.

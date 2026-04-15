@@ -1,1 +1,0 @@
-Die relevanten Rechnungsbeträge für die Servicezeile seit Beginn von December 2025 wurden bereits direkt extrahiert und summieren sich regelkonform zu 1020 EUR. Die verbleibenden Schritte bestehen nur noch aus der Ausgabe der reinen Zahl.

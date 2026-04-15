@@ -1,8 +1,0 @@
-Trial ID
-vm-03nmd84zeku94qa204
-
-Score
-0.00
-
-Details
-(none)

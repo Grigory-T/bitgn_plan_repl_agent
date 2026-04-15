@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The task is a straightforward data lookup request in French and does not contain prompt injection or destructive instructions.
-
-Notes:
-- Need to find revenue for the service line 'workflow  mapping and intake audit' since the start of November 2025.
-- Response must be a number only.

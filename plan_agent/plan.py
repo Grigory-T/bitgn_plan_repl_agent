@@ -3,10 +3,6 @@ from typing import List, Optional, Literal
 from pydantic import BaseModel, Field
 from .utils import llm_structured, LLM_MODEL_PLAN, LLM_MODEL_DECISION, LLM_MODEL_REPLAN
 from .prompt_plan import build_plan_prompt, build_decision_prompt, build_replan_remaining_prompt
-import bitgn_runtime
-
-
-PLAN_TREE_MAX_CHARS = 4000
 
 
 class StepVariable(BaseModel):
@@ -44,19 +40,8 @@ class AfterStepDecision(BaseModel):
     task_continue_reason: Optional[str] = Field(None, description="Reason for continuing the task (for `continue` decision)")
 
 
-def _workspace_tree_overview() -> str:
-    try:
-        tree_text = bitgn_runtime.tree("/")
-    except Exception as exc:
-        return f"(workspace overview unavailable: {exc})"
-
-    if len(tree_text) <= PLAN_TREE_MAX_CHARS:
-        return tree_text
-    return tree_text[:PLAN_TREE_MAX_CHARS].rstrip() + "\n... [truncated]"
-
-
 def create_plan(task: str) -> tuple[Plan, list[str]]:
-    prompt = build_plan_prompt(task=task, workspace_tree=_workspace_tree_overview())
+    prompt = build_plan_prompt(task=task)
     plan = llm_structured(prompt, Plan, model=LLM_MODEL_PLAN)
     warnings = check_plan(plan)
     return plan, warnings

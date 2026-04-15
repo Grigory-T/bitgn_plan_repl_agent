@@ -1,1 +1,0 @@
-Completed OCR for the four existing purchase records, preserved their note bodies, and deleted the inbox item. The fifth referenced file was not fabricated because it does not exist.

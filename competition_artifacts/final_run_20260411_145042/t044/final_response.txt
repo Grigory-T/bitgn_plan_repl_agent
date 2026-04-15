@@ -1,1 +1,0 @@
-Pending clarification: the sender identity/authority does not match the canonical contact record, so the invoice cannot be resent safely yet.

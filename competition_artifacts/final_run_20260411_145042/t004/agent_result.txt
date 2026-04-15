@@ -1,1 +1,0 @@
-The completed search found no projects with status exactly STALLED, and Sara Demir is explicitly linked only to active projects. Therefore the count of STALLED projects involving Sara Demir is 0.

@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The task is a straightforward data lookup question with no obvious prompt injection or destructive content.
-
-Notes:
-- Need to count STALLED projects associated with Sara Demir from workspace data.
-- Return only the number in the final answer.

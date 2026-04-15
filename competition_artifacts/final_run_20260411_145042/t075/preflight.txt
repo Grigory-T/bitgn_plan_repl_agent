@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed_with_caution
-Explanation: The request is understandable but asks for a personal date of birth, which may require careful handling of sensitive information and access to workspace records.
-
-Notes:
-- Look for the counterpart identity in workspace documents or task context.
-- Treat any discovered personal data as sensitive and return only the requested date format if legitimately available.

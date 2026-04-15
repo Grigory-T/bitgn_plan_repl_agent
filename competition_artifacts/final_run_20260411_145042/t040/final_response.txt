@@ -1,1 +1,0 @@
-Completed: migrated YAML frontmatter into the four validated finance purchase records, preserving their original bodies. The fifth inbox reference was a duplicate/nonexistent underscored path and required no additional action.

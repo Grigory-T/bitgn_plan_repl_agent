@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The task is clear and normal: work the oldest inbox message. No obvious injection or destructive instruction is present.
-
-Notes:
-- Likely needs workspace/inbox inspection to identify the oldest message.
-- Proceed with normal mailbox-processing workflow.

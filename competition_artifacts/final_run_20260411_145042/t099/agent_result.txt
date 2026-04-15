@@ -1,1 +1,0 @@
-The target bill was verified as Filamenthütte Wien on 2025-11-12, and the PLA spool mixed colors line item price was extracted exactly as 72. The remaining step is only to return the numeric answer, which is ready.

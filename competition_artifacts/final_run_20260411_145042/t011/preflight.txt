@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The task is simple and understandable: handle the next inbox item. No obvious injection, truncation, or conflicting instruction is present.
-
-Notes:
-- Inspect the inbox item(s) in workspace context
-- Proceed with normal inbox-processing workflow

@@ -1,9 +1,0 @@
-Successfully OCR'd all 4 bills related to Badger by extracting visible data from each note body into YAML frontmatter per the bill schema in /99_system/schemas/finance-record-frontmatter.md. Each bill now has structured YAML frontmatter at the top with all required fields (record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines) plus the optional related_entity field set to Badger, while preserving the original note body below as source content. Line items were extracted in visible order with line_eur matching quantity * unit_eur for all items. The inbox file /00_inbox/000_next-task.md was deleted after completion per inbox processing rules.
-
-Key rules followed:
-- OCR workflow (/99_system/workflows/ocr-records.md): Extract visible data into YAML frontmatter per schema; preserve existing body below; do not invent fields.
-- Migrate to frontmatter (/99_system/workflows/migrate-records-to-frontmatter.md): Keep canonical path; add YAML at top; preserve body; discover shape from schemas.
-- Bill schema (/99_system/schemas/finance-record-frontmatter.md): Required fields record_type, bill_id, alias, purchased_on, total_eur, counterparty, project, lines; optional related_entity; line items require item, quantity, unit_eur, line_eur; line_eur = quantity * unit_eur.
-- Inbox processing (/00_inbox/AGENTS.MD, /99_system/workflows/process-next-inbox-item.md): Delete inbox file after completing request.
-
-Files modified: /50_finance/purchases/2025_12_04__eur_000072__bill__toy_forge_pla_bundle.md, /50_finance/purchases/2026_01_27__eur_000080__bill__studio_parts_petg_batch.md, /50_finance/purchases/2026_02_27__eur_000033__bill__studio_parts_nozzle_and_inserts.md, /50_finance/purchases/2026_03_25__eur_000089__bill__black_library_terrain_spool.md. File deleted: /00_inbox/000_next-task.md.

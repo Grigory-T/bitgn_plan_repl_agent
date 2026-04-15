@@ -1,8 +1,0 @@
-Identified relevant instruction files and assessed task legitimacy. The task asks for project involvement of the 'ops manager at the tax firm', which is a neutral information retrieval query from canonical workspace records. The ops manager at the tax firm is Claudia Reiter (alias: claudia, relationship: consulting_client, email: claudia@helios-tax.example, described as 'Operations manager who only cares whether workflow changes save time this week.'). She is linked in the Helios Workflow Sprint project (entity.claudia in linked_entities). The task is allowed under workspace rules — it involves reading canonical entity and project records to answer a factual question, with no sensitive data disclosure or cross-boundary concerns.
-
-Relevant instruction files:
-- /AGENTS.MD: defines workspace structure, key locations, and rules including that entity files in 10_entities/cast/ are authoritative for identity and that project README.MD inside each folder is the canonical reference
-- /10_entities/AGENTS.MD: states canonical identity lives in this folder
-- /10_entities/cast/AGENTS.MD: states each file is authoritative for relationship and basic identity
-- /40_projects/AGENTS.MD: states README.MD inside each project folder is the canonical reference, and project files should stay explicit about who or what is linked
-- /00_inbox/AGENTS.MD, /20_work/AGENTS.MD, /30_knowledge/AGENTS.MD, /50_finance/AGENTS.MD, /60_outbox/AGENTS.MD, /90_memory/AGENTS.MD, /99_system/AGENTS.MD: general workspace governance (less directly relevant but reviewed for completeness)

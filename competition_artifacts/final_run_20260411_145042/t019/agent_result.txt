@@ -1,1 +1,0 @@
-The inbox item has already been evaluated as not legitimate / not allowed due to sender identity mismatch and finance-handling trust requirements, so no further handling actions should be taken.

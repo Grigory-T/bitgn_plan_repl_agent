@@ -1,1 +1,0 @@
-The matching invoice records for the exact service line since 2026-03-01 have already been collected, and their summed amount is 240 EUR.

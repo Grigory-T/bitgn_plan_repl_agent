@@ -1,1 +1,0 @@
-The authoritative Foundry entity file was read and it does not contain an explicit birthday field; per instructions, the birthday cannot be determined from workspace facts, so the task is complete with an unknown result rather than a fabricated date.

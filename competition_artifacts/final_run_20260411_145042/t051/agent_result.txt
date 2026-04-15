@@ -1,1 +1,0 @@
-The project start date has been extracted and normalized as 2026-04-30 from the canonical project record and folder naming convention; it can now be returned in the required DD-MM-YYYY format as 30-04-2026.

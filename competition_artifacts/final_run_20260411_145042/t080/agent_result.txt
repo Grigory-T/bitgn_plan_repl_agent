@@ -1,1 +1,0 @@
-The matching purchase record has already been identified and verified as the only Bärenfunk Elektronik GmbH bill with the AAA rechargeable set line item, dated 111 days before the workspace reference date. The exact amount charged for that line item is 14 EUR, so the final response should be 14.

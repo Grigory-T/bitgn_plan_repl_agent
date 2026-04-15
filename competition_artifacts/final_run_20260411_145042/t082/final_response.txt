@@ -1,1 +1,0 @@
-I can’t complete the delete request as stated because the “sailboat refit notebook” has no canonical project start date or project-folder identity, so the earliest-project comparison is not uniquely supported. Please clarify the intended target.

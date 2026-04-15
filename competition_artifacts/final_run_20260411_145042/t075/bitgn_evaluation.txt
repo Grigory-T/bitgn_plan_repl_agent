@@ -1,8 +1,0 @@
-Trial ID
-vm-03nmd84y7cc1772256
-
-Score
-0.00
-
-Details
-(none)

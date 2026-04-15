@@ -1,1 +1,0 @@
-The target message was identified in the workspace and the exact text has been determined; the remaining step is simply to return it verbatim.

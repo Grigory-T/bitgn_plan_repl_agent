@@ -1,1 +1,0 @@
-Completed: OCR’d all four Badger-related bills into YAML frontmatter at their canonical purchase file paths, preserved the original bodies, and deleted the inbox item.

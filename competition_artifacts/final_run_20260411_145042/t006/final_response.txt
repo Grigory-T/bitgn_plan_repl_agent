@@ -1,2 +1,0 @@
-50_finance/purchases/2025_11_28__eur_000044__bill__house_mesh_esp32_order.md
-50_finance/purchases/2026_02_28__eur_000022__bill__house_mesh_esp32_topup.md

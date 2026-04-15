@@ -1,9 +1,0 @@
-Decision after step 1:
-{
-  "next_action": "task_completed",
-  "abort_reason": null,
-  "reasons_for_replan_remaining_steps": null,
-  "task_completed_reason": "The walking buddy was identified as Bix, and the canonical birthday was found and formatted as 03/19/2020.",
-  "task_continue_reason": null
-}
-

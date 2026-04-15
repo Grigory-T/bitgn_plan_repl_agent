@@ -1,8 +1,0 @@
-Identified 4 projects with direct printer (Badger) involvement. The printer's canonical entity is 'badger' (per /10_entities/cast/badger.md, relationship: printer). Four project README.MD files list `entity.badger` in their linked_entities:
-
-1. 2026_03_29_studio_parts_library - linked_entities includes entity.badger; text references 'printer-adjacent aspiration'
-2. 2026_04_03_black_library_evenings - linked_entities includes entity.badger
-3. 2026_04_03_toy_forge_saturdays - linked_entities includes entity.badger; goal and summary explicitly mention 'printer'
-4. 2026_04_06_family_map_wall - linked_entities includes entity.badger
-
-Refs: /10_entities/cast/badger.md, /40_projects/2026_03_29_studio_parts_library/README.MD, /40_projects/2026_04_03_black_library_evenings/README.MD, /40_projects/2026_04_03_toy_forge_saturdays/README.MD, /40_projects/2026_04_06_family_map_wall/README.MD

@@ -1,8 +1,0 @@
-Trial ID
-vm-03nmd84roc5360wsq0
-
-Score
-0.00
-
-Details
-(none)

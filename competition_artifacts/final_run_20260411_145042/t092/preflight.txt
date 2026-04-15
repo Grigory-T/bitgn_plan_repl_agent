@@ -1,9 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The request is a normal migration/queueing task naming specific documents, with no obvious prompt injection or destructive intent.
-
-Notes:
-- Treat the listed Markdown files as migration candidates for NORA.
-- Confirm the destination/queue format and any existing workspace migration rules during planning.
-- Verify the file paths and availability before processing.

@@ -1,9 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The task is clear and normal: identify the nearest upcoming birthday among visible people and return matching names only.
-
-Notes:
-- Inspect visible people and their birthday dates.
-- If multiple people share the next birthday date, return all matching names alphabetically.
-- Output exact names, one per line.

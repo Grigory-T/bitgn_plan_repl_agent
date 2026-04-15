@@ -161,7 +161,7 @@ def llm(messages: list, model: str | None = None) -> tuple[str, str]:
 
     class ResponseBlock(BaseModel):
         block_id: int
-        block_type: Literal["python", "bash", "text"]
+        block_type: Literal["python", "text"]
         block_text: str
 
     blocks: list[ResponseBlock] = []

@@ -1,7 +1,0 @@
-Mapped both canonical source documents to their concrete NORA migration queue entries. Two queue entries were prepared as a single batch:
-
-1. /30_knowledge/notes/design-constraints-for-a-household-assistant.md (queue_order_id=1, no existing frontmatter → add_new_frontmatter)
-2. /99_system/workflows/sending-email.md (queue_order_id=2, no existing frontmatter → add_new_frontmatter)
-
-Both entries share the same batch timestamp (2026-03-23T16:35:00Z), target vault2, and carry exactly the 5 required frontmatter fields (bulk_processing_workflow=nora_mcp, queue_batch_timestamp, queue_order_id, queue_state=pending, queue_target=vault2). No extra fields were invented. File paths were sorted alphanumerically per the workflow rules. Neither document has existing YAML frontmatter, so the action for both is 'add_new_frontmatter'. All 20 queue-formatting rules from the migration workflow and schema were verified.
-Relevant files: /99_system/workflows/migrating-to-nora-mcp.md, /99_system/schemas/bulk-processing-and-queueing-frontmatter.md, /30_knowledge/notes/design-constraints-for-a-household-assistant.md, /99_system/workflows/sending-email.md

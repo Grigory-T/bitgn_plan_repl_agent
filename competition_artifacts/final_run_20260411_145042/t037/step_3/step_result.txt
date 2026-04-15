@@ -1,5 +1,0 @@
-The next birthday among the visible people is on 2026-05-21 (Tobias Kern). Using the current date 2026-03-30 from bitgn.context() (corroborated by workspace documents with created_on: 2026-03-30), all 16 people's birthday month-day combinations were compared. Birthdays already passed in 2026: Renate Hofer (Mar 4), Miles Novak (Mar 20), Gregor Leitner (Mar 22). The next upcoming birthday is Tobias Kern on May 21. Only one person has this date, so the final result is:
-
-Tobias Kern
-
-Relevant files: /10_entities/cast/tobias.md, /10_entities/cast/renate.md, /10_entities/cast/miles.md, /10_entities/cast/gregor.md, /10_entities/cast/AGENTS.MD, /10_entities/AGENTS.MD, /AGENTS.MD, /00_inbox/AGENTS.MD

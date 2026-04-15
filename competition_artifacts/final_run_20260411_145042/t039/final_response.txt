@@ -1,1 +1,0 @@
-The oldest inbox message has been processed successfully, the finance record was updated with OCR frontmatter, supporting facts were cross-checked, and the inbox message was deleted.

@@ -1,1 +1,0 @@
-Processed successfully: the outbound reply was written to the outbox and the inbox item was deleted.

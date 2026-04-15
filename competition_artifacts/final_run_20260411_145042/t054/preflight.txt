@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The task is clear and non-adversarial: it asks for a count of active projects involving NORA, likely obtainable by inspecting workspace data.
-
-Notes:
-- Look for projects marked ACTIVE that mention or involve NORA.
-- Return only the numeric count as requested by the task.

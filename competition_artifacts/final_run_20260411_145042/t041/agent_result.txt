@@ -1,1 +1,0 @@
-The requested inbox item was fully handled: both Petra Novak-related bill files were OCR'd by adding the required YAML frontmatter while preserving the note bodies, and the inbox item was deleted after successful completion. The work matches the discovered finance and inbox-processing instructions and no blockers remain.

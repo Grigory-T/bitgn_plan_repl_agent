@@ -1,1 +1,0 @@
-The remaining step is only to deduplicate, verify the exact project name, and format the already-confirmed result. The workspace review established that only one project is involved: Northstar Ledger.

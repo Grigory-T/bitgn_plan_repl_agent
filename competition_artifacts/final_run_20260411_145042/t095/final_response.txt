@@ -1,1 +1,0 @@
-Completed: the oldest inbox message was worked and the outbound reply draft was created; the processed inbox item was deleted.

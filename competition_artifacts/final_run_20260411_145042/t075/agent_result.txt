@@ -1,1 +1,0 @@
-The lookup cannot be completed as requested because the intended entity is not authoritatively resolved: no canonical cast file contains an 'infra_counterpart' relationship, and the closest match ('engineering_counterpart' Roman Stiller) is not sufficient to guess a DoB. The correct next action is to ask the user to clarify the counterpart identity.

@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The task is a straightforward count query with no obvious injection or destructive instructions.
-
-Notes:
-- Need to find PLANNED projects associated with Jana Vesela and count them.
-- Return only the number in the final answer.

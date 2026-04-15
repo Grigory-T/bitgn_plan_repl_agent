@@ -8,8 +8,7 @@ from .plan import (
 )
 from .run_step import run_step
 from .executor import execute_python
-from .preflight import preflight_check
-from .log import _init_log_dir, _append_log, _format_plan, _format_preflight, _write_log
+from .log import _init_log_dir, _append_log, _format_plan, _write_log
 
 
 MAX_TOTAL_STEPS = 30
@@ -23,21 +22,6 @@ def _finalize_run(log_dir, result: str, completed_steps: list[tuple[PlanStep, st
 
 def run_agent(task: str, task_id: str | None = None, batch_id: str | None = None) -> tuple[str, str, list[str]]:
     log_dir = _init_log_dir(task_id=task_id, batch_id=batch_id)
-    preflight = preflight_check(task)
-    _write_log(
-        log_dir / "preflight.txt",
-        _format_preflight(
-            should_proceed=preflight.should_proceed,
-            outcome=preflight.outcome,
-            explanation=preflight.explanation,
-            notes=preflight.notes,
-            denial_message=preflight.denial_message,
-        ),
-    )
-    if not preflight.should_proceed:
-        result = f"Request denied at preflight: {preflight.denial_message or preflight.explanation}"
-        return _finalize_run(log_dir, result, [])
-
     plan, plan_warnings = create_plan(task)
     remaining_steps: list[PlanStep] = list(plan.steps)
     completed_steps: list[tuple[PlanStep, str]] = []

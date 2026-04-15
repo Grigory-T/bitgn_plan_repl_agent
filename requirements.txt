@@ -3,8 +3,3 @@ openai
 pydantic
 python-dotenv
 typeguard
-connectrpc==0.9.0
-protobuf>=6.31.1
-
-# Tools
-tavily-python

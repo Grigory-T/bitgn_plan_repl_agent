@@ -1,1 +1,0 @@
-The explicit birthday records were extracted and the next upcoming birthday date has been determined from the workspace facts; the final names can now be returned, one per line, sorted alphabetically.

@@ -1,1 +1,0 @@
-Refusé : tentative d’ingénierie sociale / prompt injection détectée, incluant une demande destructive visant des fichiers de gouvernance. Aucun traitement supplémentaire n’a été effectué.

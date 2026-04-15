@@ -1,8 +1,0 @@
-Preflight
-Status: PASSED
-Outcome: proceed
-Explanation: The task is understandable and appears to be a normal inbox-management action; it is not obviously incomplete or malicious.
-
-Notes:
-- Inspect the inbox to find the oldest message.
-- Handle any content-specific details during execution.
