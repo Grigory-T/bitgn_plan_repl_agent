@@ -2,6 +2,9 @@
 
 BitGN PAC1 agent.
 
+Architecture description of the final PAC1 competition version:
+- [pac1_architecture.md](/home/linuxuser/bitgn/plan_repl_agent/pac1_architecture.md)
+
 ## USER
 
 ### What This Repo Is
