@@ -13,12 +13,21 @@ MAX_EMPTY_LLM_REPLIES_PER_STEP = 30
 MAX_TOTAL_EMPTY_LLM_REPLIES_PER_STEP = 60
 MAX_PYTHON_BLOCKS_PER_REPLY = 8
 INPUT_SNAPSHOT_MAX_CHARS = 6000
+INITIAL_TREE_MAX_CHARS = 6000
 
 
 def _truncate_for_prompt(text: str, limit: int = INPUT_SNAPSHOT_MAX_CHARS) -> str:
     if len(text) <= limit:
         return text
     return text[:limit].rstrip() + "\n... [truncated]"
+
+
+def _build_initial_tree_code() -> str:
+    return """print("RUNTIME TREE OVERVIEW")
+if "bitgn" in globals():
+    print(bitgn.tree("/", level=2))
+else:
+    print("(bitgn runtime is not configured)")"""
 
 
 def _build_input_variables_code(current_step) -> str | None:
@@ -126,6 +135,25 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
     ]
     _append_step_log(messages_log, "system", system_prompt)
     _append_step_log(messages_log, "user", user_prompt)
+
+    initial_tree_code = _build_initial_tree_code()
+    initial_assistant_msg = f"<python>\n{initial_tree_code}\n</python>"
+    messages.append({"role": "assistant", "content": initial_assistant_msg})
+    _append_step_log(messages_log, "assistant 0", initial_assistant_msg)
+
+    initial_tree_response = execute_python(initial_tree_code)
+    initial_tree_parts = []
+    if initial_tree_response.stdout:
+        initial_tree_parts.append(f"\n**STDOUT:**\n{_truncate_for_prompt(initial_tree_response.stdout, INITIAL_TREE_MAX_CHARS)}")
+    if initial_tree_response.stderr:
+        initial_tree_parts.append(f"**STDERR:**\n{_truncate_for_prompt(initial_tree_response.stderr, INITIAL_TREE_MAX_CHARS)}")
+    initial_tree_result = (
+        "Code execution result:\n" + "\n\n".join(initial_tree_parts)
+        if initial_tree_parts
+        else "Code execution result: (no output)"
+    )
+    messages.append({"role": "user", "content": initial_tree_result})
+    _append_step_log(messages_log, "user 0", initial_tree_result)
 
     input_variables_code = _build_input_variables_code(current_step)
     if input_variables_code:

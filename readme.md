@@ -96,6 +96,20 @@ Debug plumbing check:
 In `-d` mode no LLM pipeline is used; the worker starts the trial and submits a
 fixed denial. Use it only for log/debug inspection.
 
+Dummy CLI and parallel-worker test:
+
+```bash
+.venv/bin/python3 run_bitgn_task.py start-run --dummy --task-id t00-t02 --benchmark-id dummy/ecom
+.venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t00-t02 --workers 3 --dummy-sleep 2
+.venv/bin/python3 run_bitgn_task.py status --run-id latest
+.venv/bin/python3 run_bitgn_task.py end-run --run-id latest
+```
+
+Dummy runs do not call BitGN or the LLM. They create normal local `runs/` state,
+spawn worker subprocesses, and write normal `logs/<batch_id>/...` runner and
+evaluation files. Use them to test lifecycle, status, logging, interruption, and
+parallel execution plumbing.
+
 Legacy one-shot mode still exists:
 
 ```bash

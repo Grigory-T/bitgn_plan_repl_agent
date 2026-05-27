@@ -117,34 +117,18 @@ def preflight_check(task: str) -> PreflightDecision:
             notes=["Preflight is fail-open to avoid blocking normal ECOM task execution."],
         )
 
-    if result.outcome == "deny_prompt_injection" and result.confidence >= 4:
+    if result.outcome.startswith("deny_"):
         return PreflightDecision(
-            should_proceed=False,
-            outcome=result.outcome,
-            explanation=result.explanation,
-            notes=result.notes,
-            denial_message="Task text contains prompt-injection or instruction-override content.",
-            bitgn_outcome="OUTCOME_DENIED_SECURITY",
-        )
-
-    if result.outcome == "deny_forbidden_or_conflicting_request" and result.confidence >= 4:
-        return PreflightDecision(
-            should_proceed=False,
-            outcome=result.outcome,
-            explanation=result.explanation,
-            notes=result.notes,
-            denial_message="Task directly conflicts with ECOM policy, trust, privacy, or evidence-integrity boundaries.",
-            bitgn_outcome="OUTCOME_DENIED_SECURITY",
-        )
-
-    if result.outcome == "deny_needs_clarification" and result.confidence >= 4:
-        return PreflightDecision(
-            should_proceed=False,
-            outcome=result.outcome,
-            explanation=result.explanation,
-            notes=result.notes,
-            denial_message="Task is incomplete or too vague to execute reliably. Please clarify the requested action.",
-            bitgn_outcome="OUTCOME_NONE_CLARIFICATION",
+            should_proceed=True,
+            outcome="proceed_with_caution",
+            explanation=(
+                f"LLM preflight suggested {result.outcome}, but ECOM preflight only blocks deterministic "
+                f"early-deny patterns. Original explanation: {result.explanation}"
+            ),
+            notes=[
+                *result.notes,
+                "Proceeding because normal ECOM task details should be verified from runtime evidence and policy.",
+            ],
         )
 
     return PreflightDecision(
