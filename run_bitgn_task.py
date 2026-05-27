@@ -133,22 +133,6 @@ def build_parser() -> argparse.ArgumentParser:
         help=argparse.SUPPRESS,
     )
     parser.add_argument(
-        "--dummy",
-        action="store_true",
-        help="Run local dummy tasks for CLI/worker plumbing tests without BitGN or LLM calls.",
-    )
-    parser.add_argument(
-        "--dummy-mode",
-        action="store_true",
-        help=argparse.SUPPRESS,
-    )
-    parser.add_argument(
-        "--dummy-sleep",
-        type=float,
-        default=0.0,
-        help="Seconds each dummy worker should sleep before completing.",
-    )
-    parser.add_argument(
         "--workers",
         type=int,
         default=DEFAULT_WORKERS,
@@ -177,12 +161,6 @@ def build_lifecycle_parser() -> argparse.ArgumentParser:
         default=DEFAULT_BENCHMARK_HOST,
         help="BitGN API host",
     )
-    start_parser.add_argument(
-        "--dummy",
-        action="store_true",
-        help="Create a local dummy run for CLI/worker plumbing tests without BitGN.",
-    )
-
     run_parser = subparsers.add_parser("run-tasks", help="Run a subset of tasks for an existing leaderboard run")
     run_parser.add_argument("--run-id", required=True, help="Existing run id, or 'latest'")
     run_parser.add_argument(
@@ -201,13 +179,6 @@ def build_lifecycle_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Submit a fixed denial so logs and run plumbing can be inspected without running the full agent flow",
     )
-    run_parser.add_argument(
-        "--dummy-sleep",
-        type=float,
-        default=0.0,
-        help="Seconds each dummy worker should sleep before completing.",
-    )
-
     end_parser = subparsers.add_parser("end-run", help="Submit a leaderboard run explicitly")
     end_parser.add_argument("--run-id", required=True, help="Existing run id, or 'latest'")
 
@@ -604,8 +575,6 @@ def _run_one_attempt(
     batch_id: str,
     attempt: int,
     trial_id: str | None = None,
-    dummy_mode: bool = False,
-    dummy_sleep: float = 0.0,
 ) -> int:
     log_dir = _task_log_dir(task_id, batch_id)
     started_at = datetime.now().isoformat(timespec="seconds")
@@ -619,58 +588,6 @@ def _run_one_attempt(
         status="running",
         started_at=started_at,
     )
-
-    if dummy_mode:
-        sleep_seconds = max(0.0, dummy_sleep)
-        if sleep_seconds:
-            time.sleep(sleep_seconds)
-        elapsed_seconds = time.monotonic() - started_monotonic
-        final_message = "Dummy task completed for CLI and worker-pool plumbing test."
-        final_outcome = "OUTCOME_OK"
-        final_refs: list[str] = []
-        dummy_trial_id = trial_id or f"dummy-{task_id}"
-        _append_attempt(
-            log_dir,
-            attempt=attempt,
-            event="dummy_task",
-            details=f"dummy_sleep={sleep_seconds}",
-        )
-        write_task_result(
-            log_dir,
-            task_id=task_id,
-            benchmark_id=benchmark_id,
-            trial_id=dummy_trial_id,
-            task=f"Dummy task {task_id}",
-            harness_url=None,
-            elapsed_seconds=elapsed_seconds,
-            runner_exit=0,
-            agent_result=final_message,
-            final_response=final_message,
-            outcome=final_outcome,
-            refs=final_refs,
-        )
-        record_bitgn_evaluation(
-            log_dir,
-            trial_id=dummy_trial_id,
-            score=1.0,
-            details=["dummy task completed"],
-        )
-        _write_runner_state(
-            log_dir,
-            batch_id=batch_id,
-            task_id=task_id,
-            benchmark_id=benchmark_id,
-            attempt=attempt,
-            status="completed",
-            started_at=started_at,
-            finished_at=datetime.now().isoformat(timespec="seconds"),
-            trial_id=dummy_trial_id,
-            runner_exit=0,
-            elapsed_seconds=elapsed_seconds,
-            score=1.0,
-            score_details=["dummy task completed"],
-        )
-        return 0
 
     from bitgn.harness_connect import HarnessServiceClientSync
     from bitgn.harness_pb2 import EndTrialRequest, StartPlaygroundRequest, StartTrialRequest
@@ -855,8 +772,6 @@ def _worker_main(args: argparse.Namespace) -> int:
         batch_id=batch_id,
         attempt=1,
         trial_id=args.trial_id,
-        dummy_mode=args.dummy_mode,
-        dummy_sleep=args.dummy_sleep,
     )
 
 
@@ -869,8 +784,6 @@ def _spawn_worker(
     benchmark_host: str,
     debug_preflight_deny: bool,
     trial_id: str | None = None,
-    dummy_mode: bool = False,
-    dummy_sleep: float = 0.0,
 ) -> subprocess.Popen:
     cmd = [
         sys.executable,
@@ -889,9 +802,6 @@ def _spawn_worker(
         cmd.extend(["--trial-id", trial_id])
     if debug_preflight_deny:
         cmd.append("--debug-preflight-deny")
-    if dummy_mode:
-        cmd.append("--dummy-mode")
-        cmd.extend(["--dummy-sleep", str(dummy_sleep)])
 
     env = os.environ.copy()
     env["PYTHONDONTWRITEBYTECODE"] = "1"
@@ -1026,30 +936,6 @@ def _force_submit_unfinished_tasks(state: dict) -> list[str]:
     return finalized
 
 
-def _force_complete_dummy_unfinished_tasks(state: dict) -> list[str]:
-    unfinished = [
-        task_id
-        for task_id in state["task_ids"]
-        if state["tasks"][task_id]["status"] != "completed"
-    ]
-    if not unfinished:
-        return []
-
-    timestamp = datetime.now().isoformat(timespec="seconds")
-    finalized: list[str] = []
-    for task_id in unfinished:
-        task_state = state["tasks"][task_id]
-        task_state["status"] = "completed"
-        task_state["last_started_at"] = task_state.get("last_started_at") or timestamp
-        task_state["last_finished_at"] = timestamp
-        task_state["last_runner_exit"] = 0
-        task_state["last_outcome"] = "OUTCOME_OK"
-        task_state["last_score"] = 1.0
-        task_state["last_details"] = ["dummy task force-completed at end-run"]
-        finalized.append(task_id)
-    return finalized
-
-
 def _write_batch_runner_state(
     batch_dir: Path,
     *,
@@ -1163,8 +1049,6 @@ def _run_worker_pool(
     trial_map: dict[str, str],
     run_id: str | None,
     run_state: dict | None = None,
-    dummy_mode: bool = False,
-    dummy_sleep: float = 0.0,
 ) -> int:
     batch_dir = _batch_log_dir(batch_id)
     worker_count = max(1, min(workers, len(task_ids)))
@@ -1177,7 +1061,7 @@ def _run_worker_pool(
         batch_id=batch_id,
         benchmark_id=benchmark_id,
         workers=worker_count,
-        mode="dummy" if dummy_mode else ("leaderboard" if run_id else "playground"),
+        mode="leaderboard" if run_id else "playground",
         total_tasks=len(task_ids),
         pending_tasks=pending_tasks,
         running_tasks=[],
@@ -1203,8 +1087,6 @@ def _run_worker_pool(
                     benchmark_host=benchmark_host,
                     debug_preflight_deny=debug_preflight_deny,
                     trial_id=trial_map.get(task_id),
-                    dummy_mode=dummy_mode,
-                    dummy_sleep=dummy_sleep,
                 )
                 active.append((task_id, process))
 
@@ -1225,7 +1107,7 @@ def _run_worker_pool(
                 batch_id=batch_id,
                 benchmark_id=benchmark_id,
                 workers=worker_count,
-                mode="dummy" if dummy_mode else ("leaderboard" if run_id else "playground"),
+                mode="leaderboard" if run_id else "playground",
                 total_tasks=len(task_ids),
                 pending_tasks=pending_tasks,
                 running_tasks=[task_id for task_id, _ in active],
@@ -1260,7 +1142,7 @@ def _run_worker_pool(
             batch_id=batch_id,
             benchmark_id=benchmark_id,
             workers=worker_count,
-            mode="dummy" if dummy_mode else ("leaderboard" if run_id else "playground"),
+            mode="leaderboard" if run_id else "playground",
             total_tasks=len(task_ids),
             pending_tasks=pending_tasks + interrupted_task_ids,
             running_tasks=[],
@@ -1275,27 +1157,22 @@ def _run_worker_pool(
 
 def _parent_main(args: argparse.Namespace) -> int:
     task_ids = parse_task_spec(args.task_id)
-    if not args.dummy:
-        task_ids = _normalize_task_ids_for_benchmark(args.benchmark_host, args.benchmark_id, task_ids)
+    task_ids = _normalize_task_ids_for_benchmark(args.benchmark_host, args.benchmark_id, task_ids)
     batch_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     script_path = Path(__file__).resolve()
     run_id = None
     trial_map: dict[str, str] = {}
 
-    if args.dummy:
-        run_id = f"dummy-{batch_id}"
-        trial_map = {task_id: f"dummy-{task_id}" for task_id in task_ids}
-    else:
-        api_key = _bitgn_api_key()
-        if not api_key:
-            raise RuntimeError("BITGN_API_KEY is required because ECOM does not expose playground trials.")
-        run_id, trial_map = _task_trial_map_for_run(
-            benchmark_host=args.benchmark_host,
-            benchmark_id=args.benchmark_id,
-            task_ids=task_ids,
-            api_key=api_key,
-            batch_id=batch_id,
-        )
+    api_key = _bitgn_api_key()
+    if not api_key:
+        raise RuntimeError("BITGN_API_KEY is required because ECOM does not expose playground trials.")
+    run_id, trial_map = _task_trial_map_for_run(
+        benchmark_host=args.benchmark_host,
+        benchmark_id=args.benchmark_id,
+        task_ids=task_ids,
+        api_key=api_key,
+        batch_id=batch_id,
+    )
 
     try:
         return _run_worker_pool(
@@ -1308,11 +1185,9 @@ def _parent_main(args: argparse.Namespace) -> int:
             batch_id=batch_id,
             trial_map=trial_map,
             run_id=run_id,
-            dummy_mode=args.dummy,
-            dummy_sleep=args.dummy_sleep,
         )
     finally:
-        if run_id and not args.dummy:
+        if run_id:
             _submit_run(args.benchmark_host, run_id)
 
 
@@ -1320,32 +1195,25 @@ def _start_run_command(args: argparse.Namespace) -> int:
     _print_command_started()
     task_ids = parse_task_spec(args.task_id)
     batch_id = datetime.now().strftime("%Y%m%d_%H%M%S")
-    if args.dummy:
-        run_id = f"dummy-{batch_id}"
-        trial_map = {task_id: f"dummy-{task_id}" for task_id in task_ids}
-        benchmark_id = args.benchmark_id or "dummy/ecom"
-        benchmark_host = "dummy"
-    else:
-        task_ids = _normalize_task_ids_for_benchmark(args.benchmark_host, args.benchmark_id, task_ids)
-        api_key = _bitgn_api_key()
-        if not api_key:
-            raise RuntimeError("BITGN_API_KEY is required for start-run.")
-        run_id, trial_map = _task_trial_map_for_run(
-            benchmark_host=args.benchmark_host,
-            benchmark_id=args.benchmark_id,
-            task_ids=task_ids,
-            api_key=api_key,
-            batch_id=batch_id,
-        )
-        benchmark_id = args.benchmark_id
-        benchmark_host = args.benchmark_host
+    task_ids = _normalize_task_ids_for_benchmark(args.benchmark_host, args.benchmark_id, task_ids)
+    api_key = _bitgn_api_key()
+    if not api_key:
+        raise RuntimeError("BITGN_API_KEY is required for start-run.")
+    run_id, trial_map = _task_trial_map_for_run(
+        benchmark_host=args.benchmark_host,
+        benchmark_id=args.benchmark_id,
+        task_ids=task_ids,
+        api_key=api_key,
+        batch_id=batch_id,
+    )
+    benchmark_id = args.benchmark_id
+    benchmark_host = args.benchmark_host
 
     state = {
         "run_id": run_id,
         "benchmark_id": benchmark_id,
         "benchmark_host": benchmark_host,
         "run_name": LEADERBOARD_RUN_NAME,
-        "dummy": bool(args.dummy),
         "created_at": datetime.now().isoformat(timespec="seconds"),
         "submitted_at": None,
         "status": "open",
@@ -1374,7 +1242,6 @@ def _start_run_command(args: argparse.Namespace) -> int:
                 f"Run ID: {run_id}",
                 f"Benchmark ID: {benchmark_id}",
                 f"Run Name: {LEADERBOARD_RUN_NAME}",
-                f"Dummy: {bool(args.dummy)}",
                 f"Tasks: {', '.join(task_ids)}",
             ]
         ),
@@ -1459,8 +1326,6 @@ def _run_tasks_command(args: argparse.Namespace) -> int:
         trial_map=trial_map,
         run_id=state["run_id"],
         run_state=state,
-        dummy_mode=bool(state.get("dummy")),
-        dummy_sleep=args.dummy_sleep,
     )
 
 
@@ -1471,11 +1336,8 @@ def _end_run_command(args: argparse.Namespace) -> int:
         print(f"RUN_ID {state['run_id']}")
         print(f"SUBMITTED_AT {state['submitted_at']}")
         return 0
-    if state.get("dummy"):
-        finalized = _force_complete_dummy_unfinished_tasks(state)
-    else:
-        finalized = _force_submit_unfinished_tasks(state)
-        _submit_run(state["benchmark_host"], state["run_id"])
+    finalized = _force_submit_unfinished_tasks(state)
+    _submit_run(state["benchmark_host"], state["run_id"])
     state["submitted_at"] = datetime.now().isoformat(timespec="seconds")
     state["status"] = "submitted"
     _save_run_state(state)
@@ -1499,7 +1361,6 @@ def _status_command(args: argparse.Namespace) -> int:
     print(f"RUN_ID {state['run_id']}")
     print(f"RUN_STATE {run_state_path}")
     print(f"BENCHMARK_ID {state['benchmark_id']}")
-    print(f"DUMMY {bool(state.get('dummy'))}")
     print(f"RUN_STATUS {state.get('status', '(unknown)')}")
     print(f"SUBMITTED_AT {state.get('submitted_at') or '(not submitted)'}")
     print(f"TOTAL_TASKS {len(state['task_ids'])}")

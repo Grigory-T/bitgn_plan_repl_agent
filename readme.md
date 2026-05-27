@@ -20,25 +20,29 @@ The implementation keeps the old plan/repl orchestration style:
 - no automatic submission from `run-tasks`
 - legacy one-shot mode for quick local batches
 
-## Setup
+## Prerequisites
 
-`.env` is loaded automatically by `run_bitgn_task.py`.
+- `.env` copied or adapted from `.env.sample`
+- provider keys configured in `.env`
+- `BITGN_API_KEY` configured in `.env` for staged run flow
+- this repo's local `.venv` created with `./setup_venv.sh`
 
-Required:
+Environment loading notes:
 
-```bash
-OPENROUTER_API_KEY=...
-BITGN_API_KEY=...
-```
+- `run_bitgn_task.py` loads `.env` automatically via `python-dotenv`
+- you do not need to prefix commands with env vars if `.env` already contains them
+- you can still override a value inline for one command
 
-Optional:
+Important env vars:
 
-```bash
-BENCHMARK_ID=bitgn/ecom1-dev
-BITGN_HOST=https://api.bitgn.com
-BITGN_RUN_NAME="plan_repl_agent ecom"
-BITGN_WORKERS=4
-```
+- `OPENROUTER_API_KEY`
+- `CEREBRAS_API_KEY`
+- `LLM_AGENT_PROVIDER`
+- `BITGN_API_KEY`
+- `BENCHMARK_ID` or `BENCH_ID`
+- `BITGN_HOST` or `BENCHMARK_HOST`
+- `BITGN_RUN_NAME`
+- `BITGN_WORKERS`
 
 Install dependencies:
 
@@ -47,8 +51,14 @@ Install dependencies:
 ```
 
 This repo vendors generated BitGN protobuf/connect modules under `bitgn/`
-because the public Buf wheels used by the sample agent were not fetchable from
-this laptop.
+because the public Buf wheels used by the sample ECOM agent were not fetchable
+from this laptop.
+
+## Local Sync
+
+The old PAC1 repo had optional sync infrastructure for `/home/linuxuser/bitgn`.
+There is no equivalent ECOM sync step here now. Normal execution is local from
+`/home/linuxuser/bitgn-ecom`.
 
 ## Run On This Laptop
 
@@ -69,12 +79,17 @@ Notes:
 - for production, switch only `--benchmark-id` to the published ECOM benchmark id
 - ECOM does not expose playground trials, so prepared run trials are required
 - task ids are zero-based when the benchmark starts at `t00`, and three-digit ids such as `t100` are supported
+- the runner tolerates missing score/details fields and waits for prepared trials before starting task workers
+- `run-tasks` and `end-run` operate on durable local run state in `runs/`
 - `run-tasks` can be repeated with any subset before final submission
 - if `--task-id` is omitted on `run-tasks`, all locally unfinished tasks run
 - `run-tasks` does not submit the run
 - `status` is read-only
 - `end-run` submits the run explicitly
-- if `end-run` finds unfinished local tasks, it force-submits conservative denials before submitting the run
+- if `end-run` finds unfinished local tasks, it force-submits them with:
+  - outcome: `OUTCOME_DENIED_SECURITY`
+  - refs: empty
+  - this is an intentional conservative fallback for any still-unanswered tasks
 - all staged commands print a human-readable `STARTED_AT ...` line
 - `start-run` prints `RUN_ID ...` and `RUN_STATE ...`
 
@@ -87,28 +102,18 @@ Current DEV smoke benchmark note:
 As of 2026-05-27, `bitgn/ecom1-dev` reports `t01-t48`. The competition
 benchmark can start at `t00`; use the benchmark's actual task ids.
 
-Debug plumbing check:
+Debug mode:
 
 ```bash
 .venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t07 --workers 1 -d
+.venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t01-t03 --workers 3 -d
 ```
 
-In `-d` mode no LLM pipeline is used; the worker starts the trial and submits a
-fixed denial. Use it only for log/debug inspection.
+In `-d` mode:
 
-Dummy CLI and parallel-worker test:
-
-```bash
-.venv/bin/python3 run_bitgn_task.py start-run --dummy --task-id t00-t02 --benchmark-id dummy/ecom
-.venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t00-t02 --workers 3 --dummy-sleep 2
-.venv/bin/python3 run_bitgn_task.py status --run-id latest
-.venv/bin/python3 run_bitgn_task.py end-run --run-id latest
-```
-
-Dummy runs do not call BitGN or the LLM. They create normal local `runs/` state,
-spawn worker subprocesses, and write normal `logs/<batch_id>/...` runner and
-evaluation files. Use them to test lifecycle, status, logging, interruption, and
-parallel execution plumbing.
+- no LLM pipeline is used
+- each worker starts its prepared trial and immediately submits a fixed denial
+- this is intended only for log/debug inspection and parallel runner checks
 
 Legacy one-shot mode still exists:
 
@@ -119,11 +124,31 @@ Legacy one-shot mode still exists:
 ```
 
 One-shot mode starts a BitGN run, executes the selected tasks, then submits that
-run in the old style. The staged lifecycle is preferred for competition work.
+run in the old style. Unlike old PAC1, ECOM does not expose playground trials,
+so one-shot mode also requires `BITGN_API_KEY`. The staged lifecycle is
+preferred for competition work.
 
 ## Logs And State
 
-Durable run orchestration state:
+Run logs are written locally under:
+
+```bash
+/home/linuxuser/bitgn-ecom/logs/
+```
+
+Durable run orchestration state is stored separately under:
+
+```bash
+/home/linuxuser/bitgn-ecom/runs/
+```
+
+Important separation:
+
+- `runs/` stores durable run metadata and `task_id -> trial_id` mapping
+- `logs/` stores per-batch and per-task execution traces
+- `logs/<batch_id>/batch_runner_state.txt` stores batch-level status and score/details summaries
+
+Run identity and state:
 
 ```bash
 runs/<run_id>/run_state.json
@@ -145,9 +170,36 @@ Important files inside each task log directory:
 - `final_response.txt`
 - planner and step logs from `plan_agent/`
 
+## Current Runtime Model
+
+Control plane:
+
+- leaderboard mode supports the old 3-stage lifecycle:
+  - `start-run`
+  - `run-tasks`
+  - `end-run`
+- `start-run` creates one BitGN run and stores local run state
+- `run-tasks` attaches to an existing run and executes any selected subset of tasks
+- `end-run` explicitly submits the run
+- this keeps run lifetime visible and allows manual reruns before final submission
+
+Per-task execution:
+
+- start prepared trial via BitGN harness
+- receive `trial_id`, `instruction`, `harness_url`
+- run the planner/executor agent loop
+- submit final `message + outcome + refs`
+- end the trial and read evaluation
+
+Runtime plane:
+
+- ECOM runtime, not PAC1 PCM runtime
+- wrapper exposed through `ecom_runtime.py`
+- final submission uses the ECOM `answer` RPC
+
 ## Main Files
 
-- `run_bitgn_task.py` - BitGN runner with staged lifecycle and legacy one-shot mode
+- `run_bitgn_task.py` - BitGN runner with staged lifecycle and legacy one-shot mode. Uses one separate worker process per task, bounded by `--workers`. No task retry is performed. Worker failures do not stop the batch.
 - `ecom_runtime.py` - ECOM runtime adapter exposed to executed Python as `bitgn`
 - `plan_repl_agent.py` - local single-task workspace runner
 - `plan_agent/run_agent.py` - plan/step loop
@@ -155,3 +207,59 @@ Important files inside each task log directory:
 - `plan_agent/prompt_agent.py` - ECOM tool/safety prompt
 - `plan_agent/response.py` - final `message`, `outcome`, `refs` decision
 - `bitgn/` - generated protobuf modules and small ConnectRPC clients
+
+## Current Run Lifecycle
+
+Recommended stable model:
+
+1. `start-run`
+2. `run-tasks`
+3. `status`
+4. `end-run`
+
+Behavior:
+
+- `start-run`
+  - creates one BitGN run
+  - stores durable local metadata
+  - does not execute tasks
+  - does not submit anything
+- `run-tasks`
+  - attaches to an existing run
+  - executes any chosen subset of tasks from that run
+  - can be repeated manually
+  - if `--task-id` is omitted, it runs all tasks not yet completed locally
+  - does not submit the run automatically
+- `status`
+  - reads the current local run state
+  - reports pending, running, completed, and local-error tasks
+  - does not change any task or BitGN state
+- `end-run`
+  - submits the run explicitly
+  - does not execute tasks
+  - force-submits any still-unfinished tasks with conservative fallback output before submitting the run
+
+Why this model is used:
+
+- transparent lifecycle
+- stable recovery
+- selective reruns
+- no accidental final submission
+- easy auditing
+
+Important design rules:
+
+- `start-run` writes state once and does not overwrite silently
+- `run-tasks` must not auto-submit
+- `end-run` must not execute tasks
+- task logs include `task_id` and `trial_id`
+- batch logs stay separate from durable run state
+- local run-state files are the source of truth for manual operation
+
+## Notes
+
+- `.env` is ignored by Git
+- `.venv/` is ignored by Git
+- `logs/` is ignored by Git
+- `runs/` is ignored by Git
+- old PAC1 and sample-agent repos are reference sources, not the main place for ECOM edits
