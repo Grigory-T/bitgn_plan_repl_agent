@@ -101,7 +101,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--task-id",
         required=True,
-        help="Task spec: one task (`t04` or `4`), comma list (`t01,t03,8`), or inclusive range (`1-5` or `t01-t05`)",
+        help="Task spec: one task (`t00` or `0`), comma list (`t00,t03,100`), or inclusive range (`0-5` or `t00-t100`)",
     )
     parser.add_argument(
         "--benchmark-id",
@@ -149,7 +149,7 @@ def build_lifecycle_parser() -> argparse.ArgumentParser:
     start_parser.add_argument(
         "--task-id",
         required=True,
-        help="Task spec: one task (`t04` or `4`), comma list (`t01,t03,8`), or inclusive range (`1-5` or `t01-t05`)",
+        help="Task spec: one task (`t00` or `0`), comma list (`t00,t03,100`), or inclusive range (`0-5` or `t00-t100`)",
     )
     start_parser.add_argument(
         "--benchmark-id",
@@ -190,17 +190,22 @@ def build_lifecycle_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _task_num(raw: str) -> tuple[int, int]:
+def _task_num(raw: str) -> tuple[int, int, str]:
     value = raw.strip().lower()
     match = re.fullmatch(r"t?(\d+)", value)
     if not match:
         raise ValueError(f"Invalid task id: {raw}")
     digits = match.group(1)
-    return int(digits), len(digits)
+    return int(digits), len(digits), digits
 
 
 def _task_id(num: int, width: int = 2) -> str:
     return f"t{num:0{width}d}"
+
+
+def _explicit_pad_width(num: int, digits: str) -> int:
+    natural_width = len(str(num))
+    return len(digits) if len(digits) > natural_width else 0
 
 
 def parse_task_spec(task_spec: str) -> list[str]:
@@ -210,14 +215,18 @@ def parse_task_spec(task_spec: str) -> list[str]:
     for part in [item.strip() for item in task_spec.split(",") if item.strip()]:
         if "-" in part:
             left, right = [item.strip() for item in part.split("-", 1)]
-            start, start_width = _task_num(left)
-            end, end_width = _task_num(right)
-            width = max(start_width, end_width, 2)
+            start, _start_width, start_digits = _task_num(left)
+            end, _end_width, end_digits = _task_num(right)
+            width = max(
+                2,
+                _explicit_pad_width(start, start_digits),
+                _explicit_pad_width(end, end_digits),
+            )
             if start > end:
                 raise ValueError(f"Invalid task range: {part}")
             items = [(_task_id(num, width), num) for num in range(start, end + 1)]
         else:
-            num, width = _task_num(part)
+            num, width, _digits = _task_num(part)
             items = [(_task_id(num, max(width, 2)), num)]
 
         for task_id, _ in items:
