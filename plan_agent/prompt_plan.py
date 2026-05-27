@@ -1,12 +1,19 @@
 from .json_schemas import AFTER_STEP_DECISION_SCHEMA_JSON, PLAN_SCHEMA_JSON
 
 
-def build_plan_prompt(task: str) -> str:
+def build_plan_prompt(task: str, runtime_tree: str = "") -> str:
+    runtime_tree_section = f"""
+## Runtime Tree Overview
+{runtime_tree}
+""".rstrip() if runtime_tree else ""
+
     return f"""
 Create a short practical plan for this BitGN ECOM task.
 
 ## Task
 {task}
+
+{runtime_tree_section}
 
 Rules:
 - Keep the plan short and practical.

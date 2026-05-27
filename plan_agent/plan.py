@@ -1,8 +1,12 @@
 import json
+import os
 from typing import List, Optional, Literal
 from pydantic import BaseModel, Field
 from .utils import llm_structured, LLM_MODEL_PLAN, LLM_MODEL_DECISION, LLM_MODEL_REPLAN
 from .prompt_plan import build_plan_prompt, build_decision_prompt, build_replan_remaining_prompt
+
+
+PLAN_TREE_MAX_CHARS = 4000
 
 
 class StepVariable(BaseModel):
@@ -41,10 +45,25 @@ class AfterStepDecision(BaseModel):
 
 
 def create_plan(task: str) -> tuple[Plan, list[str]]:
-    prompt = build_plan_prompt(task=task)
+    prompt = build_plan_prompt(task=task, runtime_tree=_runtime_tree_overview())
     plan = llm_structured(prompt, Plan, model=LLM_MODEL_PLAN)
     warnings = check_plan(plan)
     return plan, warnings
+
+
+def _runtime_tree_overview() -> str:
+    if not os.getenv("BITGN_HARNESS_URL"):
+        return ""
+    try:
+        import ecom_runtime
+
+        tree_text = ecom_runtime.tree("/", level=2)
+    except Exception as exc:
+        return f"(runtime tree overview unavailable: {exc})"
+
+    if len(tree_text) <= PLAN_TREE_MAX_CHARS:
+        return tree_text
+    return tree_text[:PLAN_TREE_MAX_CHARS].rstrip() + "\n... [truncated]"
 
 def make_after_step_decision(
     task: str,

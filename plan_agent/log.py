@@ -54,6 +54,39 @@ def _write_log(path: Path, content: str) -> None:
         log_file.write(content.rstrip() + "\n")
 
 
+def _format_preflight(
+    *,
+    should_proceed: bool,
+    outcome: str,
+    explanation: str,
+    notes: list[str],
+    denial_message: str | None,
+    bitgn_outcome: str | None = None,
+) -> str:
+    lines = [
+        "Preflight",
+        f"Status: {'PASSED' if should_proceed else 'DENIED'}",
+        f"Outcome: {outcome}",
+        f"BitGN Outcome: {bitgn_outcome or '(not set)'}",
+        f"Explanation: {explanation}",
+        "",
+        "Notes:",
+    ]
+    if notes:
+        lines.extend(f"- {note}" for note in notes)
+    else:
+        lines.append("(none)")
+
+    if denial_message:
+        lines.extend([
+            "",
+            "Denial Message:",
+            denial_message,
+        ])
+
+    return "\n".join(lines)
+
+
 def _format_plan(plan: Plan, start_step: int = 1) -> str:
     lines = []
     separator = "-" * 80

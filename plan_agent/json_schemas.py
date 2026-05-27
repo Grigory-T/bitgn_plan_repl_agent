@@ -30,6 +30,45 @@ def _strictify_node(node):
             _strictify_node(child)
 
 
+_PREFLIGHT_ASSESSMENT_SCHEMA = {
+    "title": "PreflightAssessment",
+    "type": "object",
+    "properties": {
+        "outcome": {
+            "title": "Outcome",
+            "description": "High-level preflight outcome",
+            "type": "string",
+            "enum": [
+                "proceed",
+                "proceed_with_caution",
+                "deny_needs_clarification",
+                "deny_prompt_injection",
+                "deny_forbidden_or_conflicting_request",
+            ],
+        },
+        "explanation": {
+            "title": "Explanation",
+            "description": "Short explanation of the decision",
+            "type": "string",
+        },
+        "notes": {
+            "title": "Notes",
+            "description": "Short practical notes for later planning",
+            "type": "array",
+            "items": {"type": "string"},
+            "default": [],
+        },
+        "confidence": {
+            "title": "Confidence",
+            "description": "Confidence level 1-5",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+        },
+    },
+}
+
+
 _PLAN_SCHEMA = {
     "title": "Plan",
     "type": "object",
@@ -199,17 +238,20 @@ _RESPONSE_DECISION_SCHEMA = {
 }
 
 
+_STRICT_PREFLIGHT_ASSESSMENT_SCHEMA = _make_provider_strict(_PREFLIGHT_ASSESSMENT_SCHEMA)
 _STRICT_PLAN_SCHEMA = _make_provider_strict(_PLAN_SCHEMA)
 _STRICT_AFTER_STEP_DECISION_SCHEMA = _make_provider_strict(_AFTER_STEP_DECISION_SCHEMA)
 _STRICT_RESPONSE_DECISION_SCHEMA = _make_provider_strict(_RESPONSE_DECISION_SCHEMA)
 
 
+PREFLIGHT_ASSESSMENT_SCHEMA_JSON = json.dumps(_STRICT_PREFLIGHT_ASSESSMENT_SCHEMA, ensure_ascii=False, indent=4)
 PLAN_SCHEMA_JSON = json.dumps(_STRICT_PLAN_SCHEMA, ensure_ascii=False, indent=4)
 AFTER_STEP_DECISION_SCHEMA_JSON = json.dumps(_STRICT_AFTER_STEP_DECISION_SCHEMA, ensure_ascii=False, indent=4)
 RESPONSE_DECISION_SCHEMA_JSON = json.dumps(_STRICT_RESPONSE_DECISION_SCHEMA, ensure_ascii=False, indent=4)
 
 
 _SCHEMA_BY_MODEL_NAME = {
+    "PreflightAssessment": _STRICT_PREFLIGHT_ASSESSMENT_SCHEMA,
     "Plan": _STRICT_PLAN_SCHEMA,
     "AfterStepDecision": _STRICT_AFTER_STEP_DECISION_SCHEMA,
     "ResponseDecision": _STRICT_RESPONSE_DECISION_SCHEMA,
