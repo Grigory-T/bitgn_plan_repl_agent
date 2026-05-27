@@ -11,6 +11,7 @@ from .log import _append_step_log, _append_reasoning, _write_log
 MAX_ITERATIONS_PER_STEP = 30
 MAX_EMPTY_LLM_REPLIES_PER_STEP = 30
 MAX_TOTAL_EMPTY_LLM_REPLIES_PER_STEP = 60
+MAX_PYTHON_BLOCKS_PER_REPLY = 8
 
 
 def _matches_literal_dtype(value: Any, dtype: Any) -> bool:
@@ -142,6 +143,7 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
         pending_text = []
         python_blocks = []
         pair_idx = 0  # numbering for code/result pairs in logs
+        truncated_reply = False
 
         for block in llm_response_blocks:
             if block.block_type == "text":
@@ -150,6 +152,17 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
 
             if block.block_type not in ("python", "bash"):
                 continue
+
+            if len(python_blocks) >= MAX_PYTHON_BLOCKS_PER_REPLY:
+                user_msg = (
+                    "Too many Python blocks in one reply. Stop broad exploration. "
+                    "If you already have direct evidence for the current step, finalize it with the exact two-line block. "
+                    "Otherwise continue with at most one focused Python block."
+                )
+                messages.append({"role": "user", "content": user_msg})
+                _append_step_log(messages_log, "user", user_msg)
+                truncated_reply = True
+                break
 
             code_type = block.block_type
             code = block.block_text
@@ -178,6 +191,9 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
             messages.append({"role": "user", "content": block_result})
             _append_step_log(messages_log, f"user {pair_idx}", block_result)
             pair_idx += 1
+
+        if truncated_reply:
+            continue
 
         # If only text blocks existed, surface them once
         if pending_text and not python_blocks:

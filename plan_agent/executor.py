@@ -22,6 +22,12 @@ def reset_persistent_globals() -> None:
 
 def initialize_runtime_globals() -> None:
     PERSISTENT_GLOBALS["WORKSPACE_ROOT"] = os.getenv("PLAN_REPL_WORKSPACE_ROOT", "")
+    harness_url = os.getenv("BITGN_HARNESS_URL")
+    if harness_url:
+        import ecom_runtime as bitgn
+
+        bitgn.configure(harness_url)
+        PERSISTENT_GLOBALS["bitgn"] = bitgn
 
 def execute_python(code: str):
     stdout_capture = io.StringIO()

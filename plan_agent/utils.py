@@ -11,16 +11,14 @@ load_dotenv()
 
 LLM_REQUEST_TIMEOUT_SECONDS = 300
 
-# plan_model = "openai/gpt-4.1:nitro"
-plan_model = "openai/gpt-5.4-mini:nitro"
+plan_model = os.getenv("LLM_MODEL_PLAN", "openai/gpt-5.4-mini:nitro")
 
 LLM_MODEL_PLAN = plan_model
 LLM_MODEL_DECISION = plan_model
 LLM_MODEL_REPLAN = plan_model
 LLM_MODEL_RESPONSE = plan_model
 
-# LLM_MODEL_AGENT = "openai/gpt-oss-120b"
-LLM_MODEL_AGENT = "z-ai/glm-5.1:nitro"
+LLM_MODEL_AGENT = os.getenv("LLM_MODEL_AGENT", "z-ai/glm-5.1:nitro")
 
 
 
@@ -99,7 +97,7 @@ def _extract_json_object(content: str) -> str:
 
 def llm(messages: list, model: str | None = None) -> tuple[str, str]:
     provider = (os.getenv("LLM_AGENT_PROVIDER") or "openrouter").strip().lower()
-    chosen_model = LLM_MODEL_AGENT
+    chosen_model = model or LLM_MODEL_AGENT
 
     if provider == "cerebras":
         from cerebras.cloud.sdk import Cerebras

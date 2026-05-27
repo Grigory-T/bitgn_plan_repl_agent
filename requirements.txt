@@ -1,5 +1,7 @@
-# Core dependencies
+annotated-types
+connectrpc==0.10.0
 openai
+protobuf>=6.31.1,<7
 pydantic
 python-dotenv
 typeguard

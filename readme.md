@@ -1,79 +1,89 @@
-# plan_repl_agent
+# plan_repl_agent ECOM
 
-General-purpose planning and execution agent for local file workspaces.
+BitGN ECOM1 agent based on the reusable `general_purpose` plan/repl branch.
 
 ## What This Branch Is
 
-This branch keeps only the reusable local agent core:
+This branch keeps the plan/repl architecture and connects it to the ECOM runtime:
 
-- planning
-- per-step execution
-- Python-only code execution
-- structured step completion
-- isolated logs
-- isolated per-run workspace
+- plan creation and replanning
+- per-step Python execution
+- BitGN ECOM runtime helper preloaded as `bitgn`
+- deterministic submission of `message`, `outcome`, and `refs`
+- local logs per trial
 
-## Quick Start
+The ECOM runtime exposes a file-shaped commerce OS with tools such as
+`tree`, `read`, `search`, `write`, `delete`, `stat`, `exec`, and `/bin/sql`.
 
-From the repo root:
+## Setup
+
+`.env` should contain:
+
+```bash
+OPENROUTER_API_KEY=...
+BITGN_API_KEY=...
+```
+
+Install dependencies:
 
 ```bash
 ./setup_venv.sh
-.venv/bin/python3 plan_repl_agent.py "create .txt file with ten words"
 ```
 
-The command creates a fresh run under:
+The public Buf wheels referenced by the sample agent were returning 403 from
+this environment, so this repo vendors locally generated protobuf modules under
+`bitgn/` from the public sample-agent protos.
+
+## Run
+
+List DEV task ids:
 
 ```bash
-runs/<run_id>/
+.venv/bin/python run_bitgn_task.py --list-tasks
 ```
 
-Each run contains:
+Run one DEV task inside an unsubmitted selected-task run:
 
-- `workspace/`
-  - the isolated workspace the agent can read and modify
-- `step_logs/`
-  - execution logs for the run
-- `task.txt`
-  - the original task text
-- `result.json`
-  - final structured result
-- `final_answer.txt`
-  - final user-facing answer
+```bash
+.venv/bin/python run_bitgn_task.py --task-id t01
+```
 
-## Runtime Model
+Run a DEV subset inside an unsubmitted selected-task run:
 
-The executor is Python-only. There is no shell tool in the agent loop.
-Each step runs plain Python code with:
+```bash
+.venv/bin/python run_bitgn_task.py --task-id t01-t05
+```
 
-- `WORKSPACE_ROOT`
-  - absolute path to the writable workspace directory for the current run
+Selected-task runs are not submitted by default because ECOM DEV does not expose
+`StartPlayground`; this avoids accidentally submitting a partial low-score run.
+Use `--submit-selected` only when you intentionally want to force-submit it.
 
-The Python execution environment uses `WORKSPACE_ROOT` as its working directory.
+Run a full leaderboard benchmark:
+
+```bash
+.venv/bin/python run_bitgn_task.py --benchmark-id bitgn/ecom1-dev
+```
+
+For the blind competition benchmark, switch only `--benchmark-id` to the
+published production id when BitGN opens it.
 
 ## Main Files
 
-- `plan_repl_agent.py`
-  - single-run entrypoint
-- `plan_agent/run_agent.py`
-  - main plan/step loop
-- `plan_agent/run_step.py`
-  - per-step LLM loop
-- `plan_agent/executor.py`
-  - Python execution environment
+- `run_bitgn_task.py` - BitGN harness runner
+- `ecom_runtime.py` - ECOM runtime adapter exposed to executed Python as `bitgn`
+- `plan_repl_agent.py` - local single-task workspace runner
+- `plan_agent/run_agent.py` - plan/step loop
+- `plan_agent/run_step.py` - per-step Python REPL loop
+- `plan_agent/prompt_agent.py` - ECOM tool/safety prompt
+- `bitgn/` - generated protobuf modules and small ConnectRPC clients
 
-## Environment
+## Logs
 
-Create `.env` from `.env.sample`.
+Trial logs are written under:
 
-Required keys depend on provider choice:
+```bash
+logs/<batch_id>/<task_id>/
+```
 
-- `OPENROUTER_API_KEY`
-- `CEREBRAS_API_KEY`
-- `LLM_AGENT_PROVIDER`
-
-Current defaults are defined in `plan_agent/utils.py`.
-
-## Notes
-
-- `runs/` is ignored by Git.
+Each task directory includes planner logs, step logs, response prompt, and
+`runner_result.json`.

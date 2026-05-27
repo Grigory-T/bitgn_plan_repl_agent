@@ -3,15 +3,21 @@ from .json_schemas import AFTER_STEP_DECISION_SCHEMA_JSON, PLAN_SCHEMA_JSON
 
 def build_plan_prompt(task: str) -> str:
     return f"""
-Create a short plan for the following task.
+Create a short practical plan for this BitGN ECOM task.
 
 ## Task
 {task}
 
 Rules:
 - Keep the plan short and practical.
-- Include an early step to inspect the working directory and any relevant instruction files.
-- Use direct evidence from files.
+- Include an early step to inspect the ECOM runtime tree and read `/AGENTS.MD` or equivalent instructions.
+- Include evidence-gathering steps only for records relevant to the task. For catalogue-only product questions, inspect catalogue/product data only; do not add customer/order/cart/payment/support/warehouse work unless requested.
+- Include an action/answer step only after evidence and policy are checked.
+- Mention using `bitgn.sql(...)` when tabular catalogue/order data appears large.
+- For catalogue-product SQL, include the product `path` column in evidence so final refs can cite exact `/proc/catalog/...json` records.
+- For catalogue count/report tasks, include a step to inspect `/docs` and read any matching policy-update or ops-policy-note document before counting; final refs must include that doc path.
+- Count/report SQL must apply every filter in the matched policy note, including store/city/open/inventory/availability constraints and distinct-SKU rules.
+- Use direct evidence from files, runtime tools, and SQL output.
 - Do not invent missing facts.
 - Use 1-6 steps.
 - First step must not depend on input variables.

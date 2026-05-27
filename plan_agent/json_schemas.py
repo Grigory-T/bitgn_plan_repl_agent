@@ -170,6 +170,27 @@ _RESPONSE_DECISION_SCHEMA = {
             "title": "Message",
             "type": "string",
         },
+        "outcome": {
+            "title": "Outcome",
+            "type": "string",
+            "enum": [
+                "OUTCOME_OK",
+                "OUTCOME_DENIED_SECURITY",
+                "OUTCOME_NONE_CLARIFICATION",
+                "OUTCOME_NONE_UNSUPPORTED",
+                "OUTCOME_ERR_INTERNAL",
+            ],
+        },
+        "refs": {
+            "title": "Refs",
+            "type": "array",
+            "items": {"type": "string"},
+            "default": [],
+        },
+        "should_submit_to_bitgn": {
+            "title": "Should Submit To BitGN",
+            "type": "boolean",
+        },
         "reasoning": {
             "title": "Reasoning",
             "type": "string",
