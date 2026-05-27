@@ -65,16 +65,6 @@ def _ensure_yes_no_token(task: str, message: str, evidence: str) -> str:
     return message
 
 
-def _preflight_outcome_hint(text: str) -> str | None:
-    if "Request denied at preflight" not in text:
-        return None
-    match = re.search(
-        r"Recommended outcome:\s*(OUTCOME_OK|OUTCOME_DENIED_SECURITY|OUTCOME_NONE_CLARIFICATION|OUTCOME_NONE_UNSUPPORTED|OUTCOME_ERR_INTERNAL)",
-        text,
-    )
-    return match.group(1) if match else None
-
-
 def decide_response(
     task: str,
     agent_answer: str,
@@ -93,9 +83,6 @@ def decide_response(
         (log_path / "response_prompt.txt").write_text(prompt.rstrip() + "\n", encoding="utf-8")
     decision = llm_structured(prompt, ResponseDecision, model=LLM_MODEL_RESPONSE)
     decision.should_submit_to_bitgn = True
-    outcome_hint = _preflight_outcome_hint(agent_answer)
-    if outcome_hint:
-        decision.outcome = outcome_hint
     evidence_text = "\n".join([agent_answer, summarized_steps, decision.message])
     decision.message = _ensure_yes_no_token(task, decision.message, evidence_text)
     cleaned_refs: list[str] = []

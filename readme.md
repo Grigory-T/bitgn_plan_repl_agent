@@ -62,6 +62,12 @@ There is no equivalent ECOM sync step here now. Normal execution is local from
 
 ## Run On This Laptop
 
+```bash
+cd /home/linuxuser/bitgn-ecom
+./setup_venv.sh
+.venv/bin/python3 run_bitgn_task.py start-run --task-id t00-t47 --benchmark-id <published-ecom-benchmark-id>
+```
+
 Recommended staged flow:
 
 ```bash
@@ -69,6 +75,7 @@ cd /home/linuxuser/bitgn-ecom
 .venv/bin/python3 run_bitgn_task.py start-run --task-id t00-t47 --benchmark-id <published-ecom-benchmark-id>
 .venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t00-t09 --workers 4
 .venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t10-t19 --workers 4
+.venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t03,t07,t18 --workers 3
 .venv/bin/python3 run_bitgn_task.py status --run-id latest
 .venv/bin/python3 run_bitgn_task.py end-run --run-id latest
 ```
@@ -112,7 +119,7 @@ Debug mode:
 In `-d` mode:
 
 - no LLM pipeline is used
-- each worker starts its prepared trial and immediately submits a fixed denial
+- each worker starts its prepared trial and immediately submits a forced preflight denial
 - this is intended only for log/debug inspection and parallel runner checks
 
 Legacy one-shot mode still exists:

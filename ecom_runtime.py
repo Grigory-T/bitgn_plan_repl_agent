@@ -203,7 +203,7 @@ def _tree_node_from_proto(entry) -> TreeNode:
     )
 
 
-def tree_data(path: str = "/", level: int = 2) -> TreeResult:
+def tree_data(path: str = "/", level: int = 0) -> TreeResult:
     response = _runtime().tree(
         TreeRequest(
             root=_normalize_path(path, root_empty=True),
@@ -213,7 +213,7 @@ def tree_data(path: str = "/", level: int = 2) -> TreeResult:
     return TreeResult(root=_tree_node_from_proto(response.root), truncated=response.truncated)
 
 
-def tree(path: str = "/", level: int = 2) -> str:
+def tree(path: str = "/", level: int = 0) -> str:
     result = tree_data(path=path, level=level)
     root_label = _normalize_path(path)
 
@@ -233,6 +233,53 @@ def tree(path: str = "/", level: int = 2) -> str:
         return root_label
 
     body = _walk(result.root, 1)
+    lines = [root_label, *body] if body else [root_label]
+    if result.truncated:
+        lines.append("[TRUNCATED: use a narrower path or smaller level]")
+    return "\n".join(lines)
+
+
+def _count_lines(text: str) -> int:
+    if not text:
+        return 0
+    return text.count("\n") + (0 if text.endswith("\n") else 1)
+
+
+def tree_with_line_counts(path: str = "/", level: int = 0) -> str:
+    result = tree_data(path=path, level=level)
+    root_label = _normalize_path(path)
+
+    root_is_file = result.root.name and result.root.kind == "file" and not result.root.children
+    if root_is_file:
+        try:
+            file_text = read(root_label).content
+            return f"{root_label} [{_count_lines(file_text)}]"
+        except Exception:
+            return root_label
+
+    def _join_child_path(parent_path: str, child_name: str) -> str:
+        if parent_path == "/":
+            return _normalize_path(child_name)
+        return _normalize_path(f"{parent_path}/{child_name}")
+
+    def _walk(node: TreeNode, parent_path: str, depth: int) -> builtins.list[str]:
+        lines: builtins.list[str] = []
+        indent = "  " * depth
+        for child in sorted(node.children, key=lambda item: (item.kind != "dir", item.name)):
+            child_path = _join_child_path(parent_path, child.name)
+            if child.kind == "dir":
+                lines.append(f"{indent}{child.name}/")
+            else:
+                try:
+                    line_count = _count_lines(read(child_path).content)
+                    lines.append(f"{indent}{child.name} [{line_count}]")
+                except Exception:
+                    lines.append(f"{indent}{child.name}")
+            if child.children:
+                lines.extend(_walk(child, child_path, depth + 1))
+        return lines
+
+    body = _walk(result.root, root_label, 1)
     lines = [root_label, *body] if body else [root_label]
     if result.truncated:
         lines.append("[TRUNCATED: use a narrower path or smaller level]")

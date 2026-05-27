@@ -43,7 +43,7 @@ _PREFLIGHT_ASSESSMENT_SCHEMA = {
                 "proceed_with_caution",
                 "deny_needs_clarification",
                 "deny_prompt_injection",
-                "deny_forbidden_or_conflicting_request",
+                "deny_destructive_or_conflicting_request",
             ],
         },
         "explanation": {

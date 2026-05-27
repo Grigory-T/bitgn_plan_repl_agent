@@ -32,14 +32,10 @@ def run_agent(task: str, task_id: str | None = None, batch_id: str | None = None
             explanation=preflight.explanation,
             notes=preflight.notes,
             denial_message=preflight.denial_message,
-            bitgn_outcome=preflight.bitgn_outcome,
         ),
     )
     if not preflight.should_proceed:
-        result = (
-            f"Request denied at preflight. Recommended outcome: {preflight.bitgn_outcome or 'OUTCOME_DENIED_SECURITY'}. "
-            f"Message: {preflight.denial_message or preflight.explanation}"
-        )
+        result = f"Request denied at preflight: {preflight.denial_message or preflight.explanation}"
         return _finalize_run(log_dir, result, [])
 
     plan, plan_warnings = create_plan(task)

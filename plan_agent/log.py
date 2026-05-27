@@ -1,5 +1,4 @@
 import json
-import os
 from datetime import datetime
 from pathlib import Path
 import re
@@ -13,14 +12,8 @@ def _sanitize_log_segment(value: str) -> str:
 
 
 def _init_log_dir(task_id: str | None = None, batch_id: str | None = None) -> Path:
-    log_root = os.getenv("PLAN_REPL_LOG_ROOT")
-    if log_root:
-        base = Path(log_root)
-        if batch_id:
-            base = base / _sanitize_log_segment(batch_id)
-    else:
-        batch_segment = _sanitize_log_segment(batch_id) if batch_id else datetime.now().strftime("%Y%m%d_%H%M%S")
-        base = Path(__file__).resolve().parent.parent / "logs" / batch_segment
+    batch_segment = _sanitize_log_segment(batch_id) if batch_id else datetime.now().strftime("%Y%m%d_%H%M%S")
+    base = Path(__file__).resolve().parent.parent / "logs" / batch_segment
     log_dir = base / _sanitize_log_segment(task_id) if task_id else base
     log_dir.mkdir(parents=True, exist_ok=True)
     return log_dir
@@ -54,6 +47,15 @@ def _write_log(path: Path, content: str) -> None:
         log_file.write(content.rstrip() + "\n")
 
 
+def _format_refs(refs: list[str], title: str = "Reported Refs:") -> str:
+    lines = [title]
+    if refs:
+        lines.extend(f"- {ref}" for ref in refs)
+    else:
+        lines.append("(none)")
+    return "\n".join(lines)
+
+
 def _format_preflight(
     *,
     should_proceed: bool,
@@ -61,13 +63,11 @@ def _format_preflight(
     explanation: str,
     notes: list[str],
     denial_message: str | None,
-    bitgn_outcome: str | None = None,
 ) -> str:
     lines = [
         "Preflight",
         f"Status: {'PASSED' if should_proceed else 'DENIED'}",
         f"Outcome: {outcome}",
-        f"BitGN Outcome: {bitgn_outcome or '(not set)'}",
         f"Explanation: {explanation}",
         "",
         "Notes:",

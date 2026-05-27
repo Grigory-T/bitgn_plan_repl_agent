@@ -1,5 +1,6 @@
 import io
 import os
+import subprocess
 import traceback
 from contextlib import redirect_stdout, redirect_stderr
 from pydantic import BaseModel
@@ -55,5 +56,33 @@ def execute_python(code: str):
         return CodeResponse(
             stdout=stdout_capture.getvalue(),
             stderr=traceback.format_exc(),
+            globals=PERSISTENT_GLOBALS,
+        )
+
+
+def execute_bash(code: str) -> CodeResponse:
+    try:
+        result = subprocess.run(
+            ["bash", "-c", code],
+            capture_output=True,
+            text=True,
+            cwd=os.getcwd(),
+            timeout=60,
+        )
+        return CodeResponse(
+            stdout=result.stdout,
+            stderr=result.stderr if result.returncode != 0 else "",
+            globals=PERSISTENT_GLOBALS,
+        )
+    except subprocess.TimeoutExpired:
+        return CodeResponse(
+            stdout="",
+            stderr="Command timed out after 60 seconds",
+            globals=PERSISTENT_GLOBALS,
+        )
+    except Exception as e:
+        return CodeResponse(
+            stdout="",
+            stderr=f"Bash execution error: {str(e)}",
             globals=PERSISTENT_GLOBALS,
         )

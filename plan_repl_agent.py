@@ -39,12 +39,9 @@ def main(argv: list[str] | None = None) -> int:
     run_id = _run_id()
     run_root = Path(args.runs_root).expanduser().resolve() / run_id
     workspace_root = run_root / "workspace"
-    logs_root = run_root / "step_logs"
 
     workspace_root.mkdir(parents=True, exist_ok=True)
-    logs_root.mkdir(parents=True, exist_ok=True)
 
-    os.environ["PLAN_REPL_LOG_ROOT"] = str(logs_root)
     os.environ["PLAN_REPL_WORKSPACE_ROOT"] = str(workspace_root)
 
     (run_root / "task.txt").write_text(args.task.rstrip() + "\n", encoding="utf-8")

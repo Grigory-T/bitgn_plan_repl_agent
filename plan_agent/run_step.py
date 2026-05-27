@@ -5,29 +5,19 @@ from typeguard import check_type
 
 from .utils import llm, LLM_MODEL_AGENT, check_assigned_variables, format_step_variables
 from .prompt_agent import STEP_SYSTEM_PROMPT, build_step_user_first_msg_prompt
-from .executor import execute_python, PERSISTENT_GLOBALS
+from .executor import execute_python, execute_bash, PERSISTENT_GLOBALS
 from .log import _append_step_log, _append_reasoning, _write_log
 
 MAX_ITERATIONS_PER_STEP = 30
+INITIAL_TREE_MAX_CHARS = 6000
 MAX_EMPTY_LLM_REPLIES_PER_STEP = 30
 MAX_TOTAL_EMPTY_LLM_REPLIES_PER_STEP = 60
-MAX_PYTHON_BLOCKS_PER_REPLY = 8
-INPUT_SNAPSHOT_MAX_CHARS = 6000
-INITIAL_TREE_MAX_CHARS = 6000
 
 
-def _truncate_for_prompt(text: str, limit: int = INPUT_SNAPSHOT_MAX_CHARS) -> str:
+def _truncate_for_prompt(text: str, limit: int = INITIAL_TREE_MAX_CHARS) -> str:
     if len(text) <= limit:
         return text
     return text[:limit].rstrip() + "\n... [truncated]"
-
-
-def _build_initial_tree_code() -> str:
-    return """print("RUNTIME TREE OVERVIEW")
-if "bitgn" in globals():
-    print(bitgn.tree("/", level=2))
-else:
-    print("(bitgn runtime is not configured)")"""
 
 
 def _build_input_variables_code(current_step) -> str | None:
@@ -136,24 +126,24 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
     _append_step_log(messages_log, "system", system_prompt)
     _append_step_log(messages_log, "user", user_prompt)
 
-    initial_tree_code = _build_initial_tree_code()
+    initial_tree_code = "print(bitgn.tree_with_line_counts('/'))"
     initial_assistant_msg = f"<python>\n{initial_tree_code}\n</python>"
     messages.append({"role": "assistant", "content": initial_assistant_msg})
     _append_step_log(messages_log, "assistant 0", initial_assistant_msg)
 
     initial_tree_response = execute_python(initial_tree_code)
-    initial_tree_parts = []
+    initial_result_parts = []
     if initial_tree_response.stdout:
-        initial_tree_parts.append(f"\n**STDOUT:**\n{_truncate_for_prompt(initial_tree_response.stdout, INITIAL_TREE_MAX_CHARS)}")
+        initial_result_parts.append(f"\n**STDOUT:**\n{_truncate_for_prompt(initial_tree_response.stdout)}")
     if initial_tree_response.stderr:
-        initial_tree_parts.append(f"**STDERR:**\n{_truncate_for_prompt(initial_tree_response.stderr, INITIAL_TREE_MAX_CHARS)}")
-    initial_tree_result = (
-        "Code execution result:\n" + "\n\n".join(initial_tree_parts)
-        if initial_tree_parts
+        initial_result_parts.append(f"**STDERR:**\n{_truncate_for_prompt(initial_tree_response.stderr)}")
+    initial_block_result = (
+        "Code execution result:\n" + "\n\n".join(initial_result_parts)
+        if initial_result_parts
         else "Code execution result: (no output)"
     )
-    messages.append({"role": "user", "content": initial_tree_result})
-    _append_step_log(messages_log, "user 0", initial_tree_result)
+    messages.append({"role": "user", "content": initial_block_result})
+    _append_step_log(messages_log, "user 0", initial_block_result)
 
     input_variables_code = _build_input_variables_code(current_step)
     if input_variables_code:
@@ -164,9 +154,9 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
         input_variables_response = execute_python(input_variables_code)
         input_result_parts = []
         if input_variables_response.stdout:
-            input_result_parts.append(f"\n**STDOUT:**\n{_truncate_for_prompt(input_variables_response.stdout)}")
+            input_result_parts.append(f"\n**STDOUT:**\n{input_variables_response.stdout}")
         if input_variables_response.stderr:
-            input_result_parts.append(f"**STDERR:**\n{_truncate_for_prompt(input_variables_response.stderr)}")
+            input_result_parts.append(f"**STDERR:**\n{input_variables_response.stderr}")
         input_block_result = (
             "Code execution result:\n" + "\n\n".join(input_result_parts)
             if input_result_parts
@@ -225,7 +215,6 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
         pending_text = []
         python_blocks = []
         pair_idx = 0  # numbering for code/result pairs in logs
-        truncated_reply = False
 
         for block in llm_response_blocks:
             if block.block_type == "text":
@@ -234,17 +223,6 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
 
             if block.block_type not in ("python", "bash"):
                 continue
-
-            if len(python_blocks) >= MAX_PYTHON_BLOCKS_PER_REPLY:
-                user_msg = (
-                    "Too many Python blocks in one reply. Stop broad exploration. "
-                    "If you already have direct evidence for the current step, finalize it with the exact two-line block. "
-                    "Otherwise continue with at most one focused Python block."
-                )
-                messages.append({"role": "user", "content": user_msg})
-                _append_step_log(messages_log, "user", user_msg)
-                truncated_reply = True
-                break
 
             code_type = block.block_type
             code = block.block_text
@@ -274,11 +252,8 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
             _append_step_log(messages_log, f"user {pair_idx}", block_result)
             pair_idx += 1
 
-        if truncated_reply:
-            continue
-
         # If only text blocks existed, surface them once
-        if pending_text and not python_blocks:
+        if pending_text and not python_blocks and not any(b.block_type == "bash" for b in llm_response_blocks):
             text_msg = "".join(pending_text)
             messages.append({"role": "assistant", "content": text_msg})
             _append_step_log(messages_log, "assistant", text_msg)
@@ -313,13 +288,22 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
         if vars_assigned and final_answer and step_status and not twoline_oneblock_code:
             are_you_sure_msg = (
                 'Make sure that the step is completed correctly and you understand the result.\n'
-                'Analyze the information and code execution results above before finalizing.\n'
+                'Analyze all the information above, facts and code execution results. You should base you descision on the information above.\n'
                 f'The current step target was: >>>{current_step.step_description}<<<\n'
                 f'The current step output variables (should be set if task is `completed`, `None` or empty containers ([], {{}} etc.) **is not allowed**):{format_step_variables(current_step.output_variables)}\n\n'
-                'If you are sure you want to finalize the step, use **exactly** two lines of code:\n'
+                'Report the exact runtime file paths that materially influenced this step.\n'
+                'These may be direct files you acted on or indirect governing files that shaped what was correct.\n'
+                'Copy path strings verbatim from tool output or file content. Do not add or remove a leading slash yourself.\n'
+                'Inside `final_answer`, end with one exact line in this format:\n'
+                '`Relevant files: path1, path2`\n'
+                'or `Relevant files: none`\n\n'
+
+                'If you are sure you want to finilize step: use **exactly** two lines of code\n'
                 "\n<python>\nstep_status = 'completed' OR 'failed'\nfinal_answer = ...result description...\n</python>\n"
-                'Do not include other code tags. Only one <python> block with two assignments.\n'
-                'Set any required output variables in a separate python block before the final two-line block.'
+
+                'Do not include other code tags. Only one <python> block with two assignments.'
+                'All other **Output variables required** - should be set in separate python block.'
+                'So firstly set all required variables in separate step. Then in **separate** step assign final two variables: `step_status` and `final_answer`'
             )
             messages.append({"role": "user", "content": are_you_sure_msg})
             _append_step_log(messages_log, "user", are_you_sure_msg)

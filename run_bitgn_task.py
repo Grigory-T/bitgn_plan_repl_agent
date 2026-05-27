@@ -117,7 +117,7 @@ def build_parser() -> argparse.ArgumentParser:
         "-d",
         "--debug-preflight-deny",
         action="store_true",
-        help="Submit a fixed denial so logs and run plumbing can be inspected without running the full agent flow",
+        help="Force preflight to deny so logs can be inspected without running the full agent flow",
     )
     parser.add_argument(
         "--worker-mode",
@@ -177,7 +177,7 @@ def build_lifecycle_parser() -> argparse.ArgumentParser:
         "-d",
         "--debug-preflight-deny",
         action="store_true",
-        help="Submit a fixed denial so logs and run plumbing can be inspected without running the full agent flow",
+        help="Force preflight to deny so logs can be inspected without running the full agent flow",
     )
     end_parser = subparsers.add_parser("end-run", help="Submit a leaderboard run explicitly")
     end_parser.add_argument("--run-id", required=True, help="Existing run id, or 'latest'")
@@ -642,8 +642,8 @@ def _run_one_attempt(
             initialize_runtime_globals()
             ecom_runtime.reset()
             ecom_runtime.configure(harness_url)
-            agent_result = "Request denied: forced denial for debug logging mode."
-            final_message = "Request denied: forced denial for debug logging mode."
+            agent_result = "Request denied at preflight: Forced preflight denial for debug logging mode."
+            final_message = "Request denied at preflight: Forced preflight denial for debug logging mode."
             final_outcome = "OUTCOME_DENIED_SECURITY"
             final_refs = []
             (log_dir / "final_response.txt").write_text(final_message + "\n", encoding="utf-8")
