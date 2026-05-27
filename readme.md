@@ -1,27 +1,43 @@
 # plan_repl_agent ECOM
 
-BitGN ECOM1 agent based on the reusable `general_purpose` plan/repl branch.
+BitGN ECOM agent based on the old `plan_repl_agent` staged-run interface.
 
-## What This Branch Is
+## What This Repo Is
 
-This branch keeps the plan/repl architecture and connects it to the ECOM runtime:
+This repo is the editable ECOM competition agent. It is developed and executed
+locally on this laptop in:
 
-- plan creation and replanning
-- per-step Python execution
-- BitGN ECOM runtime helper preloaded as `bitgn`
-- deterministic submission of `message`, `outcome`, and `refs`
-- local logs per trial
+```bash
+/home/linuxuser/bitgn-ecom
+```
 
-The ECOM runtime exposes a file-shaped commerce OS with tools such as
-`tree`, `read`, `search`, `write`, `delete`, `stat`, `exec`, and `/bin/sql`.
+The implementation keeps the old plan/repl orchestration style:
+
+- explicit `start-run`, `run-tasks`, `status`, `end-run` lifecycle
+- durable run state in `runs/`
+- per-batch and per-task logs in `logs/`
+- selective task reruns before final submission
+- no automatic submission from `run-tasks`
+- legacy one-shot mode for quick local batches
 
 ## Setup
 
-`.env` should contain:
+`.env` is loaded automatically by `run_bitgn_task.py`.
+
+Required:
 
 ```bash
 OPENROUTER_API_KEY=...
 BITGN_API_KEY=...
+```
+
+Optional:
+
+```bash
+BENCHMARK_ID=bitgn/ecom1-dev
+BITGN_HOST=https://api.bitgn.com
+BITGN_RUN_NAME="plan_repl_agent ecom"
+BITGN_WORKERS=4
 ```
 
 Install dependencies:
@@ -30,60 +46,88 @@ Install dependencies:
 ./setup_venv.sh
 ```
 
-The public Buf wheels referenced by the sample agent were returning 403 from
-this environment, so this repo vendors locally generated protobuf modules under
-`bitgn/` from the public sample-agent protos.
+This repo vendors generated BitGN protobuf/connect modules under `bitgn/`
+because the public Buf wheels used by the sample agent were not fetchable from
+this laptop.
 
-## Run
+## Run On This Laptop
 
-List DEV task ids:
-
-```bash
-.venv/bin/python run_bitgn_task.py --list-tasks
-```
-
-Run one DEV task inside an unsubmitted selected-task run:
+Recommended staged flow:
 
 ```bash
-.venv/bin/python run_bitgn_task.py --task-id t01
+cd /home/linuxuser/bitgn-ecom
+.venv/bin/python3 run_bitgn_task.py start-run --task-id t01-t48 --benchmark-id bitgn/ecom1-dev
+.venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t01-t10 --workers 4
+.venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t11-t20 --workers 4
+.venv/bin/python3 run_bitgn_task.py status --run-id latest
+.venv/bin/python3 run_bitgn_task.py end-run --run-id latest
 ```
 
-Run a DEV subset inside an unsubmitted selected-task run:
+Notes:
+
+- `start-run` requires `BITGN_API_KEY`
+- for production, switch only `--benchmark-id` to the published ECOM benchmark id
+- ECOM does not expose playground trials, so prepared run trials are required
+- `run-tasks` can be repeated with any subset before final submission
+- if `--task-id` is omitted on `run-tasks`, all locally unfinished tasks run
+- `run-tasks` does not submit the run
+- `status` is read-only
+- `end-run` submits the run explicitly
+- if `end-run` finds unfinished local tasks, it force-submits conservative denials before submitting the run
+- all staged commands print a human-readable `STARTED_AT ...` line
+- `start-run` prints `RUN_ID ...` and `RUN_STATE ...`
+
+Debug plumbing check:
 
 ```bash
-.venv/bin/python run_bitgn_task.py --task-id t01-t05
+.venv/bin/python3 run_bitgn_task.py run-tasks --run-id latest --task-id t07 --workers 1 -d
 ```
 
-Selected-task runs are not submitted by default because ECOM DEV does not expose
-`StartPlayground`; this avoids accidentally submitting a partial low-score run.
-Use `--submit-selected` only when you intentionally want to force-submit it.
+In `-d` mode no LLM pipeline is used; the worker starts the trial and submits a
+fixed denial. Use it only for log/debug inspection.
 
-Run a full leaderboard benchmark:
+Legacy one-shot mode still exists:
 
 ```bash
-.venv/bin/python run_bitgn_task.py --benchmark-id bitgn/ecom1-dev
+.venv/bin/python3 run_bitgn_task.py --task-id t08 --benchmark-id bitgn/ecom1-dev
+.venv/bin/python3 run_bitgn_task.py --task-id t01,t03,t05 --benchmark-id bitgn/ecom1-dev --workers 4
+.venv/bin/python3 run_bitgn_task.py --task-id t01-t05 --benchmark-id bitgn/ecom1-dev --workers 4
 ```
 
-For the blind competition benchmark, switch only `--benchmark-id` to the
-published production id when BitGN opens it.
+One-shot mode starts a BitGN run, executes the selected tasks, then submits that
+run in the old style. The staged lifecycle is preferred for competition work.
+
+## Logs And State
+
+Durable run orchestration state:
+
+```bash
+runs/<run_id>/run_state.json
+runs/latest_run.txt
+```
+
+Execution logs:
+
+```bash
+logs/<batch_id>/batch_runner_state.txt
+logs/<batch_id>/<task_id>/
+```
+
+Important files inside each task log directory:
+
+- `runner_state.txt`
+- `task_result.txt`
+- `bitgn_evaluation.txt`
+- `final_response.txt`
+- planner and step logs from `plan_agent/`
 
 ## Main Files
 
-- `run_bitgn_task.py` - BitGN harness runner
+- `run_bitgn_task.py` - BitGN runner with staged lifecycle and legacy one-shot mode
 - `ecom_runtime.py` - ECOM runtime adapter exposed to executed Python as `bitgn`
 - `plan_repl_agent.py` - local single-task workspace runner
 - `plan_agent/run_agent.py` - plan/step loop
 - `plan_agent/run_step.py` - per-step Python REPL loop
 - `plan_agent/prompt_agent.py` - ECOM tool/safety prompt
+- `plan_agent/response.py` - final `message`, `outcome`, `refs` decision
 - `bitgn/` - generated protobuf modules and small ConnectRPC clients
-
-## Logs
-
-Trial logs are written under:
-
-```bash
-logs/<batch_id>/<task_id>/
-```
-
-Each task directory includes planner logs, step logs, response prompt, and
-`runner_result.json`.
