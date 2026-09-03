@@ -10,7 +10,7 @@ Create a short plan for the following task.
 
 Rules:
 - Keep the plan short and practical.
-- Include an early step to inspect the working directory and any relevant instruction files.
+- If the task depends on existing files, inspect the working directory and relevant instruction files early.
 - Use direct evidence from files.
 - Do not invent missing facts.
 - Use 1-6 steps.

@@ -38,6 +38,8 @@ _PLAN_SCHEMA = {
             "title": "Steps",
             "description": "List of steps to execute",
             "type": "array",
+            "minItems": 1,
+            "maxItems": 6,
             "items": {
                 "type": "object",
                 "title": "PlanStep",
@@ -76,7 +78,7 @@ _PLAN_SCHEMA = {
                     },
                     "step_description": {
                         "title": "Step Description",
-                        "description": "What this step should accomplish using input variables. The result of the step should be stored in output variables. Include all relevant information from the task, related to this step.",
+                        "description": "What this step should accomplish using input variables. The result of the step should be stored in output variables. Include all relevant information from the task related to this step.",
                         "type": "string",
                     },
                     "output_variables": {
@@ -113,9 +115,9 @@ _PLAN_SCHEMA = {
                     },
                 },
             },
-            "default": [],
         },
     },
+    "required": ["steps"],
 }
 
 
@@ -184,8 +186,12 @@ _STRICT_RESPONSE_DECISION_SCHEMA = _make_provider_strict(_RESPONSE_DECISION_SCHE
 
 
 PLAN_SCHEMA_JSON = json.dumps(_STRICT_PLAN_SCHEMA, ensure_ascii=False, indent=4)
-AFTER_STEP_DECISION_SCHEMA_JSON = json.dumps(_STRICT_AFTER_STEP_DECISION_SCHEMA, ensure_ascii=False, indent=4)
-RESPONSE_DECISION_SCHEMA_JSON = json.dumps(_STRICT_RESPONSE_DECISION_SCHEMA, ensure_ascii=False, indent=4)
+AFTER_STEP_DECISION_SCHEMA_JSON = json.dumps(
+    _STRICT_AFTER_STEP_DECISION_SCHEMA, ensure_ascii=False, indent=4
+)
+RESPONSE_DECISION_SCHEMA_JSON = json.dumps(
+    _STRICT_RESPONSE_DECISION_SCHEMA, ensure_ascii=False, indent=4
+)
 
 
 _SCHEMA_BY_MODEL_NAME = {

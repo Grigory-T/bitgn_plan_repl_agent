@@ -1,5 +1,4 @@
-# Core dependencies
-openai
 pydantic
 python-dotenv
+requests
 typeguard

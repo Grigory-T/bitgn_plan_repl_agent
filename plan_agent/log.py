@@ -1,8 +1,8 @@
 import json
 import os
+import re
 from datetime import datetime
 from pathlib import Path
-import re
 
 from .plan import Plan
 
@@ -19,7 +19,11 @@ def _init_log_dir(task_id: str | None = None, batch_id: str | None = None) -> Pa
         if batch_id:
             base = base / _sanitize_log_segment(batch_id)
     else:
-        batch_segment = _sanitize_log_segment(batch_id) if batch_id else datetime.now().strftime("%Y%m%d_%H%M%S")
+        batch_segment = (
+            _sanitize_log_segment(batch_id)
+            if batch_id
+            else datetime.now().strftime("%Y%m%d_%H%M%S")
+        )
         base = Path(__file__).resolve().parent.parent / "logs" / batch_segment
     log_dir = base / _sanitize_log_segment(task_id) if task_id else base
     log_dir.mkdir(parents=True, exist_ok=True)
@@ -61,12 +65,14 @@ def _format_plan(plan: Plan, start_step: int = 1) -> str:
         lines.append(f"\n{separator}")
         lines.append(f"Step {idx}: {step.step_description}")
         lines.append(separator)
-        
+
         def _serialize_vars(vars_list):
             if isinstance(vars_list, dict):
                 return json.dumps(vars_list, indent=4, ensure_ascii=False)
-            return json.dumps([v.model_dump() for v in vars_list], indent=4, ensure_ascii=False)
-        
+            return json.dumps(
+                [v.model_dump() for v in vars_list], indent=4, ensure_ascii=False
+            )
+
         lines.append(f"input_variables: {_serialize_vars(step.input_variables)}")
         lines.append(f"output_variables: {_serialize_vars(step.output_variables)}")
     return "\n".join(lines)

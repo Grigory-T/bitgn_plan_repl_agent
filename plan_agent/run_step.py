@@ -1,12 +1,13 @@
 import ast
-from typing import Any, get_args, get_origin
 from pathlib import Path
+from typing import Any, get_args, get_origin
+
 from typeguard import check_type
 
-from .utils import llm, LLM_MODEL_AGENT, check_assigned_variables, format_step_variables
+from .executor import PERSISTENT_GLOBALS, execute_python
+from .log import _append_reasoning, _append_step_log, _write_log
 from .prompt_agent import STEP_SYSTEM_PROMPT, build_step_user_first_msg_prompt
-from .executor import execute_python, PERSISTENT_GLOBALS
-from .log import _append_step_log, _append_reasoning, _write_log
+from .utils import LLM_MODEL_AGENT, check_assigned_variables, format_step_variables, llm
 
 MAX_ITERATIONS_PER_STEP = 30
 MAX_EMPTY_LLM_REPLIES_PER_STEP = 30
@@ -43,7 +44,8 @@ def _matches_literal_dtype(value: Any, dtype: Any) -> bool:
             return False
         key_type, value_type = get_args(dtype)
         return all(
-            _matches_literal_dtype(key, key_type) and _matches_literal_dtype(item, value_type)
+            _matches_literal_dtype(key, key_type)
+            and _matches_literal_dtype(item, value_type)
             for key, item in value.items()
         )
 
@@ -73,6 +75,7 @@ def _validate_output_value(value: Any, dtype: Any) -> None:
 
     raise TypeError(f"value does not match {dtype}")
 
+
 def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) -> str:
     step_folder = Path(log_dir) / f"step_{step_index}" if log_dir else None
     messages_log = step_folder / "messages.txt" if step_folder else None
@@ -97,7 +100,9 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
     total_empty_replies = 0
 
     while completed_turns < MAX_ITERATIONS_PER_STEP:
-        llm_response, llm_response_blocks, reasoning = llm(messages, model=LLM_MODEL_AGENT)
+        llm_response, llm_response_blocks, reasoning = llm(
+            messages, model=LLM_MODEL_AGENT
+        )
         _append_reasoning(reasoning_log, reasoning)
 
         if not llm_response and not llm_response_blocks:
@@ -132,9 +137,10 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
         if all(block.block_type == "text" for block in llm_response_blocks):
             messages.append({"role": "assistant", "content": llm_response})
             _append_step_log(messages_log, "assistant", llm_response)
-            user_msg = ("No valid code to execute. Use \n<python>\n...\n</python>\ntags to write code.\n"
-                        "If step is completed you should set python variables `step_status: str` - 'completed' or 'failed' and `final_answer: str` - description of results.\n"
-                        )
+            user_msg = (
+                "No valid code to execute. Use \n<python>\n...\n</python>\ntags to write code.\n"
+                "If step is completed you should set python variables `step_status: str` - 'completed' or 'failed' and `final_answer: str` - description of results.\n"
+            )
             messages.append({"role": "user", "content": user_msg})
             _append_step_log(messages_log, "user", user_msg)
             continue
@@ -173,7 +179,11 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
                 result_parts.append(f"\n**STDOUT:**\n{code_response.stdout}")
             if code_response.stderr:
                 result_parts.append(f"**STDERR:**\n{code_response.stderr}")
-            block_result = "Code execution result:\n" + "\n\n".join(result_parts) if result_parts else "Code execution result: (no output)"
+            block_result = (
+                "Code execution result:\n" + "\n\n".join(result_parts)
+                if result_parts
+                else "Code execution result: (no output)"
+            )
 
             messages.append({"role": "user", "content": block_result})
             _append_step_log(messages_log, f"user {pair_idx}", block_result)
@@ -187,12 +197,15 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
 
         # Was final_answer or step_status assigned in any python block?
         vars_assigned = any(check_assigned_variables(b) for b in python_blocks)
-        final_answer = PERSISTENT_GLOBALS.get('final_answer', '')
-        step_status = PERSISTENT_GLOBALS.get('step_status', '')
+        final_answer = PERSISTENT_GLOBALS.get("final_answer", "")
+        step_status = PERSISTENT_GLOBALS.get("step_status", "")
 
         # True only if exactly one python block exists AND it assigns both step_status and final_answer (order doesn't matter)
         twoline_oneblock_code = False
-        if len(llm_response_blocks) == 1 and llm_response_blocks[0].block_type == "python":
+        if (
+            len(llm_response_blocks) == 1
+            and llm_response_blocks[0].block_type == "python"
+        ):
             try:
                 tree = ast.parse(llm_response_blocks[0].block_text)
                 if len(tree.body) != 2:
@@ -214,21 +227,21 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
 
         if vars_assigned and final_answer and step_status and not twoline_oneblock_code:
             are_you_sure_msg = (
-                'Make sure that the step is completed correctly and you understand the result.\n'
-                'Analyze the information and code execution results above before finalizing.\n'
-                f'The current step target was: >>>{current_step.step_description}<<<\n'
-                f'The current step output variables (should be set if task is `completed`, `None` or empty containers ([], {{}} etc.) **is not allowed**):{format_step_variables(current_step.output_variables)}\n\n'
-                'If you are sure you want to finalize the step, use **exactly** two lines of code:\n'
+                "Make sure that the step is completed correctly and you understand the result.\n"
+                "Analyze the information and code execution results above before finalizing.\n"
+                f"The current step target was: >>>{current_step.step_description}<<<\n"
+                f"The current step output variables (should be set if task is `completed`, `None` or empty containers ([], {{}} etc.) **is not allowed**):{format_step_variables(current_step.output_variables)}\n\n"
+                "If you are sure you want to finalize the step, use **exactly** two lines of code:\n"
                 "\n<python>\nstep_status = 'completed' OR 'failed'\nfinal_answer = ...result description...\n</python>\n"
-                'Do not include other code tags. Only one <python> block with two assignments.\n'
-                'Set any required output variables in a separate python block before the final two-line block.'
+                "Do not include other code tags. Only one <python> block with two assignments.\n"
+                "Set any required output variables in a separate python block before the final two-line block."
             )
             messages.append({"role": "user", "content": are_you_sure_msg})
             _append_step_log(messages_log, "user", are_you_sure_msg)
             continue
 
         if vars_assigned and final_answer and step_status and twoline_oneblock_code:
-            if step_status == 'failed':
+            if step_status == "failed":
                 if step_folder:
                     _write_log(step_folder / "step_result.txt", final_answer)
                 return final_answer
@@ -239,30 +252,31 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
                 dtype_str = var.variable_data_type
                 value = PERSISTENT_GLOBALS.get(name, None)
                 if value is None:
-                    error_msg += f'Missing variable: {name}\n'
+                    error_msg += f"Missing variable: {name}\n"
                 else:
-                    if dtype_str == 'object':
+                    if dtype_str == "object":
                         continue
                     try:
                         glbs = dict(PERSISTENT_GLOBALS)
-                        if 'pd' in glbs and 'pandas' not in glbs:
-                            glbs['pandas'] = glbs['pd']
-                        if 'np' in glbs and 'numpy' not in glbs:
-                            glbs['numpy'] = glbs['np']
-                        
+                        if "pd" in glbs and "pandas" not in glbs:
+                            glbs["pandas"] = glbs["pd"]
+                        if "np" in glbs and "numpy" not in glbs:
+                            glbs["numpy"] = glbs["np"]
+
                         dtype = eval(dtype_str, glbs)
                         _validate_output_value(value, dtype)
-                    except Exception as e:
-                        error_msg += (f'Error: {name} is {type(value).__name__} but expected literal python type: {dtype_str}\n'
-                                        f'make sure that the variable {dtype_str} class exists verbatim in current python environment.\n'
-                                        f'name of the class should be verbatim {dtype_str}, so re-import it if needed\n'
-                                        f'examples of different imports: import pandas as pd VS import pandas; import numpy as np VS import numpy; etc\n'
-                                        )
+                    except Exception:
+                        error_msg += (
+                            f"Error: {name} is {type(value).__name__} but expected literal python type: {dtype_str}\n"
+                            f"make sure that the variable {dtype_str} class exists verbatim in current python environment.\n"
+                            f"name of the class should be verbatim {dtype_str}, so re-import it if needed\n"
+                            f"examples of different imports: import pandas as pd VS import pandas; import numpy as np VS import numpy; etc\n"
+                        )
             if not error_msg:
                 if step_folder:
                     _write_log(step_folder / "step_result.txt", final_answer)
                 return final_answer
-            
+
             messages.append({"role": "user", "content": error_msg})
             _append_step_log(messages_log, "user", error_msg)
 

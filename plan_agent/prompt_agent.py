@@ -1,6 +1,4 @@
-import datetime
-
-STEP_SYSTEM_PROMPT = f"""
+STEP_SYSTEM_PROMPT = """
 You are an agent that solves tasks by writing Python code snippets.
 
 # Rules:
@@ -45,7 +43,9 @@ If task is `failed` - output variables are not required to be set.
 def build_step_user_first_msg_prompt(task, current_step, completed_steps):
     parts = []
 
-    parts.append("## Global Task (only for general understanding of main goal. DO NOT TRY TO SOLVE THE TASK HERE!)")
+    parts.append(
+        "## Global Task (only for general understanding of main goal. DO NOT TRY TO SOLVE THE TASK HERE!)"
+    )
     parts.append(f"\n {task} \n")
 
     if completed_steps:
@@ -62,14 +62,16 @@ def build_step_user_first_msg_prompt(task, current_step, completed_steps):
                     parts.append(f"- {name} ({dtype}): {desc}")
             parts.append(f"**Result:** {result}")
 
-    parts.extend([
-        "",
-        "## >>> CURRENT STEP (FOCUS HERE) <<<",
-        "This is the current step you need to execute. Focus on completing THIS step below:",
-        "",
-        f"\n >>> {current_step.step_description} <<< \n",
-        "",
-    ])
+    parts.extend(
+        [
+            "",
+            "## >>> CURRENT STEP (FOCUS HERE) <<<",
+            "This is the current step you need to execute. Focus on completing THIS step below:",
+            "",
+            f"\n >>> {current_step.step_description} <<< \n",
+            "",
+        ]
+    )
 
     # Input variables
     input_vars = current_step.input_variables or []

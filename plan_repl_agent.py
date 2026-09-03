@@ -14,12 +14,13 @@ from plan_agent.executor import initialize_runtime_globals, reset_persistent_glo
 from plan_agent.response import decide_response
 from plan_agent.run_agent import run_agent
 
-
 load_dotenv()
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Run the planning agent against a fresh local workspace.")
+    parser = argparse.ArgumentParser(
+        description="Run the planning agent against a fresh local workspace."
+    )
     parser.add_argument("task", help="Task to solve")
     parser.add_argument(
         "--runs-root",
@@ -67,8 +68,13 @@ def main(argv: list[str] | None = None) -> int:
         "workspace_root": str(workspace_root),
         "log_dir": log_dir,
     }
-    (run_root / "result.json").write_text(json.dumps(result_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    (run_root / "final_answer.txt").write_text(response.message.rstrip() + "\n", encoding="utf-8")
+    (run_root / "result.json").write_text(
+        json.dumps(result_payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    (run_root / "final_answer.txt").write_text(
+        response.message.rstrip() + "\n", encoding="utf-8"
+    )
 
     print(f"RUN_ID {run_id}")
     print(f"RUN_ROOT {run_root}")

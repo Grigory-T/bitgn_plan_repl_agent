@@ -1,7 +1,9 @@
 from .json_schemas import RESPONSE_DECISION_SCHEMA_JSON
 
 
-def build_response_decision_prompt(task: str, agent_answer: str, step_results: str) -> str:
+def build_response_decision_prompt(
+    task: str, agent_answer: str, step_results: str
+) -> str:
     return f"""You are preparing the final response after the agent has already finished its work.
 
 ## Original Task
