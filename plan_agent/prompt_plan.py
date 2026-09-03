@@ -10,7 +10,7 @@ Create a short plan for the following task.
 
 Rules:
 - Keep the plan short and practical.
-- If the task depends on existing files, inspect the working directory and relevant instruction files early.
+- Add discovery steps only when the task depends on existing workspace content or unknown state.
 - Use direct evidence from files.
 - Do not invent missing facts.
 - Use 1-6 steps.

@@ -31,7 +31,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _run_id() -> str:
-    return datetime.now().strftime("%Y%m%d_%H%M%S")
+    return datetime.now().strftime("%Y%m%d_%H%M%S_%f")
 
 
 def main(argv: list[str] | None = None) -> int:

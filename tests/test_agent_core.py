@@ -7,6 +7,8 @@ from unittest.mock import patch
 
 from plan_agent.executor import PERSISTENT_GLOBALS, reset_persistent_globals
 from plan_agent.plan import AfterStepDecision, Plan, PlanStep
+from plan_agent.prompt_agent import STEP_SYSTEM_PROMPT
+from plan_agent.prompt_plan import build_plan_prompt
 from plan_agent.run_agent import run_agent
 from plan_agent.run_step import run_step
 
@@ -18,6 +20,15 @@ class AgentCoreTests(unittest.TestCase):
     def test_plan_requires_at_least_one_step(self) -> None:
         with self.assertRaises(ValueError):
             Plan(steps=[])
+
+    def test_prompts_allow_evidence_based_empty_results(self) -> None:
+        self.assertIn("Empty strings or containers are valid", STEP_SYSTEM_PROMPT)
+        self.assertIn("never as placeholders", STEP_SYSTEM_PROMPT)
+        self.assertNotIn("empty containers", STEP_SYSTEM_PROMPT)
+
+    def test_plan_does_not_require_unnecessary_discovery(self) -> None:
+        prompt = build_plan_prompt("create a new file")
+        self.assertIn("only when the task depends", prompt)
 
     def test_decision_requires_reason_matching_its_action(self) -> None:
         with self.assertRaises(ValueError):
