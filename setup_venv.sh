@@ -25,3 +25,11 @@ fi
 .venv/bin/python -m pip install --upgrade pip
 .venv/bin/python -m pip install -r requirements.txt
 find "$ROOT/.venv" -type d -name "__pycache__" -prune -exec rm -rf {} +
+
+if [ ! -f "$ROOT/llm_config.txt" ]; then
+  install -m 600 "$ROOT/llm_config.example.txt" "$ROOT/llm_config.txt"
+  echo "Created $ROOT/llm_config.txt"
+fi
+
+.venv/bin/python -m unittest discover -s tests -v
+echo "Setup complete. Edit llm_config.txt, then run llm_preflight.py."

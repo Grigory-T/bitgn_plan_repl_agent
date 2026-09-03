@@ -37,4 +37,9 @@ if ($LASTEXITCODE -ne 0) {
     throw "tests failed with exit code $LASTEXITCODE"
 }
 
-Write-Host "Setup complete. Configure the LLM_* environment variables, then run llm_preflight.py."
+if (-not (Test-Path "llm_config.txt")) {
+    Copy-Item "llm_config.example.txt" "llm_config.txt"
+    Write-Host "Created $Root\llm_config.txt"
+}
+
+Write-Host "Setup complete. Edit llm_config.txt, then run llm_preflight.py."

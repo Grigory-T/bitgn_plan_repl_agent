@@ -8,13 +8,10 @@ import warnings
 from typing import Any, Literal
 
 import requests
-from dotenv import load_dotenv
 from pydantic import BaseModel
 from urllib3.exceptions import InsecureRequestWarning
 
 from .json_schemas import get_schema_dict
-
-load_dotenv()
 
 DEFAULT_MAX_COMPLETION_TOKENS = 24_000
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 300
@@ -289,9 +286,10 @@ def _post_chat_completion(
 
 def _structured_output_mode() -> str:
     mode = os.getenv("LLM_STRUCTURED_OUTPUT", "json_schema").strip().casefold()
-    if mode not in {"json_schema", "prompt_only"}:
+    if mode not in {"json_schema", "json_object", "prompt_only"}:
         raise RuntimeError(
-            "LLM_STRUCTURED_OUTPUT must be 'json_schema' or 'prompt_only'."
+            "LLM_STRUCTURED_OUTPUT must be 'json_schema', 'json_object', "
+            "or 'prompt_only'."
         )
     return mode
 
@@ -305,7 +303,8 @@ def llm_structured(
         get_schema_dict(response_model.__name__) or response_model.model_json_schema()
     )
     response_format = None
-    if _structured_output_mode() == "json_schema":
+    structured_output_mode = _structured_output_mode()
+    if structured_output_mode == "json_schema":
         response_format = {
             "type": "json_schema",
             "json_schema": {
@@ -315,6 +314,8 @@ def llm_structured(
                 "schema": schema,
             },
         }
+    elif structured_output_mode == "json_object":
+        response_format = {"type": "json_object"}
 
     selected_model = _model_or_error(model, LLM_MODEL_PLAN)
     max_tokens = _env_int("LLM_MAX_COMPLETION_TOKENS", DEFAULT_MAX_COMPLETION_TOKENS)

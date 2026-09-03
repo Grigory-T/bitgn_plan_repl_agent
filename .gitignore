@@ -1,4 +1,5 @@
 .env
+llm_config.txt
 .venv/
 logs/
 runs/

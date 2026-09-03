@@ -5,16 +5,11 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from datetime import datetime
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-from plan_agent.executor import initialize_runtime_globals, reset_persistent_globals
-from plan_agent.response import decide_response
-from plan_agent.run_agent import run_agent
-
-load_dotenv()
+from plan_agent.config import default_config_path, load_runtime_config
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -22,6 +17,11 @@ def build_parser() -> argparse.ArgumentParser:
         description="Run the planning agent against a fresh local workspace."
     )
     parser.add_argument("task", help="Task to solve")
+    parser.add_argument(
+        "--config",
+        default=str(default_config_path()),
+        help="Plain-text LLM configuration file",
+    )
     parser.add_argument(
         "--runs-root",
         default=str(Path(__file__).resolve().parent / "runs"),
@@ -36,6 +36,17 @@ def _run_id() -> str:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    try:
+        config_path = load_runtime_config(args.config)
+    except RuntimeError as exc:
+        print(f"CONFIG ERROR: {exc}", file=sys.stderr)
+        return 2
+
+    # Import model-facing modules only after the authoritative configuration
+    # file has populated the process environment.
+    from plan_agent.executor import initialize_runtime_globals, reset_persistent_globals
+    from plan_agent.response import decide_response
+    from plan_agent.run_agent import run_agent
 
     run_id = _run_id()
     run_root = Path(args.runs_root).expanduser().resolve() / run_id
@@ -67,6 +78,7 @@ def main(argv: list[str] | None = None) -> int:
         "reasoning": response.reasoning,
         "workspace_root": str(workspace_root),
         "log_dir": log_dir,
+        "config_path": str(config_path),
     }
     (run_root / "result.json").write_text(
         json.dumps(result_payload, ensure_ascii=False, indent=2) + "\n",

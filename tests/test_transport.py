@@ -85,6 +85,21 @@ class TransportTests(unittest.TestCase):
         response_format = post.call_args.kwargs["json"]["response_format"]
         self.assertEqual(response_format["type"], "json_schema")
 
+    def test_json_object_mode_uses_simpler_response_format(self) -> None:
+        response = self._response('{"status":"ok"}')
+        env = self._environment(LLM_STRUCTURED_OUTPUT="json_object")
+        with (
+            patch.dict(os.environ, env, clear=True),
+            patch("plan_agent.utils.requests.post", return_value=response) as post,
+        ):
+            result = utils.llm_structured(
+                "return json", ExampleResult, model="example-model"
+            )
+
+        self.assertEqual(result.status, "ok")
+        response_format = post.call_args.kwargs["json"]["response_format"]
+        self.assertEqual(response_format, {"type": "json_object"})
+
     def test_length_completion_is_rejected(self) -> None:
         response = self._response("partial", finish_reason="length")
         with (

@@ -27,31 +27,38 @@ run it only with the OS permissions and data access appropriate for the task.
 
 ## Configuration
 
-Copy `.env.sample` to `.env`, or set the same variables in the current shell.
-At minimum configure:
+Setup creates an ignored plain-text file named `llm_config.txt` from
+`llm_config.example.txt`. Edit that one file before running the agent. At
+minimum configure:
 
 - `LLM_BASE_URL` - full Chat Completions request URL
-- `LLM_API_KEY` - API credential
+- `LLM_API_KEY` - API credential when authentication is enabled
 - `LLM_MODEL` - model identifier used for planning and execution
 
-The transport is configurable without provider-specific source changes:
+The configuration file is authoritative: inherited `LLM_*` environment
+variables are cleared before it is loaded. The transport supports hosted
+gateways, custom gateways, and unauthenticated local servers without
+provider-specific source changes:
 
 - `LLM_AUTH_HEADER` and `LLM_AUTH_PREFIX` control authentication
 - `LLM_CHOICES_PATH` locates the response choices array
 - `LLM_EXTRA_BODY_JSON` adds model or gateway options
 - `LLM_MAX_TOKENS_FIELD` selects the gateway's completion-limit field name
 - `LLM_VERIFY_TLS` controls certificate verification
-- `LLM_STRUCTURED_OUTPUT=json_schema` uses structured output; set
-  `prompt_only` only when a gateway does not implement it
+- `LLM_STRUCTURED_OUTPUT` supports `json_schema`, `json_object`, and
+  `prompt_only` for gateways with different structured-output capabilities
 
-Secrets belong only in environment variables or an untracked local `.env`.
-Use `<none>` as `LLM_AUTH_HEADER` for an unauthenticated local endpoint, or as
-`LLM_AUTH_PREFIX` when a gateway expects the raw key value.
+The real `llm_config.txt` is ignored by Git. Never commit it. Use `<none>` as
+`LLM_AUTH_HEADER` for an unauthenticated local endpoint, or as
+`LLM_AUTH_PREFIX` when a gateway expects the raw key value. Set
+`LLM_CHOICES_PATH` when a gateway wraps the standard choices array. Put any
+optional request fields in `LLM_EXTRA_BODY_JSON`.
 
 ## Linux Setup
 
 ```bash
 ./setup_venv.sh
+# Edit llm_config.txt in a text editor.
 .venv/bin/python llm_preflight.py
 .venv/bin/python plan_repl_agent.py "Create a text file containing ten words"
 ```
@@ -62,14 +69,15 @@ From the cloned repository:
 
 ```powershell
 .\setup_windows.ps1 -Python "C:\Program Files\Python313\python.exe"
+# Edit llm_config.txt in a text editor.
 .\.venv\Scripts\python.exe .\llm_preflight.py
 .\.venv\Scripts\python.exe .\plan_repl_agent.py `
   "Create a text file containing ten words"
 ```
 
-Set the `LLM_*` variables in the same PowerShell process before the preflight.
-The repository intentionally does not include any real endpoint, model, header,
-or credential values.
+To use another configuration file on either operating system, pass
+`--config path/to/file.txt` to both commands. The repository intentionally
+contains no real endpoint, model, header, or credential values.
 
 ## Main Files
 
@@ -78,6 +86,8 @@ or credential values.
 - `plan_agent/run_step.py` - per-step model loop
 - `plan_agent/executor.py` - persistent Python execution environment
 - `plan_agent/utils.py` - provider-neutral HTTP transport
+- `plan_agent/config.py` - strict plain-text configuration loader
 - `llm_preflight.py` - minimal structured-output check
 
-`runs/`, `.env`, virtual environments, and bytecode are ignored by Git.
+`runs/`, `llm_config.txt`, `.env`, virtual environments, and bytecode are
+ignored by Git.

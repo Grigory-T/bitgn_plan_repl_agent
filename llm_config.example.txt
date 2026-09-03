@@ -1,0 +1,40 @@
+# Copy this file to llm_config.txt, then replace the values below.
+# This is plain KEY=value text. Keep the real file private; Git ignores it.
+
+# Full Chat Completions request URL.
+LLM_BASE_URL=https://your-llm-gateway.example/v1/chat/completions
+
+# Model identifier accepted by that endpoint.
+LLM_MODEL=your-model-id
+
+# Authentication. Use <none> as LLM_AUTH_HEADER for an unauthenticated local
+# endpoint. Use <none> as LLM_AUTH_PREFIX when the header expects a raw key.
+LLM_API_KEY=paste-key-here
+LLM_AUTH_HEADER=Authorization
+LLM_AUTH_PREFIX=Bearer
+
+# Dot-separated path from the JSON response root to the choices array.
+LLM_CHOICES_PATH=choices
+
+# Provider/model options as one JSON object. Examples include reasoning or
+# chat-template switches. Leave as {} when no extra options are needed.
+LLM_EXTRA_BODY_JSON={}
+
+# Structured-output and connection behavior. Supported modes are json_schema,
+# json_object, and prompt_only, in decreasing order of enforcement.
+LLM_STRUCTURED_OUTPUT=json_schema
+LLM_VERIFY_TLS=true
+
+# Quality/reliability settings.
+LLM_MAX_COMPLETION_TOKENS=24000
+LLM_MAX_TOKENS_FIELD=max_tokens
+LLM_REQUEST_TIMEOUT_SECONDS=300
+LLM_REQUEST_ATTEMPTS=3
+LLM_SCHEMA_ATTEMPTS=3
+
+# Optional role-specific models. Usually one LLM_MODEL is simpler and better.
+# LLM_MODEL_PLAN=another-model-id
+# LLM_MODEL_AGENT=another-model-id
+# LLM_MODEL_DECISION=another-model-id
+# LLM_MODEL_REPLAN=another-model-id
+# LLM_MODEL_RESPONSE=another-model-id
