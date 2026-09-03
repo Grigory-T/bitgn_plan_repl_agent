@@ -6,6 +6,7 @@ from typeguard import check_type
 
 from .executor import PERSISTENT_GLOBALS, execute_python
 from .log import _append_reasoning, _append_step_log, _write_log
+from .progress import progress_event
 from .prompt_agent import STEP_SYSTEM_PROMPT, build_step_user_first_msg_prompt
 from .utils import LLM_MODEL_AGENT, check_assigned_variables, format_step_variables, llm
 
@@ -100,6 +101,12 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
     total_empty_replies = 0
 
     while completed_turns < MAX_ITERATIONS_PER_STEP:
+        progress_event(
+            "step_turn_started",
+            step_number=step_index,
+            turn_number=completed_turns + 1,
+            message_count=len(messages),
+        )
         llm_response, llm_response_blocks, reasoning = llm(
             messages, model=LLM_MODEL_AGENT
         )
@@ -128,6 +135,13 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
 
         empty_replies = 0
         completed_turns += 1
+        progress_event(
+            "step_turn_received",
+            step_number=step_index,
+            turn_number=completed_turns,
+            block_count=len(llm_response_blocks),
+            response_chars=len(llm_response),
+        )
 
         if not llm_response_blocks:
             messages.append({"role": "assistant", "content": llm_response})
@@ -166,8 +180,24 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
             _append_step_log(messages_log, f"assistant {pair_idx}", assistant_msg)
 
             if code_type == "python":
+                progress_event(
+                    "code_execution_started",
+                    step_number=step_index,
+                    turn_number=completed_turns,
+                    block_number=pair_idx + 1,
+                    code_chars=len(code),
+                )
                 code_response = execute_python(code)
                 python_blocks.append(code)
+                progress_event(
+                    "code_execution_completed",
+                    step_number=step_index,
+                    turn_number=completed_turns,
+                    block_number=pair_idx + 1,
+                    stdout_chars=len(code_response.stdout),
+                    stderr_chars=len(code_response.stderr),
+                    success=not bool(code_response.stderr),
+                )
             else:
                 user_msg = f"Unknown code type: {code_type}"
                 messages.append({"role": "user", "content": user_msg})

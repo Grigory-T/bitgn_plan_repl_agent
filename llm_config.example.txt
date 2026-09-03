@@ -31,6 +31,7 @@ LLM_MAX_TOKENS_FIELD=max_tokens
 LLM_REQUEST_TIMEOUT_SECONDS=300
 LLM_REQUEST_ATTEMPTS=3
 LLM_SCHEMA_ATTEMPTS=3
+LLM_PROGRESS_INTERVAL_SECONDS=30
 
 # Optional role-specific models. Usually one LLM_MODEL is simpler and better.
 # LLM_MODEL_PLAN=another-model-id

@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 import os
+import time
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import Mock, patch
 
 from pydantic import BaseModel
 
 from plan_agent import utils
+from plan_agent.progress import configure_progress
 
 
 class ExampleResult(BaseModel):
@@ -14,6 +18,9 @@ class ExampleResult(BaseModel):
 
 
 class TransportTests(unittest.TestCase):
+    def tearDown(self) -> None:
+        configure_progress(None, console=False)
+
     def _environment(self, **overrides: str) -> dict[str, str]:
         values = {
             "LLM_BASE_URL": "https://gateway.example/chat/completions",
@@ -196,6 +203,39 @@ class TransportTests(unittest.TestCase):
                     max_completion_tokens=100,
                 )
             post.assert_not_called()
+
+    def test_pending_request_emits_neutral_heartbeat(self) -> None:
+        response = self._response("done")
+
+        def delayed_response(*args, **kwargs):
+            time.sleep(1.1)
+            return response
+
+        env = self._environment(LLM_PROGRESS_INTERVAL_SECONDS="1")
+        with TemporaryDirectory() as directory:
+            log_path = Path(directory) / "run.log"
+            configure_progress(log_path, console=False)
+            with (
+                patch.dict(os.environ, env, clear=True),
+                patch(
+                    "plan_agent.utils.requests.post",
+                    side_effect=delayed_response,
+                ),
+            ):
+                utils._post_chat_completion(
+                    messages=[{"role": "user", "content": "private prompt"}],
+                    model="private-model-name",
+                    max_completion_tokens=24_000,
+                    phase="Plan",
+                )
+
+            content = log_path.read_text(encoding="utf-8")
+            self.assertIn("event=llm_request_waiting", content)
+            self.assertIn("event=llm_completion_accepted", content)
+            self.assertNotIn("private prompt", content)
+            self.assertNotIn("private-model-name", content)
+            self.assertNotIn("https://gateway.example", content)
+            self.assertNotIn("secret-for-test", content)
 
 
 if __name__ == "__main__":

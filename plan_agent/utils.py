@@ -3,8 +3,10 @@ from __future__ import annotations
 import ast
 import json
 import os
+import threading
 import time
 import warnings
+from itertools import count
 from typing import Any, Literal
 
 import requests
@@ -12,10 +14,13 @@ from pydantic import BaseModel
 from urllib3.exceptions import InsecureRequestWarning
 
 from .json_schemas import get_schema_dict
+from .progress import progress_event
 
 DEFAULT_MAX_COMPLETION_TOKENS = 24_000
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 300
 DEFAULT_REQUEST_ATTEMPTS = 3
+DEFAULT_PROGRESS_INTERVAL_SECONDS = 30
+_LLM_CALL_IDS = count(1)
 
 
 def _env_int(name: str, default: int, *, minimum: int = 1) -> int:
@@ -205,6 +210,7 @@ def _post_chat_completion(
     model: str,
     max_completion_tokens: int,
     response_format: dict[str, Any] | None = None,
+    phase: str = "completion",
 ) -> tuple[str, str, str | None]:
     endpoint = _required_env("LLM_BASE_URL")
     max_tokens_field = os.getenv("LLM_MAX_TOKENS_FIELD", "max_tokens").strip()
@@ -229,9 +235,39 @@ def _post_chat_completion(
     verify_tls = _env_bool("LLM_VERIFY_TLS", True)
     timeout = _env_int("LLM_REQUEST_TIMEOUT_SECONDS", DEFAULT_REQUEST_TIMEOUT_SECONDS)
     attempts = _env_int("LLM_REQUEST_ATTEMPTS", DEFAULT_REQUEST_ATTEMPTS)
+    progress_interval = _env_int(
+        "LLM_PROGRESS_INTERVAL_SECONDS", DEFAULT_PROGRESS_INTERVAL_SECONDS
+    )
     response: requests.Response | None = None
+    call_id = next(_LLM_CALL_IDS)
 
     for attempt in range(attempts):
+        attempt_number = attempt + 1
+        request_started = time.monotonic()
+        progress_event(
+            "llm_request_started",
+            call_id=call_id,
+            phase=phase,
+            attempt=attempt_number,
+            attempts=attempts,
+            timeout_seconds=timeout,
+            completion_limit=max_completion_tokens,
+            message_count=len(messages),
+        )
+        heartbeat_stop = threading.Event()
+
+        def report_waiting() -> None:
+            while not heartbeat_stop.wait(progress_interval):
+                progress_event(
+                    "llm_request_waiting",
+                    call_id=call_id,
+                    phase=phase,
+                    attempt=attempt_number,
+                    request_elapsed_seconds=int(time.monotonic() - request_started),
+                )
+
+        heartbeat = threading.Thread(target=report_waiting, daemon=True)
+        heartbeat.start()
         try:
             with warnings.catch_warnings():
                 if not verify_tls:
@@ -244,16 +280,54 @@ def _post_chat_completion(
                     timeout=timeout,
                 )
         except requests.RequestException as exc:
+            heartbeat_stop.set()
+            heartbeat.join(timeout=1)
+            progress_event(
+                "llm_request_error",
+                call_id=call_id,
+                phase=phase,
+                attempt=attempt_number,
+                error_type=type(exc).__name__,
+                request_elapsed_seconds=time.monotonic() - request_started,
+            )
             if attempt + 1 == attempts:
                 raise RuntimeError(
                     f"LLM HTTP request failed after {attempts} attempt(s): {exc}"
                 ) from exc
-            time.sleep(min(60.0, float(2**attempt)))
+            delay = min(60.0, float(2**attempt))
+            progress_event(
+                "llm_request_retry",
+                call_id=call_id,
+                phase=phase,
+                reason="request_exception",
+                delay_seconds=delay,
+            )
+            time.sleep(delay)
             continue
+        finally:
+            heartbeat_stop.set()
+            heartbeat.join(timeout=1)
+
+        progress_event(
+            "llm_response_received",
+            call_id=call_id,
+            phase=phase,
+            attempt=attempt_number,
+            status_code=response.status_code,
+            request_elapsed_seconds=time.monotonic() - request_started,
+        )
 
         if response.status_code == 429 or 500 <= response.status_code <= 599:
             if attempt + 1 < attempts:
-                time.sleep(_retry_delay_seconds(response, attempt))
+                delay = _retry_delay_seconds(response, attempt)
+                progress_event(
+                    "llm_request_retry",
+                    call_id=call_id,
+                    phase=phase,
+                    reason="http_status",
+                    delay_seconds=delay,
+                )
+                time.sleep(delay)
                 continue
 
         try:
@@ -270,10 +344,26 @@ def _post_chat_completion(
                 f"LLM HTTP request failed with status {response.status_code}{detail}."
             ) from exc
         try:
-            return _parse_completion_response(response)
+            parsed = _parse_completion_response(response)
+            progress_event(
+                "llm_completion_accepted",
+                call_id=call_id,
+                phase=phase,
+                response_chars=len(parsed[0]),
+                finish_reason=parsed[2] or "unspecified",
+            )
+            return parsed
         except _RetryableCompletionError as exc:
             if attempt + 1 < attempts:
-                time.sleep(min(60.0, float(2**attempt)))
+                delay = min(60.0, float(2**attempt))
+                progress_event(
+                    "llm_request_retry",
+                    call_id=call_id,
+                    phase=phase,
+                    reason=type(exc).__name__,
+                    delay_seconds=delay,
+                )
+                time.sleep(delay)
                 continue
             raise RuntimeError(
                 f"Invalid LLM completion after {attempts} attempt(s): {exc}"
@@ -329,10 +419,23 @@ def llm_structured(
             model=selected_model,
             max_completion_tokens=max_tokens,
             response_format=response_format,
+            phase=response_model.__name__,
         )
         try:
-            return _validate_structured_response(content, response_model)
+            result = _validate_structured_response(content, response_model)
+            progress_event(
+                "structured_response_validated",
+                phase=response_model.__name__,
+                schema_attempt=attempt + 1,
+            )
+            return result
         except Exception as exc:
+            progress_event(
+                "structured_validation_failed",
+                phase=response_model.__name__,
+                schema_attempt=attempt + 1,
+                error_type=type(exc).__name__,
+            )
             errors.append(str(exc))
             if attempt + 1 == validation_attempts:
                 suffix = f"; finish_reason={finish_reason}" if finish_reason else ""
@@ -393,6 +496,7 @@ def llm(
         max_completion_tokens=_env_int(
             "LLM_MAX_COMPLETION_TOKENS", DEFAULT_MAX_COMPLETION_TOKENS
         ),
+        phase="StepExecution",
     )
 
     class ResponseBlock(BaseModel):

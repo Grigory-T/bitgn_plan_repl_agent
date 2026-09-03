@@ -20,6 +20,13 @@ Every run gets a fresh directory under `runs/<run_id>/`:
 - `task.txt` - original task
 - `result.json` - structured final result
 - `final_answer.txt` - final user-facing answer
+- `run.log` - live, neutral progress events safe to use for behavior diagnosis
+
+The run ID and paths are printed before the first model request. While a model
+request is pending, the console and `run.log` receive a heartbeat every 30
+seconds. The neutral log records timings, stages, retries, counts, status codes,
+and error types. It does not record the task, prompts, file contents, model
+responses, endpoint, model name, or credentials.
 
 The Python execution loop starts in `workspace/` and is instructed to work
 there. It is an automation runtime, not an operating-system security sandbox;

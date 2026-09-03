@@ -10,6 +10,7 @@ from datetime import datetime
 from pathlib import Path
 
 from plan_agent.config import default_config_path, load_runtime_config
+from plan_agent.progress import configure_progress, progress_event
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -56,6 +57,15 @@ def main(argv: list[str] | None = None) -> int:
     workspace_root.mkdir(parents=True, exist_ok=True)
     logs_root.mkdir(parents=True, exist_ok=True)
 
+    run_log = run_root / "run.log"
+    configure_progress(run_log, console=True)
+    print(f"RUN_ID {run_id}", flush=True)
+    print(f"RUN_ROOT {run_root}", flush=True)
+    print(f"WORKSPACE_ROOT {workspace_root}", flush=True)
+    print(f"RUN_LOG {run_log}", flush=True)
+    print(f"PROCESS_ID {os.getpid()}", flush=True)
+    progress_event("run_started", process_id=os.getpid())
+
     os.environ["PLAN_REPL_LOG_ROOT"] = str(logs_root)
     os.environ["PLAN_REPL_WORKSPACE_ROOT"] = str(workspace_root)
 
@@ -64,13 +74,26 @@ def main(argv: list[str] | None = None) -> int:
     reset_persistent_globals()
     initialize_runtime_globals()
 
-    agent_answer, log_dir, step_results = run_agent(task=args.task)
-    response = decide_response(
-        task=args.task,
-        agent_answer=agent_answer,
-        step_results=step_results,
-        log_dir=log_dir,
-    )
+    try:
+        agent_answer, log_dir, step_results = run_agent(task=args.task)
+        progress_event(
+            "final_response_started",
+            completed_steps=len(step_results),
+        )
+        response = decide_response(
+            task=args.task,
+            agent_answer=agent_answer,
+            step_results=step_results,
+            log_dir=log_dir,
+        )
+        progress_event("final_response_completed")
+    except KeyboardInterrupt:
+        progress_event("run_interrupted")
+        print("\nRUN INTERRUPTED", file=sys.stderr, flush=True)
+        return 130
+    except Exception as exc:
+        progress_event("run_failed", error_type=type(exc).__name__)
+        raise
 
     result_payload = {
         "task": args.task,
@@ -88,9 +111,12 @@ def main(argv: list[str] | None = None) -> int:
         response.message.rstrip() + "\n", encoding="utf-8"
     )
 
-    print(f"RUN_ID {run_id}")
-    print(f"RUN_ROOT {run_root}")
-    print(f"WORKSPACE_ROOT {workspace_root}")
+    progress_event(
+        "run_completed",
+        completed_steps=len(step_results),
+        result_chars=len(response.message),
+    )
+
     print(f"LOG_DIR {log_dir}")
     print("")
     print(response.message)
