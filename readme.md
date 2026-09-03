@@ -75,6 +75,10 @@ From the cloned repository:
   "Create a text file containing ten words"
 ```
 
+The setup script finds the `uv` executable on `PATH` or in the current user's
+Python AppData directories. If needed, pass its exact path with
+`-UvPath "C:\path\to\uv.exe"`.
+
 To use another configuration file on either operating system, pass
 `--config path/to/file.txt` to both commands. The repository intentionally
 contains no real endpoint, model, header, or credential values.
