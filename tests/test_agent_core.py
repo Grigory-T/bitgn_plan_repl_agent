@@ -8,6 +8,7 @@ from unittest.mock import patch
 from plan_agent.executor import PERSISTENT_GLOBALS, reset_persistent_globals
 from plan_agent.plan import AfterStepDecision, Plan, PlanStep
 from plan_agent.run_agent import run_agent
+from plan_agent.run_step import run_step
 
 
 class AgentCoreTests(unittest.TestCase):
@@ -71,6 +72,41 @@ class AgentCoreTests(unittest.TestCase):
         self.assertEqual(result, "done")
         self.assertEqual(step_results, ["first", "second"])
         self.assertEqual(seen_markers, [("", ""), ("", "")])
+
+    def test_step_accepts_output_code_before_final_block(self) -> None:
+        class Block:
+            def __init__(self, block_text: str):
+                self.block_type = "python"
+                self.block_text = block_text
+
+        blocks = [
+            Block("result = 'value'"),
+            Block("step_status = 'completed'\nfinal_answer = 'done'"),
+        ]
+        step = PlanStep(
+            step_description="produce result",
+            output_variables=[
+                {
+                    "variable_name": "result",
+                    "variable_description": "result",
+                    "variable_data_type": "str",
+                }
+            ],
+        )
+        with (
+            TemporaryDirectory() as directory,
+            patch("plan_agent.run_step.llm", return_value=("response", blocks, "")),
+        ):
+            answer = run_step(
+                task="task",
+                current_step=step,
+                completed_steps=[],
+                log_dir=Path(directory),
+                step_index=1,
+            )
+
+        self.assertEqual(answer, "done")
+        self.assertEqual(PERSISTENT_GLOBALS["result"], "value")
 
 
 if __name__ == "__main__":

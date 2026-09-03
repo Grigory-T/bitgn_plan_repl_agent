@@ -98,6 +98,44 @@ class TransportTests(unittest.TestCase):
                     max_completion_tokens=24_000,
                 )
 
+    def test_empty_completion_is_retried(self) -> None:
+        empty = self._response("")
+        success = self._response("done")
+        env = self._environment(LLM_REQUEST_ATTEMPTS="2")
+        with (
+            patch.dict(os.environ, env, clear=True),
+            patch(
+                "plan_agent.utils.requests.post", side_effect=[empty, success]
+            ) as post,
+            patch("plan_agent.utils.time.sleep"),
+        ):
+            content, _, _ = utils._post_chat_completion(
+                messages=[{"role": "user", "content": "hello"}],
+                model="example-model",
+                max_completion_tokens=24_000,
+            )
+
+        self.assertEqual(content, "done")
+        self.assertEqual(post.call_count, 2)
+
+    def test_text_content_blocks_are_supported(self) -> None:
+        response = self._response("")
+        response.json.return_value["envelope"]["choices"][0]["message"]["content"] = [
+            {"type": "text", "text": "one"},
+            {"type": "text", "text": " two"},
+        ]
+        with (
+            patch.dict(os.environ, self._environment(), clear=True),
+            patch("plan_agent.utils.requests.post", return_value=response),
+        ):
+            content, _, _ = utils._post_chat_completion(
+                messages=[{"role": "user", "content": "hello"}],
+                model="example-model",
+                max_completion_tokens=24_000,
+            )
+
+        self.assertEqual(content, "one two")
+
     def test_protected_request_fields_cannot_be_overridden(self) -> None:
         env = self._environment(LLM_EXTRA_BODY_JSON='{"model":"other"}')
         with patch.dict(os.environ, env, clear=True):

@@ -142,6 +142,66 @@ def _retry_delay_seconds(response: requests.Response, attempt: int) -> float:
     return min(60.0, float(2**attempt))
 
 
+class _RetryableCompletionError(ValueError):
+    pass
+
+
+def _content_text(value: Any) -> str:
+    if isinstance(value, str):
+        return value
+    if not isinstance(value, list):
+        return ""
+
+    parts: list[str] = []
+    for item in value:
+        if isinstance(item, str):
+            parts.append(item)
+        elif isinstance(item, dict) and isinstance(item.get("text"), str):
+            parts.append(item["text"])
+    return "".join(parts)
+
+
+def _parse_completion_response(
+    response: requests.Response,
+) -> tuple[str, str, str | None]:
+    try:
+        body = response.json()
+    except ValueError as exc:
+        raise _RetryableCompletionError("response body is not valid JSON") from exc
+
+    choices_path = os.getenv("LLM_CHOICES_PATH", "choices").strip()
+    try:
+        choices = _value_at_path(body, choices_path)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"cannot locate choices at {choices_path!r}: {exc}") from exc
+
+    if not isinstance(choices, list):
+        raise ValueError(f"{choices_path!r} is not a list")
+    if not choices:
+        raise _RetryableCompletionError("response contains no choices")
+
+    try:
+        choice = choices[0]
+        message = choice["message"]
+        finish_reason = choice.get("finish_reason")
+    except (KeyError, TypeError) as exc:
+        raise ValueError("first choice has no message object") from exc
+    if not isinstance(message, dict):
+        raise ValueError("first choice message is not an object")
+
+    if finish_reason == "length":
+        raise _RetryableCompletionError("completion reached its token limit")
+
+    content = _content_text(message.get("content"))
+    if not content.strip():
+        raise _RetryableCompletionError("completion content is empty")
+
+    reasoning = message.get("reasoning_content") or message.get("reasoning") or ""
+    if not isinstance(reasoning, str):
+        reasoning = ""
+    return content, reasoning.strip(), finish_reason
+
+
 def _post_chat_completion(
     *,
     messages: list[dict[str, Any]],
@@ -212,29 +272,19 @@ def _post_chat_completion(
             raise RuntimeError(
                 f"LLM HTTP request failed with status {response.status_code}{detail}."
             ) from exc
-        break
+        try:
+            return _parse_completion_response(response)
+        except _RetryableCompletionError as exc:
+            if attempt + 1 < attempts:
+                time.sleep(min(60.0, float(2**attempt)))
+                continue
+            raise RuntimeError(
+                f"Invalid LLM completion after {attempts} attempt(s): {exc}"
+            ) from exc
+        except (KeyError, IndexError, TypeError, ValueError) as exc:
+            raise RuntimeError(f"Invalid LLM response contract: {exc}") from exc
 
-    if response is None:  # Defensive; the loop always returns or assigns it.
-        raise RuntimeError("LLM HTTP request did not produce a response.")
-
-    try:
-        body = response.json()
-        choices_path = os.getenv("LLM_CHOICES_PATH", "choices").strip()
-        choices = _value_at_path(body, choices_path)
-        choice = choices[0]
-        message = choice["message"]
-        content = message.get("content") or ""
-        finish_reason = choice.get("finish_reason")
-        if finish_reason == "length":
-            raise ValueError("completion reached its token limit")
-        if not isinstance(content, str) or not content.strip():
-            raise ValueError("completion content is empty")
-        reasoning = message.get("reasoning_content") or message.get("reasoning") or ""
-        if not isinstance(reasoning, str):
-            reasoning = ""
-        return content, reasoning.strip(), finish_reason
-    except (KeyError, IndexError, TypeError, ValueError) as exc:
-        raise RuntimeError(f"Invalid LLM response contract: {exc}") from exc
+    raise RuntimeError("LLM HTTP request did not produce a usable completion.")
 
 
 def _structured_output_mode() -> str:

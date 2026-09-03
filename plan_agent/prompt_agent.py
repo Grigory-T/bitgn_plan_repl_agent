@@ -23,7 +23,9 @@ Available runtime variable:
 
 # Step completion
 When the step is done, set python variables `step_status` to 'completed' or 'failed' and `final_answer` to the description of what was accomplished.
-To finish the step, use exactly two lines of python code:
+To finish the step, end your response with a separate Python block containing
+exactly two assignment lines. Code that sets or checks output variables may
+appear in earlier Python blocks in the same response.
 Examples:
 <python>
 step_status = 'completed'

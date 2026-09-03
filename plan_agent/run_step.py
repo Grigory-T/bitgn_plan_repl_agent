@@ -200,14 +200,14 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
         final_answer = PERSISTENT_GLOBALS.get("final_answer", "")
         step_status = PERSISTENT_GLOBALS.get("step_status", "")
 
-        # True only if exactly one python block exists AND it assigns both step_status and final_answer (order doesn't matter)
-        twoline_oneblock_code = False
-        if (
-            len(llm_response_blocks) == 1
-            and llm_response_blocks[0].block_type == "python"
-        ):
+        # The response may set/check output variables before its final block.
+        # Completion is valid when the last Python block contains only the two
+        # required assignments. This is deterministic without forcing a weak
+        # model to spread a simple finalization across another LLM turn.
+        has_finalize_block = False
+        if python_blocks:
             try:
-                tree = ast.parse(llm_response_blocks[0].block_text)
+                tree = ast.parse(python_blocks[-1])
                 if len(tree.body) != 2:
                     raise ValueError("not a two-line python finalize block")
                 targets = set()
@@ -221,11 +221,11 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
                                     if isinstance(elt, ast.Name):
                                         targets.add(elt.id)
                 if "final_answer" in targets and "step_status" in targets:
-                    twoline_oneblock_code = True
+                    has_finalize_block = True
             except Exception:
                 pass
 
-        if vars_assigned and final_answer and step_status and not twoline_oneblock_code:
+        if vars_assigned and final_answer and step_status and not has_finalize_block:
             are_you_sure_msg = (
                 "Make sure that the step is completed correctly and you understand the result.\n"
                 "Analyze the information and code execution results above before finalizing.\n"
@@ -233,14 +233,14 @@ def run_step(task, current_step, completed_steps, log_dir=None, step_index=0) ->
                 f"The current step output variables (should be set if task is `completed`, `None` or empty containers ([], {{}} etc.) **is not allowed**):{format_step_variables(current_step.output_variables)}\n\n"
                 "If you are sure you want to finalize the step, use **exactly** two lines of code:\n"
                 "\n<python>\nstep_status = 'completed' OR 'failed'\nfinal_answer = ...result description...\n</python>\n"
-                "Do not include other code tags. Only one <python> block with two assignments.\n"
-                "Set any required output variables in a separate python block before the final two-line block."
+                "End the response with this final two-line <python> block. "
+                "Any output-variable code must appear before it."
             )
             messages.append({"role": "user", "content": are_you_sure_msg})
             _append_step_log(messages_log, "user", are_you_sure_msg)
             continue
 
-        if vars_assigned and final_answer and step_status and twoline_oneblock_code:
+        if vars_assigned and final_answer and step_status and has_finalize_block:
             if step_status == "failed":
                 if step_folder:
                     _write_log(step_folder / "step_result.txt", final_answer)
