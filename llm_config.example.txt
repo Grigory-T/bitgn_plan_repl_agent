@@ -16,6 +16,10 @@ LLM_AUTH_PREFIX=Bearer
 # Dot-separated path from the JSON response root to the choices array.
 LLM_CHOICES_PATH=choices
 
+# Dot-separated path to the standard token-usage object. Use <none> when the
+# endpoint does not return usage. Counts are added to the neutral run log.
+LLM_USAGE_PATH=usage
+
 # Provider/model options as one JSON object. Examples include reasoning or
 # chat-template switches. Leave as {} when no extra options are needed.
 LLM_EXTRA_BODY_JSON={}

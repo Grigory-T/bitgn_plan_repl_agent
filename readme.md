@@ -25,8 +25,10 @@ Every run gets a fresh directory under `runs/<run_id>/`:
 The run ID and paths are printed before the first model request. While a model
 request is pending, the console and `run.log` receive a heartbeat every 30
 seconds. The neutral log records timings, stages, retries, counts, status codes,
-and error types. It does not record the task, prompts, file contents, model
-responses, endpoint, model name, or credentials.
+and error types. When the endpoint returns standard token usage, it also records
+per-call prompt/completion/total token counts and end-to-end output tokens per
+second. It does not record the task, prompts, file contents, model responses,
+endpoint, model name, or credentials.
 
 The Python execution loop starts in `workspace/` and is instructed to work
 there. It is an automation runtime, not an operating-system security sandbox;
@@ -49,6 +51,7 @@ provider-specific source changes:
 
 - `LLM_AUTH_HEADER` and `LLM_AUTH_PREFIX` control authentication
 - `LLM_CHOICES_PATH` locates the response choices array
+- `LLM_USAGE_PATH` locates the optional standard token-usage object
 - `LLM_EXTRA_BODY_JSON` adds model or gateway options
 - `LLM_MAX_TOKENS_FIELD` selects the gateway's completion-limit field name
 - `LLM_VERIFY_TLS` controls certificate verification
@@ -59,7 +62,14 @@ The real `llm_config.txt` is ignored by Git. Never commit it. Use `<none>` as
 `LLM_AUTH_HEADER` for an unauthenticated local endpoint, or as
 `LLM_AUTH_PREFIX` when a gateway expects the raw key value. Set
 `LLM_CHOICES_PATH` when a gateway wraps the standard choices array. Put any
-optional request fields in `LLM_EXTRA_BODY_JSON`.
+optional request fields in `LLM_EXTRA_BODY_JSON`. Set `LLM_USAGE_PATH` to the
+corresponding wrapped usage object, or to `<none>` when usage is unavailable.
+
+Reasoning files are written only when an endpoint returns a non-empty
+`reasoning` or `reasoning_content` field. An empty or absent field cannot be
+reconstructed by the agent. Because requests are non-streaming for broad
+gateway compatibility, the runtime can measure full request duration and
+end-to-end output rate, but not time to first token.
 
 ## Linux Setup
 

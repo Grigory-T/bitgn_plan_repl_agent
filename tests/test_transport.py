@@ -29,6 +29,7 @@ class TransportTests(unittest.TestCase):
             "LLM_AUTH_PREFIX": "<none>",
             "LLM_MODEL": "example-model",
             "LLM_CHOICES_PATH": "envelope.choices",
+            "LLM_USAGE_PATH": "envelope.usage",
             "LLM_EXTRA_BODY_JSON": '{"model_option":{"enabled":false}}',
             "LLM_VERIFY_TLS": "false",
             "LLM_REQUEST_ATTEMPTS": "1",
@@ -44,6 +45,11 @@ class TransportTests(unittest.TestCase):
         response.raise_for_status.return_value = None
         response.json.return_value = {
             "envelope": {
+                "usage": {
+                    "prompt_tokens": 10,
+                    "completion_tokens": 4,
+                    "total_tokens": 14,
+                },
                 "choices": [
                     {
                         "message": {"content": content},
@@ -236,6 +242,44 @@ class TransportTests(unittest.TestCase):
             self.assertNotIn("private-model-name", content)
             self.assertNotIn("https://gateway.example", content)
             self.assertNotIn("secret-for-test", content)
+
+    def test_standard_usage_is_written_to_neutral_log(self) -> None:
+        response = self._response("done")
+        with TemporaryDirectory() as directory:
+            log_path = Path(directory) / "run.log"
+            configure_progress(log_path, console=False)
+            with (
+                patch.dict(os.environ, self._environment(), clear=True),
+                patch("plan_agent.utils.requests.post", return_value=response),
+            ):
+                utils._post_chat_completion(
+                    messages=[{"role": "user", "content": "private prompt"}],
+                    model="private-model-name",
+                    max_completion_tokens=24_000,
+                )
+
+            content = log_path.read_text(encoding="utf-8")
+            self.assertIn("prompt_tokens=10", content)
+            self.assertIn("completion_tokens=4", content)
+            self.assertIn("total_tokens=14", content)
+            self.assertIn("output_tps_end_to_end=", content)
+            self.assertIn("reasoning_chars=0", content)
+            self.assertNotIn("private prompt", content)
+
+    def test_missing_usage_does_not_reject_completion(self) -> None:
+        response = self._response("done")
+        del response.json.return_value["envelope"]["usage"]
+        with (
+            patch.dict(os.environ, self._environment(), clear=True),
+            patch("plan_agent.utils.requests.post", return_value=response),
+        ):
+            content, _, _ = utils._post_chat_completion(
+                messages=[{"role": "user", "content": "hello"}],
+                model="example-model",
+                max_completion_tokens=24_000,
+            )
+
+        self.assertEqual(content, "done")
 
 
 if __name__ == "__main__":

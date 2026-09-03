@@ -26,6 +26,7 @@ class ConfigTests(unittest.TestCase):
                     [
                         "LLM_BASE_URL=http://127.0.0.1:8000/v1/chat/completions",
                         "LLM_MODEL=local-model",
+                        "LLM_USAGE_PATH=wrapped.usage",
                         "LLM_AUTH_HEADER=<none>",
                         "LLM_API_KEY=",
                     ]
@@ -40,6 +41,7 @@ class ConfigTests(unittest.TestCase):
                 loaded = load_runtime_config(path)
                 self.assertEqual(loaded, path.resolve())
                 self.assertEqual(os.environ["LLM_MODEL"], "local-model")
+                self.assertEqual(os.environ["LLM_USAGE_PATH"], "wrapped.usage")
                 self.assertNotIn("LLM_MODEL_PLAN", os.environ)
                 self.assertNotIn("LLM_UNUSED_OLD_SETTING", os.environ)
                 self.assertEqual(os.environ["UNRELATED_SETTING"], "preserved")

@@ -204,6 +204,27 @@ def _parse_completion_response(
     return content, reasoning.strip(), finish_reason
 
 
+def _completion_usage(response: requests.Response) -> dict[str, int]:
+    """Return standard token counts when the configured response exposes them."""
+    usage_path = os.getenv("LLM_USAGE_PATH", "usage").strip()
+    if usage_path.casefold() in {"", "none", "<none>"}:
+        return {}
+
+    try:
+        usage = _value_at_path(response.json(), usage_path)
+    except (TypeError, ValueError):
+        return {}
+    if not isinstance(usage, dict):
+        return {}
+
+    result: dict[str, int] = {}
+    for key in ("prompt_tokens", "completion_tokens", "total_tokens"):
+        value = usage.get(key)
+        if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+            result[key] = value
+    return result
+
+
 def _post_chat_completion(
     *,
     messages: list[dict[str, Any]],
@@ -345,12 +366,25 @@ def _post_chat_completion(
             ) from exc
         try:
             parsed = _parse_completion_response(response)
+            request_elapsed = time.monotonic() - request_started
+            usage = _completion_usage(response)
+            metrics: dict[str, Any] = {
+                "call_id": call_id,
+                "phase": phase,
+                "response_chars": len(parsed[0]),
+                "reasoning_chars": len(parsed[1]),
+                "finish_reason": parsed[2] or "unspecified",
+                "request_elapsed_seconds": request_elapsed,
+                **usage,
+            }
+            completion_tokens = usage.get("completion_tokens")
+            if completion_tokens is not None and request_elapsed > 0:
+                metrics["output_tps_end_to_end"] = (
+                    completion_tokens / request_elapsed
+                )
             progress_event(
                 "llm_completion_accepted",
-                call_id=call_id,
-                phase=phase,
-                response_chars=len(parsed[0]),
-                finish_reason=parsed[2] or "unspecified",
+                **metrics,
             )
             return parsed
         except _RetryableCompletionError as exc:
